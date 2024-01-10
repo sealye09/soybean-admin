@@ -1,6 +1,5 @@
 import { useRouter } from 'vue-router';
 import type { RouteLocationRaw } from 'vue-router';
-import type { RouteKey } from '@elegant-router/types';
 import { router as globalRouter } from '@/router';
 
 /**
@@ -23,7 +22,7 @@ export function useRouterPush(inSetup = true) {
     params?: Record<string, string>;
   }
 
-  async function routerPushByKey(key: RouteKey, options?: RouterPushOptions) {
+  async function routerPushByKey(key: string, options?: RouterPushOptions) {
     const { query, params } = options || {};
 
     const routeLocation: RouteLocationRaw = {
@@ -82,7 +81,9 @@ export function useRouterPush(inSetup = true) {
 
   /** Redirect from login */
   async function redirectFromLogin() {
+    console.log('redirect');
     const redirect = route.value.query?.redirect as string;
+    console.log('🚀 ~ redirectFromLogin ~ redirect:', redirect);
 
     if (redirect) {
       routerPush(redirect);

@@ -1,6 +1,12 @@
 import 'vue-router';
 
 declare module 'vue-router' {
+  interface Route {
+    path: string;
+    name: string;
+    redirect?: string;
+    meta: RouteMeta;
+  }
   interface RouteMeta {
     /**
      * Title of the route
@@ -45,7 +51,7 @@ declare module 'vue-router' {
     /** The outer link of the route */
     href?: string;
     /** Whether to hide the route in the menu */
-    hideInMenu?: boolean;
+    hidden?: boolean;
     /**
      * The menu key will be activated when entering the route
      *
@@ -54,7 +60,7 @@ declare module 'vue-router' {
      * @example
      *   the route is "user_detail", if it is set to "user_list", the menu "user_list" will be activated
      */
-    activeMenu?: import('@elegant-router/types').LastLevelRouteKey;
+    activeMenu?: string;
     /** By default, the same route path will use one tab, if set to true, it will use multiple tabs */
     multiTab?: boolean;
     /** If set, the route will be fixed in tabs, and the value is the order of fixed tabs */

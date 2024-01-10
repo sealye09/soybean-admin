@@ -128,10 +128,10 @@ declare namespace App {
   namespace Global {
     type VNode = import('vue').VNode;
     type RouteLocationNormalizedLoaded = import('vue-router').RouteLocationNormalizedLoaded;
-    type RouteKey = import('@elegant-router/types').RouteKey;
-    type RouteMap = import('@elegant-router/types').RouteMap;
-    type RoutePath = import('@elegant-router/types').RoutePath;
-    type LastLevelRouteKey = import('@elegant-router/types').LastLevelRouteKey;
+    type RouteKey = string;
+    type RouteMap = <T extends RouteKey = RouteKey>() => Record<T, string>;
+    type RoutePath = string;
+    type LastLevelRouteKey = string;
 
     /** The global header props */
     interface HeaderProps {
@@ -188,7 +188,7 @@ declare namespace App {
       /** The tab route key */
       routeKey: LastLevelRouteKey;
       /** The tab route path */
-      routePath: RouteMap[LastLevelRouteKey];
+      routePath: string;
       /** The tab route full path */
       fullPath: string;
       /** The tab fixed index */
@@ -222,7 +222,7 @@ declare namespace App {
    * Locales type
    */
   namespace I18n {
-    type RouteKey = import('@elegant-router/types').RouteKey;
+    type RouteKey = string;
 
     type LangType = 'en-US' | 'zh-CN';
 
@@ -358,7 +358,7 @@ declare namespace App {
         };
       };
       form: {
-        userName: FormMsg;
+        username: FormMsg;
         phone: FormMsg;
         pwd: FormMsg;
         code: FormMsg;

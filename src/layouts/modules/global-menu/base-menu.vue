@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { MentionOption, MenuProps } from 'naive-ui';
 import { SimpleScrollbar } from '@sa/materials';
-import type { RouteKey } from '@elegant-router/types';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { useRouteStore } from '@/store/modules/route';
@@ -40,10 +39,10 @@ const menuHeightStyle = computed(() =>
 );
 
 const selectedKey = computed(() => {
-  const { hideInMenu, activeMenu } = route.meta;
+  const { hidden, activeMenu } = route.meta;
   const name = route.name as string;
 
-  const routeName = (hideInMenu ? activeMenu : name) || name;
+  const routeName = (hidden ? activeMenu : name) || name;
 
   return routeName;
 });
@@ -58,7 +57,7 @@ function updateExpandedKeys() {
   expandedKeys.value = routeStore.getSelectedMenuKeyPath(selectedKey.value);
 }
 
-function handleClickMenu(key: RouteKey) {
+function handleClickMenu(key: string) {
   routerPushByKey(key);
 }
 

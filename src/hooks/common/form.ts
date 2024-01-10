@@ -5,11 +5,11 @@ import { $t } from '@/locales';
 
 export function useFormRules() {
   const constantRules = {
-    userName: [
-      createRequiredRule($t('form.userName.required')),
+    username: [
+      createRequiredRule($t('form.username.required')),
       {
         pattern: REG_USER_NAME,
-        message: $t('form.userName.invalid'),
+        message: $t('form.username.invalid'),
         trigger: 'change'
       }
     ],

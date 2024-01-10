@@ -1,3 +1,5 @@
+import { type RouteRecordRaw } from 'vue-router';
+
 /**
  * Namespace Api
  *
@@ -17,7 +19,7 @@ declare namespace Api {
 
     interface UserInfo {
       userId: string;
-      userName: string;
+      username: string;
       roles: string[];
     }
   }
@@ -28,15 +30,13 @@ declare namespace Api {
    * Backend api module: "route"
    */
   namespace Route {
-    type ElegantConstRoute = import('@elegant-router/types').ElegantConstRoute;
-
-    interface MenuRoute extends ElegantConstRoute {
+    type MenuRoute = {
       id: string;
-    }
+    } & RouteRecordRaw;
 
-    interface UserRoute {
+    type UserRoute = {
       routes: MenuRoute[];
-      home: import('@elegant-router/types').LastLevelRouteKey;
-    }
+      home: string;
+    };
   }
 }

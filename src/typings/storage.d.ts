@@ -1,3 +1,5 @@
+import type { UserInfo } from '@/service';
+
 /** The storage namespace */
 declare namespace StorageType {
   interface Session {
@@ -13,11 +15,13 @@ declare namespace StorageType {
     /** The i18n language */
     lang: App.I18n.LangType;
     /** The token */
-    token: string;
+    token?: string;
+    /** Token type */
+    tokenType?: string;
     /** The refresh token */
-    refreshToken: string;
+    refreshToken?: string;
     /** The user info */
-    userInfo: Api.Auth.UserInfo;
+    userInfo?: UserInfo;
     /** The theme color */
     themeColor: string;
     /** The theme settings */
