@@ -1,58 +1,41 @@
-import type { CustomRoute, ElegantConstRoute, ElegantRoute } from '@elegant-router/types';
-import { generatedRoutes } from '../elegant/routes';
-import { layouts, views } from '../elegant/imports';
-import { transformElegantRoutesToVueRoutes } from '../elegant/transform';
+import { ERROR_ROUTE } from './modules/error';
+import { EXCEPTION_ROUTE } from './modules/exception';
+import { HOME_ROUTE } from './modules/home';
+import { LOGIN_ROUTE } from './modules/login';
+import { MANAGE_ROUTE } from './modules/manage';
+import { MULTI_ROUTE } from './modules/multi';
 
-export const ROOT_ROUTE: CustomRoute = {
+export const ROOT_ROUTE = {
   name: 'root',
   path: '/',
   redirect: '/home',
   meta: {
     title: 'root',
-    constant: true
+    constant: true,
+    keepAlive: false,
+    hidden: true
   }
 };
 
-const customRoutes: CustomRoute[] = [
-  ROOT_ROUTE,
-  {
-    name: 'not-found',
-    path: '/:pathMatch(.*)*',
-    component: 'layout.blank$view.404',
-    meta: {
-      title: 'not-found',
-      constant: true
-    }
+export const ANY_ROUTE = {
+  name: 'any',
+  path: '/:pathMatch(.*)*',
+  redirect: '/error/404',
+  meta: {
+    title: 'any',
+    constant: true,
+    keepAlive: false,
+    hidden: true
   }
+};
+
+export const routes = [
+  ROOT_ROUTE,
+  LOGIN_ROUTE,
+  HOME_ROUTE,
+  MANAGE_ROUTE,
+  MULTI_ROUTE,
+  ERROR_ROUTE,
+  EXCEPTION_ROUTE,
+  ANY_ROUTE
 ];
-
-/** Create routes */
-export function createRoutes() {
-  const constantRoutes: ElegantRoute[] = [];
-
-  const authRoutes: ElegantRoute[] = [];
-
-  [...customRoutes, ...generatedRoutes].forEach(item => {
-    if (item.meta?.constant) {
-      constantRoutes.push(item);
-    } else {
-      authRoutes.push(item);
-    }
-  });
-
-  const constantVueRoutes = transformElegantRoutesToVueRoutes(constantRoutes, layouts, views);
-
-  return {
-    constantVueRoutes,
-    authRoutes
-  };
-}
-
-/**
- * Get auth vue routes
- *
- * @param routes Elegant routes
- */
-export function getAuthVueRoutes(routes: ElegantConstRoute[]) {
-  return transformElegantRoutesToVueRoutes(routes, layouts, views);
-}
