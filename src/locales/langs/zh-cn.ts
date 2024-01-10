@@ -136,7 +136,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来，{username} ！'
       },
       pwdLogin: {
         title: '密码登录',
@@ -169,7 +169,7 @@ const local: App.I18n.Schema = {
     }
   },
   form: {
-    userName: {
+    username: {
       required: '请输入用户名',
       invalid: '用户名格式不正确'
     },
