@@ -1,5 +1,4 @@
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw, _RouteRecordBase } from 'vue-router';
-import type { ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
 import { useSvgIconRender } from '@sa/hooks';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
@@ -10,7 +9,7 @@ import SvgIcon from '@/components/custom/svg-icon.vue';
  * @param routes Auth routes
  * @param roles Roles
  */
-export function filterAuthRoutesByRoles(routes: ElegantConstRoute[], roles: string[]) {
+export function filterAuthRoutesByRoles(routes: RouteRecordRaw[], roles: string[]) {
   const SUPER_ROLE = 'R_SUPER';
 
   if (roles.includes(SUPER_ROLE)) {
@@ -26,7 +25,7 @@ export function filterAuthRoutesByRoles(routes: ElegantConstRoute[], roles: stri
  * @param route Auth route
  * @param roles Roles
  */
-function filterAuthRouteByRoles(route: ElegantConstRoute, roles: string[]) {
+function filterAuthRouteByRoles(route: RouteRecordRaw, roles: string[]) {
   const routeRoles = (route.meta && route.meta.roles) || [];
 
   if (!routeRoles.length) {
@@ -49,18 +48,43 @@ function filterAuthRouteByRoles(route: ElegantConstRoute, roles: string[]) {
  *
  * @param routes Auth routes
  */
-export function getGlobalMenusByAuthRoutes(routes: ElegantConstRoute[]) {
+export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
   const menus: App.Global.Menu[] = [];
 
   routes.forEach(route => {
-    if (!route.meta?.hideInMenu) {
+    if (!route.meta?.hidden) {
       const menu = getGlobalMenuByBaseRoute(route);
+      const meta = route?.meta;
+      const childrenLength = route.children?.length ?? 0;
 
-      if (route.children?.length) {
-        menu.children = getGlobalMenusByAuthRoutes(route.children);
+      // 1. children length > 1 目录
+      if (childrenLength > 1) {
+        menu.children = getGlobalMenusByAuthRoutes(route.children!);
+        menus.push(menu);
+        return;
       }
 
-      menus.push(menu);
+      // 2. children length === 1 && alwaysShow 目录
+      if (childrenLength === 1) {
+        if (meta?.alwaysShow) {
+          menu.children = getGlobalMenusByAuthRoutes(route.children!);
+          menus.push(menu);
+          return;
+        }
+        // 3. children length === 1 && !alwaysShow 菜单
+        menus.push(getGlobalMenuByBaseRoute(route.children![0]));
+        return;
+      }
+
+      // 4. children length === 0 菜单
+      if (childrenLength === 0) {
+        menus.push(menu);
+        return;
+      }
+
+      console.log(route);
+      // 5. children length < 0 error
+      throw new Error('Invalid route');
     }
   });
 
@@ -100,7 +124,7 @@ export function updateLocaleOfGlobalMenus(menus: App.Global.Menu[]) {
  *
  * @param route
  */
-function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | ElegantConstRoute) {
+function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | RouteRecordRaw) {
   const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
   const { name, path } = route;
@@ -112,8 +136,8 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
     key: name as string,
     label,
     i18nKey,
-    routeKey: name as RouteKey,
-    routePath: path as RouteMap[RouteKey],
+    routeKey: name as string,
+    routePath: path as string,
     icon: SvgIconVNode({ icon, localIcon, fontSize: 20 })
   };
 
@@ -126,13 +150,13 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
  * @param routes Vue routes (two levels)
  */
 export function getCacheRouteNames(routes: RouteRecordRaw[]) {
-  const cacheNames: LastLevelRouteKey[] = [];
+  const cacheNames: string[] = [];
 
   routes.forEach(route => {
     // only get last two level route, which has component
     route.children?.forEach(child => {
       if (child.component && child.meta?.keepAlive) {
-        cacheNames.push(child.name as LastLevelRouteKey);
+        cacheNames.push(child.name as string);
       }
     });
   });
@@ -146,7 +170,7 @@ export function getCacheRouteNames(routes: RouteRecordRaw[]) {
  * @param routeName
  * @param routes
  */
-export function isRouteExistByRouteName(routeName: RouteKey, routes: ElegantConstRoute[]) {
+export function isRouteExistByRouteName(routeName: string, routes: RouteRecordRaw[]) {
   return routes.some(route => recursiveGetIsRouteExistByRouteName(route, routeName));
 }
 
@@ -156,7 +180,7 @@ export function isRouteExistByRouteName(routeName: RouteKey, routes: ElegantCons
  * @param route
  * @param routeName
  */
-function recursiveGetIsRouteExistByRouteName(route: ElegantConstRoute, routeName: RouteKey) {
+function recursiveGetIsRouteExistByRouteName(route: RouteRecordRaw, routeName: string) {
   let isExist = route.name === routeName;
 
   if (isExist) {

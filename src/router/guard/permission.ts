@@ -1,5 +1,4 @@
 import type { NavigationGuardNext, RouteLocationNormalized, Router } from 'vue-router';
-import type { RouteKey, RoutePath } from '@elegant-router/types';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouteStore } from '@/store/modules/route';
 import { localStg } from '@/utils/storage';
@@ -13,7 +12,12 @@ export function createPermissionGuard(router: Router) {
     // 1. route with href
     if (to.meta.href) {
       window.open(to.meta.href, '_blank');
-      next({ path: from.fullPath, replace: true, query: from.query, hash: to.hash });
+      next({
+        path: from.fullPath,
+        replace: true,
+        query: from.query,
+        hash: to.hash
+      });
     }
 
     const authStore = useAuthStore();
@@ -21,49 +25,56 @@ export function createPermissionGuard(router: Router) {
     const isLogin = Boolean(localStg.get('token'));
     const needLogin = !to.meta.constant;
     const routeRoles = to.meta.roles || [];
-    const rootRoute: RouteKey = 'root';
-    const loginRoute: RouteKey = 'login';
-    const noPermissionRoute: RouteKey = '403';
+    const rootRoute = 'root';
+    const loginRoute = 'login';
+    const noPermissionRoute = '403';
 
-    const SUPER_ADMIN = 'R_SUPER';
-    const hasPermission =
-      !routeRoles.length ||
-      authStore.userInfo.roles.includes(SUPER_ADMIN) ||
-      authStore.userInfo.roles.some(role => routeRoles.includes(role));
+    const SUPER_ADMIN = 'ROOT';
+    // const hasPermission =
+    //   !routeRoles.length ||
+    //   authStore.userInfo.roles.includes(SUPER_ADMIN) ||
+    //   authStore.userInfo.roles.some((role) => routeRoles.includes(role));
+    // TODO: remove this line
+    const hasPermission = true;
 
     const strategicPatterns: Common.StrategicPattern[] = [
-      // 1. if it is login route when logged in, change to the root page
+      // 1. 已登录且访问登录页，则跳转到根路由
       {
         condition: isLogin && to.name === loginRoute,
         callback: () => {
+          console.log('1. 已登录且访问登录页，则跳转到根路由');
           next({ name: rootRoute });
         }
       },
-      // 2. if is is constant route, then it is allowed to access directly
+      // 2. 常量路由，直接放行
       {
         condition: !needLogin,
         callback: () => {
+          console.log('2. 常量路由，直接放行');
           next();
         }
       },
-      // 3. if the route need login but the user is not logged in, then switch to the login page
+      // 3. 页面需要登录，但是用户未登录，则跳转到登录页
       {
         condition: !isLogin && needLogin,
         callback: () => {
+          console.log('3. 页面需要登录，但是用户未登录，则跳转到登录页');
           next({ name: loginRoute, query: { redirect: to.fullPath } });
         }
       },
-      // 4. if the user is logged in and has permission, then it is allowed to access
+      // 4. 用户已登录，且有权限，则放行
       {
         condition: isLogin && needLogin && hasPermission,
         callback: () => {
+          console.log('4. 用户已登录，且有权限，则放行');
           next();
         }
       },
-      // 5. if the user is logged in but does not have permission, then switch to the 403 page
+      // 5. 用户已登录，但是没有权限，则跳转到403页面
       {
         condition: isLogin && needLogin && !hasPermission,
         callback: () => {
+          console.log('5. 用户已登录，但是没有权限，则跳转到403页面');
           next({ name: noPermissionRoute });
         }
       }
@@ -84,52 +95,62 @@ async function createAuthRouteGuard(
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) {
-  const notFoundRoute: RouteKey = 'not-found';
+  const notFoundRoute = 'not-found';
   const isNotFoundRoute = to.name === notFoundRoute;
+  const isConstantRoute = to.meta.constant;
 
-  // 1. If the route is the constant route but is not the "not-found" route, then it is allowed to access.
-  if (to.meta.constant && !isNotFoundRoute) {
+  // 1. 如果路由是常量路由，但不是“not-found”路由，则允许访问。
+  if (isConstantRoute && !isNotFoundRoute) {
+    console.log('1. 如果路由是常量路由，但不是“not-found”路由，则允许访问。');
     return true;
   }
 
-  // 2. If the auth route is initialized but is not the "not-found" route, then it is allowed to access.
+  // 2. 如果路由已经初始化，但不是“not-found”路由，则允许访问。
   const routeStore = useRouteStore();
   if (routeStore.isInitAuthRoute && !isNotFoundRoute) {
+    console.log('2. 如果路由已经初始化，但不是“not-found”路由，则允许访问。');
     return true;
   }
 
-  // 3. If the route is initialized, check whether the route exists.
+  // 3. 如果路由已经初始化，则检查路由是否存在。
   if (routeStore.isInitAuthRoute && isNotFoundRoute) {
-    const exist = await routeStore.getIsAuthRouteExist(to.path as RoutePath);
-
-    if (exist) {
-      const noPermissionRoute: RouteKey = '403';
-
-      next({ name: noPermissionRoute });
-
-      return false;
-    }
-
+    console.log('3. 如果路由已经初始化，则检查路由是否存在。');
+    // const exist = await routeStore.getIsAuthRouteExist(to.path);
+    // TODO: remove this line
     return true;
+
+    // if (exist) {
+    //   const noPermissionRoute = "403";
+
+    //   next({ name: noPermissionRoute });
+
+    //   return false;
+    // }
+
+    // return true;
   }
 
-  // 4. If the user is not logged in, then redirect to the login page.
+  // 4. 如果用户未登录，则跳转到登录页。
   const isLogin = Boolean(localStg.get('token'));
+  console.log('4. 如果用户未登录，则跳转到登录页。');
   if (!isLogin) {
-    const loginRoute: RouteKey = 'login';
+    const loginRoute = 'login';
     const redirect = to.fullPath;
 
     next({ name: loginRoute, query: { redirect } });
-
+    console.log('not login');
     return false;
   }
 
-  // 5. init auth route
+  // 5. 初始化路由
   await routeStore.initAuthRoute();
+  console.log('5. 初始化路由');
 
   // 6. the route is caught by the "not-found" route because the auto route is not initialized. after the auto route is initialized, redirect to the original route.
+  // 6. 路由被“not-found”路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。
   if (isNotFoundRoute) {
-    const rootRoute: RouteKey = 'root';
+    console.log('6. 路由被“not-found”路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。');
+    const rootRoute = 'root';
     const path = to.redirectedFrom?.name === rootRoute ? '/' : to.fullPath;
 
     next({ path, replace: true, query: to.query, hash: to.hash });

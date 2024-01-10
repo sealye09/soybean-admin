@@ -1,45 +1,60 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { $t } from '@/locales';
-import { loginModuleRecord } from '@/constants/app';
-import { useRouterPush } from '@/hooks/common/router';
+// import { loginModuleRecord } from "@/constants/app";
+// import { useRouterPush } from "@/hooks/common/router";
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useAuthStore } from '@/store/modules/auth';
+import type { LoginData } from '@/service';
+import { getCaptchaApi } from '@/service';
 
 defineOptions({
   name: 'PwdLogin'
 });
 
 const authStore = useAuthStore();
-const { toggleLoginModule } = useRouterPush();
+// const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useNaiveForm();
 const { constantRules } = useFormRules();
 
-interface FormModel {
-  userName: string;
-  password: string;
-}
-
-const model: FormModel = reactive({
-  userName: 'Soybean',
-  password: '123456'
+const model: LoginData = reactive({
+  username: 'admin',
+  password: '123456',
+  captchaCode: '',
+  captchaKey: ''
 });
 
-const rules: Record<keyof FormModel, App.Global.FormRule[]> = {
-  userName: constantRules.userName,
+const captchaImageBase64 = ref('');
+
+const rules: Record<'username' | 'password', App.Global.FormRule[]> = {
+  username: constantRules.username,
   password: constantRules.pwd
 };
 
 async function handleSubmit() {
   await validate();
-  await authStore.login(model.userName, model.password);
+  await authStore.login(model);
 }
+
+const getCaptcha = async () => {
+  const { data } = await getCaptchaApi();
+
+  if (!data || !data.captchaBase64) {
+    return;
+  }
+  model.captchaKey = data.captchaKey;
+  captchaImageBase64.value = data.captchaBase64;
+};
+
+onMounted(() => {
+  getCaptcha();
+});
 </script>
 
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false">
-    <NFormItem path="userName">
-      <NInput v-model:value="model.userName" :placeholder="$t('page.login.common.userNamePlaceholder')" />
+    <NFormItem path="username">
+      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
     </NFormItem>
     <NFormItem path="password">
       <NInput
@@ -47,6 +62,10 @@ async function handleSubmit() {
         type="password"
         :placeholder="$t('page.login.common.passwordPlaceholder')"
       />
+    </NFormItem>
+    <NFormItem path="password">
+      <NInput v-model:value="model.captchaCode" :placeholder="$t('page.login.common.codePlaceholder')" />
+      <img :src="captchaImageBase64" alt="captcha" style="cursor: pointer" @click="getCaptcha" />
     </NFormItem>
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
@@ -56,14 +75,16 @@ async function handleSubmit() {
       <NButton type="primary" size="large" block round :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </NButton>
-      <div class="flex-y-center justify-between gap-12px">
+      <!--
+ <div class="flex-y-center justify-between gap-12px">
         <NButton class="flex-1" block @click="toggleLoginModule('code-login')">
-          {{ $t(loginModuleRecord['code-login']) }}
+          {{ $t(loginModuleRecord["code-login"]) }}
         </NButton>
         <NButton class="flex-1" block @click="toggleLoginModule('register')">
           {{ $t(loginModuleRecord.register) }}
         </NButton>
-      </div>
+      </div> 
+-->
     </NSpace>
   </NForm>
 </template>

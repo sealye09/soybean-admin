@@ -1,7 +1,5 @@
 import type { Router } from 'vue-router';
-import type { LastLevelRouteKey, RouteMap } from '@elegant-router/types';
 import { $t } from '@/locales';
-import { getRoutePath } from '@/router/elegant/transform';
 
 /**
  * Get all tabs
@@ -57,8 +55,8 @@ export function getTabByRoute(route: App.Global.TabRoute) {
   const tab: App.Global.Tab = {
     id: getTabIdByRoute(route),
     label,
-    routeKey: name as LastLevelRouteKey,
-    routePath: path as RouteMap[LastLevelRouteKey],
+    routeKey: name as string,
+    routePath: path as string,
     fullPath,
     fixedIndex: fixedIndexInTab,
     icon,
@@ -76,11 +74,11 @@ export function getTabByRoute(route: App.Global.TabRoute) {
  */
 export function getDefaultHomeTab(router: Router) {
   const homeRouteName = import.meta.env.VITE_ROUTE_HOME;
-  const homeRoutePath = getRoutePath(homeRouteName);
+  const homeRoutePath = router.resolve({ name: homeRouteName }).path;
   const i18nLabel = $t(`route.${homeRouteName}`);
 
   let homeTab: App.Global.Tab = {
-    id: getRoutePath(homeRouteName),
+    id: router.resolve({ name: homeRouteName }).path,
     label: i18nLabel || homeRouteName,
     routeKey: homeRouteName,
     routePath: homeRoutePath,

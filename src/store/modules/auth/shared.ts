@@ -1,3 +1,4 @@
+import type { UserInfo } from '@/service';
 import { localStg } from '@/utils/storage';
 
 /** Get token */
@@ -7,10 +8,13 @@ export function getToken() {
 
 /** Get user info */
 export function getUserInfo() {
-  const emptyInfo: Api.Auth.UserInfo = {
-    userId: '',
-    userName: '',
-    roles: []
+  const emptyInfo: UserInfo = {
+    userId: undefined,
+    username: undefined,
+    nickname: undefined,
+    avatar: undefined,
+    roles: [],
+    perms: []
   };
   const userInfo = localStg.get('userInfo') || emptyInfo;
 

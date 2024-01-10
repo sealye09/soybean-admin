@@ -1,13 +1,8 @@
 import type { App } from 'vue';
-import {
-  type RouterHistory,
-  createMemoryHistory,
-  createRouter,
-  createWebHashHistory,
-  createWebHistory
-} from 'vue-router';
-import { createRoutes } from './routes';
+import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw, type RouterHistory } from 'vue-router';
 import { createRouterGuard } from './guard';
+import { routes } from './routes';
 
 const { VITE_ROUTER_HISTORY_MODE = 'history', VITE_BASE_URL } = import.meta.env;
 
@@ -17,11 +12,16 @@ const historyCreatorMap: Record<Env.RouterHistoryMode, (base?: string) => Router
   memory: createMemoryHistory
 };
 
-const { constantVueRoutes } = createRoutes();
-
 export const router = createRouter({
   history: historyCreatorMap[VITE_ROUTER_HISTORY_MODE](VITE_BASE_URL),
-  routes: constantVueRoutes
+  routes: routes as RouteRecordRaw[],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+
+    return { top: 0 };
+  }
 });
 
 /** Setup Vue Router */

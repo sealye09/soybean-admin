@@ -97,7 +97,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
       updateDocumentTitleByLocale();
 
       // update global menus by locale
-      routeStore.updateGlobalMenusByLocale();
+      // routeStore.updateGlobalMenusByLocale();
 
       // update tabs by locale
       tabStore.updateTabsByLocale();
