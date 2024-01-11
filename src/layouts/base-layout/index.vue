@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { AdminLayout, LAYOUT_SCROLL_EL_ID } from '@sa/materials';
 import type { LayoutMode } from '@sa/materials';
+import { AdminLayout, LAYOUT_SCROLL_EL_ID } from '@sa/materials';
+import { computed } from 'vue';
+
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
+
+import { setupMixMenuContext } from '../hooks/use-mix-menu';
+import GlobalContent from '../modules/global-content/index.vue';
+import GlobalFooter from '../modules/global-footer/index.vue';
 import GlobalHeader from '../modules/global-header/index.vue';
 import GlobalSider from '../modules/global-sider/index.vue';
 import GlobalTab from '../modules/global-tab/index.vue';
-import GlobalContent from '../modules/global-content/index.vue';
-import GlobalFooter from '../modules/global-footer/index.vue';
 import ThemeDrawer from '../modules/theme-drawer/index.vue';
-import { setupMixMenuContext } from '../hooks/use-mix-menu';
 
 defineOptions({
-  name: 'BaseLayout'
+  name: 'BaseLayout',
 });
 
 const appStore = useAppStore();
@@ -26,26 +28,26 @@ const layoutMode = computed(() => {
 });
 
 const headerPropsConfig: Record<UnionKey.ThemeLayoutMode, App.Global.HeaderProps> = {
-  vertical: {
+  'vertical': {
     showLogo: false,
     showMenu: false,
-    showMenuToggler: true
+    showMenuToggler: true,
   },
   'vertical-mix': {
     showLogo: false,
     showMenu: false,
-    showMenuToggler: false
+    showMenuToggler: false,
   },
-  horizontal: {
+  'horizontal': {
     showLogo: true,
     showMenu: true,
-    showMenuToggler: false
+    showMenuToggler: false,
   },
   'horizontal-mix': {
     showLogo: true,
     showMenu: true,
-    showMenuToggler: false
-  }
+    showMenuToggler: false,
+  },
 };
 
 const headerProps = computed(() => headerPropsConfig[themeStore.layout.mode]);
@@ -65,9 +67,8 @@ function getSiderWidth() {
 
   let w = isVerticalMix.value || isHorizontalMix.value ? mixWidth : width;
 
-  if (isVerticalMix.value && appStore.mixSiderFixed) {
+  if (isVerticalMix.value && appStore.mixSiderFixed)
     w += mixChildMenuWidth;
-  }
 
   return w;
 }
@@ -77,9 +78,8 @@ function getSiderCollapsedWidth() {
 
   let w = isVerticalMix.value || isHorizontalMix.value ? mixCollapsedWidth : collapsedWidth;
 
-  if (isVerticalMix.value && appStore.mixSiderFixed) {
+  if (isVerticalMix.value && appStore.mixSiderFixed)
     w += mixChildMenuWidth;
-  }
 
   return w;
 }

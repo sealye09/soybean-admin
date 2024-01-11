@@ -13,7 +13,7 @@ export const BACKEND_CONFIG: BackendResultConfig = {
   codeKey: 'code',
   dataKey: 'data',
   msgKey: 'msg',
-  successCodes: SERVICE_SUCCESS_CODE
+  successCodes: SERVICE_SUCCESS_CODE,
 };
 
 /** 请求超时时间 */
@@ -54,5 +54,5 @@ export const ERROR_STATUS = {
   503: '503: 服务不可用~',
   504: '504: 网关超时~',
   505: '505: http版本不支持该请求~',
-  [DEFAULT_REQUEST_ERROR_CODE]: DEFAULT_REQUEST_ERROR_MSG
+  [DEFAULT_REQUEST_ERROR_CODE]: DEFAULT_REQUEST_ERROR_MSG,
 };

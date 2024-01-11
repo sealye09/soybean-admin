@@ -1,7 +1,6 @@
-import { ref } from 'vue';
-import type { Ref } from 'vue';
-import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { useBoolean, useLoading } from '@sa/hooks';
+import type { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { type Ref, ref } from 'vue';
 
 import CustomAxiosInstance from './instance';
 import type { BackendResultConfig, RequestError, RequestResult } from './type';
@@ -9,10 +8,10 @@ import type { BackendResultConfig, RequestError, RequestResult } from './type';
 type RequestMethod = 'get' | 'post' | 'put' | 'delete';
 
 interface RequestParam {
-  url: string;
-  method?: RequestMethod;
-  data?: any;
-  axiosConfig?: AxiosRequestConfig;
+  url: string
+  method?: RequestMethod
+  data?: any
+  axiosConfig?: AxiosRequestConfig
 }
 
 /**
@@ -43,7 +42,7 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: B
       method,
       url,
       data: param.data,
-      config: param.axiosConfig
+      config: param.axiosConfig,
     })) as RequestResult<T>;
 
     return res;
@@ -94,15 +93,15 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: B
     get,
     post,
     put,
-    delete: handleDelete
+    delete: handleDelete,
   };
 }
 
 interface RequestResultHook<T = any> {
-  data: Ref<T | null>;
-  error: Ref<RequestError | null>;
-  loading: Ref<boolean>;
-  network: Ref<boolean>;
+  data: Ref<T | null>
+  error: Ref<RequestError | null>
+  loading: Ref<boolean>
+  network: Ref<boolean>
 }
 
 /**
@@ -149,14 +148,14 @@ export function createHookRequest(axiosConfig: AxiosRequestConfig, backendConfig
       method,
       url,
       data: param.data,
-      config: param.axiosConfig
+      config: param.axiosConfig,
     }).then(handleRequestResult);
 
     return {
       data,
       error,
       loading,
-      network
+      network,
     };
   }
 
@@ -205,24 +204,25 @@ export function createHookRequest(axiosConfig: AxiosRequestConfig, backendConfig
     get,
     post,
     put,
-    delete: handleDelete
+    delete: handleDelete,
   };
 }
 
 async function getRequestResponse(params: {
-  instance: AxiosInstance;
-  method: RequestMethod;
-  url: string;
-  data?: any;
-  config?: AxiosRequestConfig;
+  instance: AxiosInstance
+  method: RequestMethod
+  url: string
+  data?: any
+  config?: AxiosRequestConfig
 }) {
   const { instance, method, url, data, config } = params;
 
   let res: any;
-  if (method === 'get' || method === 'delete') {
+  if (method === 'get' || method === 'delete')
     res = await instance[method](url, config);
-  } else {
+
+  else
     res = await instance[method](url, data, config);
-  }
+
   return res;
 }

@@ -1,4 +1,4 @@
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 /**
  * Namespace Api
@@ -12,16 +12,16 @@ declare namespace Api {
    * Backend api module: "auth"
    */
   namespace Auth {
-    interface LoginToken {
-      token: string;
-      refreshToken: string;
-    }
+    type LoginToken = {
+      token: string
+      refreshToken: string
+    };
 
-    interface UserInfo {
-      userId: string;
-      username: string;
-      roles: string[];
-    }
+    type UserInfo = {
+      userId: string
+      username: string
+      roles: string[]
+    };
   }
 
   /**
@@ -31,12 +31,12 @@ declare namespace Api {
    */
   namespace Route {
     type MenuRoute = {
-      id: string;
+      id: string
     } & RouteRecordRaw;
 
     type UserRoute = {
-      routes: MenuRoute[];
-      home: string;
+      routes: MenuRoute[]
+      home: string
     };
   }
 }
