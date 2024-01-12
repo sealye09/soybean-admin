@@ -4,15 +4,15 @@ import { ERROR_ROUTE } from './modules/error';
 import { EXCEPTION_ROUTE } from './modules/exception';
 import { HOME_ROUTE } from './modules/home';
 import { LOGIN_ROUTE } from './modules/login';
-import { MANAGE_ROUTE } from './modules/manage';
-import { MULTI_ROUTE } from './modules/multi';
+import { MULTI_ROUTE } from './modules/multi-level';
+import { SYSTEM_ROUTE } from './modules/system';
 
 export * from './modules/error';
 export * from './modules/exception';
 export * from './modules/home';
 export * from './modules/login';
-export * from './modules/manage';
-export * from './modules/multi';
+export * from './modules/system';
+export * from './modules/multi-level';
 
 export const ROOT_ROUTE = {
   name: 'root',
@@ -44,12 +44,12 @@ export const constantRoutes = [
   ROOT_ROUTE,
   LOGIN_ROUTE,
   HOME_ROUTE,
+  EXCEPTION_ROUTE,
   ERROR_ROUTE,
   ANY_ROUTE,
 ];
 
 export const dynamicRoutes = [
-  MANAGE_ROUTE,
+  SYSTEM_ROUTE,
   MULTI_ROUTE,
-  EXCEPTION_ROUTE,
 ];

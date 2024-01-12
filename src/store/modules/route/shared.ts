@@ -2,6 +2,7 @@ import { useSvgIconRender } from '@sa/hooks';
 import { type RouteLocationNormalizedLoaded, type RouteRecordRaw, type _RouteRecordBase, useRouter } from 'vue-router';
 
 import SvgIcon from '@/components/custom/svg-icon.vue';
+import BaseLayout from '@/layouts/base-layout/index.vue';
 import { $t } from '@/locales';
 
 /**
@@ -60,6 +61,48 @@ function filterAuthRouteByRoles(route: RouteRecordRaw, roles: string[]) {
 }
 
 /**
+ * 递归过滤有权限的异步(动态)路由, 后端路由
+ * 同时处理路径和组件
+ *
+ * @param routes 接口返回的异步(动态)路由
+ * @param roles 用户角色集合
+ * @returns 返回用户有权限的异步(动态)路由
+ */
+export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string[]) {
+  const asyncRoutes: RouteRecordRaw[] = [];
+  const modules = import.meta.glob('/src/views/**/**.vue');
+
+  routes.forEach((route) => {
+    const tmpRoute = { ...route }; // ES6扩展运算符复制新对象
+    if (!route.name) tmpRoute.name = route.path;
+
+    const hasPermission = tmpRoute.meta?.roles?.some(role => roles.includes(role));
+
+    // 判断用户(角色)是否有该路由的访问权限
+    if (hasPermission) {
+      if (tmpRoute.component?.toString() === 'Layout') {
+        tmpRoute.component = BaseLayout;
+      }
+      else {
+        const component = modules[`/src/views/${tmpRoute.component}.vue`];
+        if (component)
+          tmpRoute.component = component;
+
+        else
+          tmpRoute.component = modules[`/src/views/404/index.vue`];
+      }
+
+      if (tmpRoute.children)
+        tmpRoute.children = filterAsyncRoutesByRoles(tmpRoute.children, roles);
+
+      asyncRoutes.push(tmpRoute);
+    }
+  });
+
+  return asyncRoutes;
+}
+
+/**
  * Get global menus by auth routes
  *
  * @param routes Auth routes
@@ -70,37 +113,25 @@ export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
   routes.forEach((route) => {
     if (!route.meta?.hidden) {
       const menu = getGlobalMenuByBaseRoute(route);
-      const meta = route?.meta;
-      const childrenLength = route.children?.length ?? 0;
+      const length = route.children?.length ?? 0;
+      const showAlways = route.meta?.showAlways;
 
-      // 1. children length > 1 目录
-      if (childrenLength > 1) {
-        menu.children = getGlobalMenusByAuthRoutes(route.children!);
+      if (length > 1) {
+        menu.children = getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]);
         menus.push(menu);
-        return;
       }
-
-      // 2. children length === 1 && alwaysShow 目录
-      if (childrenLength === 1) {
-        if (meta?.alwaysShow) {
-          menu.children = getGlobalMenusByAuthRoutes(route.children!);
+      else if (length === 1) {
+        if (showAlways) {
+          menu.children = getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]);
           menus.push(menu);
-          return;
         }
-        // 3. children length === 1 && !alwaysShow 菜单
-        menus.push(getGlobalMenuByBaseRoute(route.children![0]));
-        return;
+        else {
+          menus.push(...getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]));
+        }
       }
-
-      // 4. children length === 0 菜单
-      if (childrenLength === 0) {
+      else if (length === 0) {
         menus.push(menu);
-        return;
       }
-
-      console.log(route);
-      // 5. children length < 0 error
-      throw new Error('Invalid route');
     }
   });
 

@@ -13,11 +13,11 @@ import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
 
 import {
+  filterAsyncRoutesByRoles,
   filterAuthRoutesByRoles,
   getBreadcrumbsByRoute,
   getCacheRouteNames,
   getGlobalMenusByAuthRoutes,
-  getRouteNameByPath,
   getSelectedMenuKeyPathByKey,
   updateLocaleOfGlobalMenus,
 } from './shared';
@@ -117,10 +117,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init auth route */
   async function initAuthRoute() {
-    if (authRouteMode.value === 'static')
-      await initStaticAuthRoute();
-    else
-      await initDynamicAuthRoute();
+    if (authRouteMode.value === 'static') await initStaticAuthRoute();
+    else await initDynamicAuthRoute();
 
     tabStore.initHomeTab(router);
   }
@@ -140,17 +138,28 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init dynamic auth route */
   async function initDynamicAuthRoute() {
-    console.log('动态路由模式：初始化中');
-    setIsInitAuthRoute(false);
-    const { data } = await listRoutes();
+    if (!authStore.userInfo) return;
 
-    handleAuthRoutes(data as RouteRecordRaw[]);
+    try {
+      console.log('动态路由模式：初始化中');
+      setIsInitAuthRoute(false);
+      const { data } = await listRoutes();
 
-    // routeHome.value = data.home
-    // handleUpdateRootRouteRedirect(home);
+      const filteredAuthRoutes = filterAsyncRoutesByRoles(data as RouteRecordRaw[], authStore.userInfo.roles);
+      console.log('🚀 ~ initDynamicAuthRoute ~ filteredAuthRoutes:', filteredAuthRoutes);
 
-    setIsInitAuthRoute(true);
-    console.log('路由初始化完成！');
+      handleAuthRoutes(filteredAuthRoutes);
+      // routeHome.value = data.home
+      // handleUpdateRootRouteRedirect(home);
+
+      setIsInitAuthRoute(true);
+      console.log('路由初始化完成！');
+    }
+    catch (e) {
+      console.log(e);
+      // to login
+      authStore.logout();
+    }
   }
 
   /**
@@ -182,23 +191,6 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   // }
 
   /**
-   * Get is auth route exist
-   *
-   * @param routePath Route path
-   */
-  async function getIsAuthRouteExist(routePath: string) {
-    const routeName = getRouteNameByPath(routePath);
-    if (!routeName) return false;
-
-    // if (authRouteMode.value === 'static') {
-    //   const { authRoutes } = createRoutes();
-    //   return isRouteExistByRouteName(routeName, authRoutes);
-    // }
-    // const { data } = await fetchIsRouteExist(routeName);
-    // return data;
-  }
-
-  /**
    * Get selected menu key path
    *
    * @param selectedKey Selected menu key
@@ -219,7 +211,6 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     initAuthRoute,
     isInitAuthRoute,
     setIsInitAuthRoute,
-    getIsAuthRouteExist,
     getSelectedMenuKeyPath,
   };
 });

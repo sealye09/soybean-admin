@@ -1,7 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <LookForward />
+  <div>
+    level2
+    <router-view />
+  </div>
 </template>
 
 <style scoped></style>

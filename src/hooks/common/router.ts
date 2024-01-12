@@ -34,7 +34,6 @@ export function useRouterPush(inSetup = true) {
 
     if (params) routeLocation.params = params;
 
-    console.log('🚀 ~ routerPushByKey ~ routeLocation:', routeLocation);
     return routerPush(routeLocation);
   }
 

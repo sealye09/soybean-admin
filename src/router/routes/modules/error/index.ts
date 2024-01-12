@@ -5,7 +5,7 @@ import BlankLayout from '@/layouts/blank-layout/index.vue';
 export const ERROR_ROUTE_403 = {
   name: 'error-403',
   path: '/error/403',
-  component: () => import('@/views/_builtin/403/index.vue'),
+  component: () => import('@/views/403/index.vue'),
   meta: {
     title: '403',
     i18nKey: 'route.403',
@@ -18,7 +18,7 @@ export const ERROR_ROUTE_403 = {
 export const ERROR_ROUTE_404 = {
   name: 'error-404',
   path: '/error/404',
-  component: () => import('@/views/_builtin/404/index.vue'),
+  component: () => import('@/views/404/index.vue'),
   meta: {
     title: '404',
     i18nKey: 'route.404',
@@ -31,7 +31,7 @@ export const ERROR_ROUTE_404 = {
 export const ERROR_ROUTE_500 = {
   name: 'error-500',
   path: '/error/500',
-  component: () => import('@/views/_builtin/500/index.vue'),
+  component: () => import('@/views/500/index.vue'),
   meta: {
     title: '500',
     i18nKey: 'route.500',

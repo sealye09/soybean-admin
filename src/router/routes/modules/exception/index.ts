@@ -5,7 +5,7 @@ import BaseLayout from '@/layouts/base-layout/index.vue';
 export const EXCEPTION_ROUTE_403 = {
   name: 'exception-403',
   path: '/exception/403',
-  component: () => import('@/views/_builtin/403/index.vue'),
+  component: () => import('@/views/403/index.vue'),
   meta: {
     title: '403',
     i18nKey: 'route.403',
@@ -19,7 +19,7 @@ export const EXCEPTION_ROUTE_403 = {
 export const EXCEPTION_ROUTE_404 = {
   name: 'exception-404',
   path: '/exception/404',
-  component: () => import('@/views/_builtin/404/index.vue'),
+  component: () => import('@/views/404/index.vue'),
   meta: {
     title: '404',
     i18nKey: 'route.404',
@@ -33,7 +33,7 @@ export const EXCEPTION_ROUTE_404 = {
 export const EXCEPTION_ROUTE_500 = {
   name: 'exception-500',
   path: '/exception/500',
-  component: () => import('@/views/_builtin/500/index.vue'),
+  component: () => import('@/views/500/index.vue'),
   meta: {
     title: '500',
     i18nKey: 'route.500',

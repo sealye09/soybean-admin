@@ -17,9 +17,8 @@ const ROOT_USER = 'root';
 
 export function createPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
-    const authStore = useAuthStore();
-
     const meta = to.meta;
+    const authStore = useAuthStore();
 
     const isLogin = Boolean(authStore.token);
     const userInfo = authStore.userInfo;
@@ -34,15 +33,17 @@ export function createPermissionGuard(router: Router) {
     if (!pass) return;
 
     // 1. 外链
-    if (meta.href) {
-      window.open(meta.href, '_blank');
-      next({
-        path: from.fullPath,
-        replace: true,
-        query: from.query,
-        hash: to.hash,
-      });
-    }
+    // console.log('isExternal(to.path)', isExternal(to.path), to);
+    // if (isExternal(to.path)) {
+    //   console.log('1. 外链');
+    //   window.open(to.path, '_blank');
+    //   next({
+    //     path: from.fullPath,
+    //     replace: true,
+    //     query: from.query,
+    //     hash: to.hash,
+    //   });
+    // }
 
     const strategicPatterns: Common.StrategicPattern[] = [
       // 1. 已登录且访问登录页，则跳转到根路由

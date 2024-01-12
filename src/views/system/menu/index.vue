@@ -9,7 +9,10 @@ onActivated(() => {
 </script>
 
 <template>
-  <LookForward />
+  <div class="text-18px text-red">
+    menu
+    <LookForward />
+  </div>
 </template>
 
 <style scoped></style>

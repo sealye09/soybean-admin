@@ -1,13 +1,13 @@
 import 'vue-router';
 
 declare module 'vue-router' {
-  interface Route  {
-    path: string;
-    name: string;
-    redirect?: string;
-    meta: RouteMeta;
+  interface Route {
+    path: string
+    name: string
+    redirect?: string
+    meta: RouteMeta
   }
-  interface RouteMeta  {
+  interface RouteMeta {
     /**
      * Title of the route
      *

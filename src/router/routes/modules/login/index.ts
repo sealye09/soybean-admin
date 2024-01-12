@@ -3,7 +3,7 @@ import type { RouteLocationNormalized } from 'vue-router';
 export const LOGIN_ROUTE = {
   path: '/login',
   name: 'login',
-  component: () => import('@/views/_builtin/login/index.vue'),
+  component: () => import('@/views/login/index.vue'),
   meta: {
     title: 'login',
     i18nKey: 'route.login',
