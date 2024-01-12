@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { $t } from '@/locales';
 
 defineOptions({ name: 'MenuToggler' });
@@ -8,36 +9,25 @@ const props = defineProps<Props>();
 
 interface Props {
   /** Show collapsed icon */
-  collapsed?: boolean;
+  collapsed?: boolean
   /** Arrow style icon */
-  arrowIcon?: boolean;
+  arrowIcon?: boolean
 }
 
-type NumberBool = 0 | 1;
+const arrowIcons = ['line-md:chevron-double-left', 'line-md:chevron-double-right'];
+const menuIcons = ['line-md:menu-fold-left', 'line-md:menu-fold-right'];
 
-const icon = computed(() => {
-  const icons: Record<NumberBool, Record<NumberBool, string>> = {
-    0: {
-      0: 'line-md:menu-fold-left',
-      1: 'line-md:menu-fold-right'
-    },
-    1: {
-      0: 'ph-caret-double-left-bold',
-      1: 'ph-caret-double-right-bold'
-    }
-  };
-
-  const arrowIcon = Number(props.arrowIcon || false) as NumberBool;
-
-  const collapsed = Number(props.collapsed || false) as NumberBool;
-
-  return icons[arrowIcon][collapsed];
-});
+const closeIcon = computed(() => props.arrowIcon ? arrowIcons[0] : menuIcons[0]);
+const openIcon = computed(() => props.arrowIcon ? arrowIcons[1] : menuIcons[1]);
 </script>
 
 <template>
-  <ButtonIcon :tooltip-content="collapsed ? $t('icon.expand') : $t('icon.collapse')" tooltip-placement="bottom-start">
-    <SvgIcon :icon="icon" />
+  <ButtonIcon
+    class="h-full"
+    :tooltip-content="collapsed ? $t('icon.expand') : $t('icon.collapse')" tooltip-placement="bottom-start"
+  >
+    <SvgIcon v-if="collapsed" :icon="openIcon" />
+    <SvgIcon v-else :icon="closeIcon" />
   </ButtonIcon>
 </template>
 

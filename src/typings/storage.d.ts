@@ -8,7 +8,7 @@ declare namespace StorageType {
     // /**
     //  * the theme settings
     //  */
-    // themeSettings: App.Theme.ThemeSetting;
+    themeSettings: App.Theme.ThemeSetting
   }
 
   interface Local {

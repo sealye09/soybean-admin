@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { getRgbOfColor } from '@sa/utils';
-
 import { $t } from '@/locales';
-import { localStg } from '@/utils/storage';
 
 const loadingClasses = [
   'left-0 top-0',
@@ -11,16 +8,16 @@ const loadingClasses = [
   'right-0 bottom-0 animate-delay-1500',
 ];
 
-function addThemeColorCssVars() {
-  const themeColor = localStg.get('themeColor') || '#646cff';
+// function addThemeColorCssVars() {
+//   const themeColor = localStg.get('themeColor') || '#646cff';
 
-  const { r, g, b } = getRgbOfColor(themeColor);
+//   const { r, g, b } = getRgbOfColor(themeColor);
 
-  const cssVars = `--primary-color: ${r} ${g} ${b}`;
-  document.documentElement.style.cssText = cssVars;
-}
+//   const cssVars = `--primary-color: ${r} ${g} ${b}`;
+//   document.documentElement.style.cssText = cssVars;
+// }
 
-addThemeColorCssVars();
+// addThemeColorCssVars();
 </script>
 
 <template>

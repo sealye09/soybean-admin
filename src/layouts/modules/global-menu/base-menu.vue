@@ -17,11 +17,11 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'vertical',
 });
 
-type Props = {
+interface Props {
   darkTheme?: boolean
   mode?: MenuProps['mode']
   menus: App.Global.Menu[]
-};
+}
 
 const route = useRoute();
 const appStore = useAppStore();

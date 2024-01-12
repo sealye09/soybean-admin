@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ExceptionBase' });
@@ -16,25 +17,28 @@ interface Props {
    * - 404: not found
    * - 500: service error
    */
-  type: ExceptionType;
+  type: ExceptionType
+  color?: string
 }
 
 const iconMap: Record<ExceptionType, string> = {
-  '403': 'no-permission',
-  '404': 'not-found',
-  '500': 'service-error'
+  403: 'no-permission',
+  404: 'not-found',
+  500: 'service-error',
 };
 
 const icon = computed(() => iconMap[props.type]);
 </script>
 
 <template>
-  <div class="flex-vertical-center gap-24px min-h-520px wh-full overflow-hidden">
+  <div class="min-h-520px wh-full flex-vertical-center gap-24px overflow-hidden">
     <div class="flex text-400px text-primary">
-      <SvgIcon :local-icon="icon" />
+      <SvgIcon :local-icon="icon" :style="{ color: props.color }" />
     </div>
     <RouterLink to="/">
-      <NButton type="primary">{{ $t('common.backToHome') }}</NButton>
+      <NButton type="primary">
+        {{ $t('common.backToHome') }}
+      </NButton>
     </RouterLink>
   </div>
 </template>

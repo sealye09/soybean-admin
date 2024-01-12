@@ -1,7 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue';
+
+import { useThemeStore } from '@/store/modules/theme';
+
+const themeStore = useThemeStore();
+
+const primaryColor = computed(() => themeStore.themeColors.primary);
+</script>
 
 <template>
-  <ExceptionBase type="403" />
+  <ExceptionBase type="403" :color="primaryColor" />
 </template>
 
 <style scoped></style>

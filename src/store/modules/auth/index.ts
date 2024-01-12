@@ -43,8 +43,7 @@ export const useAuthStore = defineStore(
 
       try {
         const { data } = await loginApi(LoginData);
-        if (!data)
-          throw new Error('Login failed');
+        if (!data) throw new Error('Login failed');
 
         // 存储token信息
         token.value = data.accessToken;

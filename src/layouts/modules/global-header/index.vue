@@ -25,14 +25,14 @@ const routeStore = useRouteStore();
 const { isFullscreen, toggle } = useFullscreen();
 const { menus } = useMixMenuContext();
 
-type Props = {
+interface Props {
   /** Whether to show the logo */
   showLogo?: App.Global.HeaderProps['showLogo']
   /** Whether to show the menu toggler */
   showMenuToggler?: App.Global.HeaderProps['showMenuToggler']
   /** Whether to show the menu */
   showMenu?: App.Global.HeaderProps['showMenu']
-};
+}
 
 const headerMenus = computed(() => {
   if (themeStore.layout.mode === 'horizontal')
@@ -49,19 +49,35 @@ const headerMenus = computed(() => {
   <DarkModeContainer class="h-full flex-y-center shadow-header">
     <GlobalLogo v-if="showLogo" class="h-full" :style="{ width: `${themeStore.sider.width}px` }" />
     <HorizontalMenu v-if="showMenu" mode="horizontal" :menus="headerMenus" class="px-12px" />
-    <div v-else class="h-full flex-y-center flex-1-hidden">
-      <MenuToggler v-if="showMenuToggler" :collapsed="appStore.siderCollapse" @click="appStore.toggleSiderCollapse" />
-      <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
-    </div>
-    <div class="h-full flex-y-center justify-end">
-      <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
-      <LangSwitch :show-tooltip="false" :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" />
-      <ThemeSchemaSwitch
-        :theme-schema="themeStore.themeScheme"
-        :is-dark="themeStore.darkMode"
-        @switch="themeStore.toggleThemeScheme"
+    <div v-else class="h-full flex-y-center flex-1-hidden gap-12px">
+      <MenuToggler
+        v-if="showMenuToggler"
+        :collapsed="appStore.siderCollapse"
+        :height="`${themeStore.header.height}px`"
+        @click="appStore.toggleSiderCollapse"
       />
-      <ThemeButton />
+      <GlobalBreadcrumb v-if="!appStore.isMobile" />
+    </div>
+    <div class="h-full flex-y-center justify-end gap-12px px-16px">
+      <div class="h-full flex-y-center">
+        <FullScreen
+          v-if="!appStore.isMobile"
+          :full="isFullscreen"
+          @click="toggle"
+        />
+        <LangSwitch
+          :show-tooltip="false"
+          :lang="appStore.locale"
+          :lang-options="appStore.localeOptions"
+          @change-lang="appStore.changeLocale"
+        />
+        <ThemeSchemaSwitch
+          :theme-schema="themeStore.themeScheme"
+          :is-dark="themeStore.darkMode"
+          @switch="themeStore.toggleThemeScheme"
+        />
+        <ThemeButton />
+      </div>
       <UserAvatar />
     </div>
   </DarkModeContainer>

@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router';
 
 import { LOGIN_ROUTE } from '@/router/routes';
 import { useAuthStore } from '@/store/modules/auth';
-import { useRouteStore } from '@/store/modules/route';
 
 import {
   DEFAULT_REQUEST_ERROR_CODE,
@@ -37,10 +36,7 @@ export function handleAxiosError(axiosError: AxiosError) {
   }
   else if (axiosError.code === REQUEST_TIMEOUT_CODE && axiosError.message.includes('timeout')) {
     // 超时错误
-    Object.assign(error, {
-      code: REQUEST_TIMEOUT_CODE,
-      msg: REQUEST_TIMEOUT_MSG,
-    });
+    Object.assign(error, { code: REQUEST_TIMEOUT_CODE, msg: REQUEST_TIMEOUT_MSG });
   }
   else {
     // 请求不成功的错误

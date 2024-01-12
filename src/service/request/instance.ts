@@ -13,6 +13,7 @@ import {
 } from './handler';
 import type { BackendResultConfig } from './type';
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 type RefreshRequestQueue = (config: AxiosRequestConfig) => void;
 
 /**
@@ -23,8 +24,8 @@ type RefreshRequestQueue = (config: AxiosRequestConfig) => void;
 export default class CustomAxiosInstance {
   instance: AxiosInstance;
   backendConfig: BackendResultConfig;
-  isRefreshing: boolean;
-  retryQueues: RefreshRequestQueue[];
+  // isRefreshing: boolean;
+  // retryQueues: RefreshRequestQueue[];
 
   /**
    * @param axiosConfig - Axios配置
@@ -41,13 +42,14 @@ export default class CustomAxiosInstance {
   ) {
     this.backendConfig = backendConfig;
     this.instance = axios.create(axiosConfig);
-    this.setInterceptor();
-    this.isRefreshing = false;
-    this.retryQueues = [];
+    this.setRequestInterceptor();
+    this.setResponseInterceptor();
+    // this.isRefreshing = false;
+    // this.retryQueues = [];
   }
 
   /** 设置请求拦截器 */
-  setInterceptor() {
+  setRequestInterceptor() {
     this.instance.interceptors.request.use(
       async (config) => {
         const handleConfig = { ...config };
@@ -65,48 +67,50 @@ export default class CustomAxiosInstance {
         return handleServiceResult(error, null);
       },
     );
+  }
+
+  // 设置响应拦截器
+  setResponseInterceptor() {
     this.instance.interceptors.response.use(
-      (async (response) => {
-        const { status, config } = response;
+      (async (response: AxiosResponse) => {
+        const { status, config: _config, data } = response;
+        const { codeKey, dataKey, successCodes } = this.backendConfig;
+        const code = data[codeKey] as string | number;
+
         if (status === 200 || status < 300 || status === 304) {
-          const backend = response.data;
-          const { codeKey, dataKey, successCodes } = this.backendConfig;
-          const code = backend[codeKey] as string | number;
           // 请求成功
-          if (successCodes.includes(code))
-            return handleServiceResult(null, backend[dataKey]);
+          if (successCodes.includes(code)) return handleServiceResult(null, data[dataKey]);
 
           // token失效, 刷新token
-          if (REFRESH_TOKEN_CODE.includes(code)) {
-            // 原始请求
-            const originRequest = new Promise((resolve) => {
-              this.retryQueues.push((refreshConfig: AxiosRequestConfig) => {
-                config.headers.Authorization = refreshConfig.headers?.Authorization;
-                resolve(this.instance.request(config));
-              });
-            });
+          // if (REFRESH_TOKEN_CODE.includes(code)) {
+          //   // 原始请求
+          //   const originRequest = new Promise((resolve) => {
+          //     this.retryQueues.push((refreshConfig: AxiosRequestConfig) => {
+          //       _config.headers.Authorization = refreshConfig.headers?.Authorization;
+          //       resolve(this.instance.request(_config));
+          //     });
+          //   });
 
-            if (!this.isRefreshing) {
-              this.isRefreshing = true;
-              const refreshConfig = await handleRefreshToken(response.config);
-              if (refreshConfig)
-                this.retryQueues.map(cb => cb(refreshConfig));
+          //   if (!this.isRefreshing) {
+          //     this.isRefreshing = true;
+          //     const refreshConfig = await handleRefreshToken(response.config);
+          //     if (refreshConfig) this.retryQueues.map(cb => cb(refreshConfig));
 
-              this.retryQueues = [];
-              this.isRefreshing = false;
-            }
-            return originRequest;
-          }
+          //     this.retryQueues = [];
+          //     this.isRefreshing = false;
+          //   }
+          //   return originRequest;
+          // }
 
           // 业务错误
-          const error = handleBackendError(backend, this.backendConfig);
+          const error = handleBackendError(data, this.backendConfig);
           return handleServiceResult(error, null);
         }
 
         // 网络错误
         const error = handleResponseError(response);
         return handleServiceResult(error, null);
-      }) as (response: AxiosResponse<any, any>) => Promise<AxiosResponse<any, any>>,
+      }) as unknown as (response: AxiosResponse<any, any>) => Promise<AxiosResponse<any, any>>,
       (axiosError: AxiosError) => {
         // 请求失败 axios错误
         const error = handleAxiosError(axiosError);

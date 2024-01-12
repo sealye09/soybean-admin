@@ -316,7 +316,7 @@ declare namespace App {
         login: {
           common: {
             loginOrRegister: string
-            userNamePlaceholder: string
+            usernamePlaceholder: string
             phonePlaceholder: string
             codePlaceholder: string
             passwordPlaceholder: string

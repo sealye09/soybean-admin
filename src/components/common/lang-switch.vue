@@ -13,18 +13,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-type Props = {
+interface Props {
   /** Current language */
   lang: App.I18n.LangType
   /** Language options */
   langOptions: App.I18n.LangOption[]
   /** Show tooltip */
   showTooltip?: boolean
-};
+}
 
-type Emits = {
+interface Emits {
   (e: 'changeLang', lang: App.I18n.LangType): void
-};
+}
 
 const tooltipContent = computed(() => {
   if (!props.showTooltip) return '';
@@ -39,8 +39,8 @@ function changeLang(lang: App.I18n.LangType) {
 
 <template>
   <NDropdown :value="lang" :options="langOptions" trigger="hover" @select="changeLang">
-    <div>
-      <ButtonIcon :tooltip-content="tooltipContent" tooltip-placement="left">
+    <div class="h-full">
+      <ButtonIcon class="h-full" :tooltip-content="tooltipContent" tooltip-placement="left">
         <SvgIcon icon="heroicons:language" />
       </ButtonIcon>
     </div>

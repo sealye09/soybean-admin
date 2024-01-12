@@ -68,21 +68,22 @@ function logout() {
 }
 
 function handleDropdown(key: DropdownKey) {
-  if (key === 'logout')
-    logout();
-
-  else
-    routerPushByKey(key);
+  if (key === 'logout')logout();
+  else routerPushByKey(key);
 }
 </script>
 
 <template>
-  <NButton v-if="!authStore.isLogin" quaternary @click="loginOrRegister">
+  <NButton
+    v-if="!authStore.isLogin" quaternary
+    class="h-full"
+    @click="loginOrRegister"
+  >
     {{ $t('page.login.common.loginOrRegister') }}
   </NButton>
   <NDropdown v-else placement="bottom" trigger="click" :options="options" @select="handleDropdown">
-    <div>
-      <ButtonIcon>
+    <div class="h-full">
+      <ButtonIcon class="h-full">
         <SvgIcon icon="ph:user-circle" class="text-icon-large" />
         <span class="text-16px font-medium">{{ authStore.userInfo?.username ?? '' }}</span>
       </ButtonIcon>

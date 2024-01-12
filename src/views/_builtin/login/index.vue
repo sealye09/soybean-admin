@@ -14,10 +14,10 @@ import PwdLogin from './components/pwd-login.vue';
 import Register from './components/register.vue';
 import ResetPwd from './components/reset-pwd.vue';
 
-type Props = {
+interface Props {
   /** The login module */
   module?: UnionKey.LoginModule
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   module: 'pwd-login',
@@ -26,11 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 
-type LoginModule = {
+interface LoginModule {
   key: UnionKey.LoginModule
   label: string
   component: Component
-};
+}
 
 const modules: LoginModule[] = [
   { key: 'pwd-login', label: loginModuleRecord['pwd-login'], component: PwdLogin },
@@ -61,32 +61,21 @@ const bgColor = computed(() => {
 <template>
   <div class="relative wh-full flex-center overflow-hidden" :style="{ backgroundColor: bgColor }">
     <WaveBg :theme-color="bgThemeColor" />
-    <NCard class="relative z-4 w-auto rd-12px">
+    <NCard class="relative z-4 w-auto rd-12px py-12px">
       <div class="w-400px <sm:w-300px">
-        <header class="flex-y-center justify-between">
-          <SystemLogo class="text-64px text-primary <sm:text-48px" />
-          <h3 class="text-28px text-primary font-500 <sm:text-22px">
+        <header class="flex-y-center justify-center gap-24px <sm:gap-12px">
+          <SystemLogo
+            class="text-64px text-primary <sm:text-48px"
+          />
+
+          <NGradientText type="primary" class="text-28px font-500 <sm:text-22px">
             {{ $t('system.title') }}
-          </h3>
-          <div class="i-flex-vertical">
-            <ThemeSchemaSwitch
-              :theme-schema="themeStore.themeScheme"
-              :show-tooltip="false"
-              class="text-20px <sm:text-18px"
-              @switch="themeStore.toggleThemeScheme"
-            />
-            <LangSwitch
-              :lang="appStore.locale"
-              :lang-options="appStore.localeOptions"
-              :show-tooltip="false"
-              @change-lang="appStore.changeLocale"
-            />
-          </div>
+          </NGradientText>
         </header>
         <main class="pt-24px">
-          <h3 class="text-18px text-primary font-medium">
+          <NGradientText type="primary" class="text-18px font-medium">
             {{ $t(activeModule.label) }}
-          </h3>
+          </NGradientText>
           <div class="pt-24px">
             <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
               <component :is="activeModule.component" />
@@ -95,6 +84,24 @@ const bgColor = computed(() => {
         </main>
       </div>
     </NCard>
+
+    <div
+      class="absolute right-48px top-24px z-3 h-40px"
+    >
+      <div class="h-full flex items-baseline justify-center gap-4px">
+        <ThemeSchemaSwitch
+          :theme-schema="themeStore.themeScheme"
+          :show-tooltip="false"
+          @switch="themeStore.toggleThemeScheme"
+        />
+        <LangSwitch
+          :lang="appStore.locale"
+          :lang-options="appStore.localeOptions"
+          :show-tooltip="false"
+          @change-lang="appStore.changeLocale"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

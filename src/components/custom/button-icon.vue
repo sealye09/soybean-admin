@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { createReusableTemplate } from '@vueuse/core';
 import type { PopoverPlacement } from 'naive-ui';
+import { computed } from 'vue';
 
 defineOptions({
   name: 'ButtonIcon',
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 const props = withDefaults(defineProps<Props>(), {
   class: 'h-36px text-icon',
   icon: '',
   tooltipContent: '',
-  tooltipPlacement: 'bottom'
+  tooltipPlacement: 'bottom',
 });
 
 interface Props {
   /** Button class */
-  class?: string;
+  class?: string
   /** Iconify icon name */
-  icon?: string;
+  icon?: string
   /** Tooltip content */
-  tooltipContent?: string;
+  tooltipContent?: string
   /** Tooltip placement */
-  tooltipPlacement?: PopoverPlacement;
+  tooltipPlacement?: PopoverPlacement
 }
 
 interface ButtonProps {
-  className: string;
+  className: string
 }
 
 const [DefineButton, Button] = createReusableTemplate<ButtonProps>();
@@ -35,13 +35,11 @@ const [DefineButton, Button] = createReusableTemplate<ButtonProps>();
 const cls = computed(() => {
   let clsStr = props.class;
 
-  if (!clsStr.includes('h-')) {
+  if (!clsStr.includes('h-'))
     clsStr += ' h-36px';
-  }
 
-  if (!clsStr.includes('text-')) {
+  if (!clsStr.includes('text-'))
     clsStr += ' text-icon';
-  }
 
   return clsStr;
 });

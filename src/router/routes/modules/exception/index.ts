@@ -9,6 +9,7 @@ export const EXCEPTION_ROUTE_403 = {
   meta: {
     title: '403',
     i18nKey: 'route.403',
+    icon: 'ic:baseline-block',
     hidden: true,
     constant: true,
     keepAlive: false,
@@ -22,6 +23,7 @@ export const EXCEPTION_ROUTE_404 = {
   meta: {
     title: '404',
     i18nKey: 'route.404',
+    icon: 'ic:baseline-web-asset-off',
     hidden: true,
     constant: true,
     keepAlive: false,
@@ -35,6 +37,7 @@ export const EXCEPTION_ROUTE_500 = {
   meta: {
     title: '500',
     i18nKey: 'route.500',
+    icon: 'ic:baseline-wifi-off',
     hidden: true,
     constant: true,
     keepAlive: false,
@@ -48,7 +51,9 @@ export const EXCEPTION_ROUTE = {
   redirect: '/exception/404',
   meta: {
     title: 'exception',
+    i18nKey: 'route.exception',
     hidden: true,
+    icon: 'ant-design:exception-outlined',
     constant: true,
     keepAlive: false,
   },

@@ -11,6 +11,7 @@ const appStore = useAppStore();
 
 <template>
   <ButtonIcon
+    class="h-full"
     icon="majesticons:color-swatch-line"
     :tooltip-content="$t('icon.themeConfig')"
     @click="appStore.openThemeDrawer"

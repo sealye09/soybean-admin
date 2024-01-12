@@ -21,243 +21,246 @@ import {
   updateTabsByI18nKey,
 } from './shared';
 
-export const useTabStore = defineStore(SetupStoreId.Tab, () => {
-  const themeStore = useThemeStore();
-  const { routerPush } = useRouterPush(false);
+export const useTabStore = defineStore(
+  SetupStoreId.Tab,
+  () => {
+    const themeStore = useThemeStore();
+    const { routerPush } = useRouterPush(false);
 
-  /** Tabs */
-  const tabs = ref<App.Global.Tab[]>([]);
+    /** Tabs */
+    const tabs = ref<App.Global.Tab[]>([]);
 
-  /** Get active tab */
-  const homeTab = ref<App.Global.Tab>();
+    /** Get active tab */
+    const homeTab = ref<App.Global.Tab>();
 
-  /**
-   * Init home tab
-   *
-   * @param router Router instance
-   */
-  function initHomeTab(router: Router) {
-    homeTab.value = getDefaultHomeTab(router);
-  }
-
-  /** Get all tabs */
-  const allTabs = computed(() => getAllTabs(tabs.value, homeTab.value));
-
-  /** Active tab id */
-  const activeTabId = ref<string>('');
-
-  /**
-   * Set active tab id
-   *
-   * @param id Tab id
-   */
-  function setActiveTabId(id: string) {
-    activeTabId.value = id;
-  }
-
-  /**
-   * Init tab store
-   *
-   * @param currentRoute Current route
-   */
-  function initTabStore(currentRoute: App.Global.TabRoute) {
-    const storageTabs = localStg.get('globalTabs');
-
-    if (themeStore.tab.cache && storageTabs)
-      tabs.value = updateTabsByI18nKey(storageTabs);
-
-    addTab(currentRoute);
-  }
-
-  /**
-   * Add tab
-   *
-   * @param route Tab route
-   * @param active Whether to activate the added tab
-   */
-  function addTab(route: App.Global.TabRoute, active = true) {
-    const tab = getTabByRoute(route);
-
-    const isHomeTab = tab.id === homeTab.value?.id;
-
-    if (!isHomeTab && !isTabInTabs(tab.id, tabs.value))
-      tabs.value.push(tab);
-
-    if (active)
-      setActiveTabId(tab.id);
-  }
-
-  /**
-   * Remove tab
-   *
-   * @param tabId Tab id
-   */
-  async function removeTab(tabId: string) {
-    const isRemoveActiveTab = activeTabId.value === tabId;
-    const updatedTabs = filterTabsById(tabId, tabs.value);
-
-    function update() {
-      tabs.value = updatedTabs;
+    /**
+     * Init home tab
+     *
+     * @param router Router instance
+     */
+    function initHomeTab(router: Router) {
+      homeTab.value = getDefaultHomeTab(router);
     }
 
-    if (!isRemoveActiveTab) {
-      update();
-      return;
+    /** Get all tabs */
+    const allTabs = computed(() => getAllTabs(tabs.value, homeTab.value));
+
+    /** Active tab id */
+    const activeTabId = ref<string>('');
+
+    /**
+     * Set active tab id
+     *
+     * @param id Tab id
+     */
+    function setActiveTabId(id: string) {
+      activeTabId.value = id;
     }
 
-    const activeTab = updatedTabs.at(-1) || homeTab.value;
+    /**
+     * Init tab store
+     *
+     * @param currentRoute Current route
+     */
+    function initTabStore(currentRoute: App.Global.TabRoute) {
+      const storageTabs = localStg.get('globalTabs');
 
-    if (activeTab) {
+      if (themeStore.tab.cache && storageTabs)
+        tabs.value = updateTabsByI18nKey(storageTabs);
+
+      addTab(currentRoute);
+    }
+
+    /**
+     * Add tab
+     *
+     * @param route Tab route
+     * @param active Whether to activate the added tab
+     */
+    function addTab(route: App.Global.TabRoute, active = true) {
+      const tab = getTabByRoute(route);
+
+      const isHomeTab = tab.id === homeTab.value?.id;
+
+      if (!isHomeTab && !isTabInTabs(tab.id, tabs.value))
+        tabs.value.push(tab);
+
+      if (active)
+        setActiveTabId(tab.id);
+    }
+
+    /**
+     * Remove tab
+     *
+     * @param tabId Tab id
+     */
+    async function removeTab(tabId: string) {
+      const isRemoveActiveTab = activeTabId.value === tabId;
+      const updatedTabs = filterTabsById(tabId, tabs.value);
+
+      function update() {
+        tabs.value = updatedTabs;
+      }
+
+      if (!isRemoveActiveTab) {
+        update();
+        return;
+      }
+
+      const activeTab = updatedTabs.at(-1) || homeTab.value;
+
+      if (activeTab) {
+        await switchRouteByTab(activeTab);
+        update();
+      }
+    }
+
+    /**
+     * Clear tabs
+     *
+     * @param excludes Exclude tab ids
+     */
+    async function clearTabs(excludes: string[] = []) {
+      const remainTabIds = [...getFixedTabIds(tabs.value), ...excludes];
+      const removedTabsIds = tabs.value.map(tab => tab.id).filter(id => !remainTabIds.includes(id));
+
+      const isRemoveActiveTab = removedTabsIds.includes(activeTabId.value);
+      const updatedTabs = filterTabsByIds(removedTabsIds, tabs.value);
+
+      function update() {
+        tabs.value = updatedTabs;
+      }
+
+      if (!isRemoveActiveTab) {
+        update();
+        return;
+      }
+
+      const activeTab = updatedTabs[updatedTabs.length - 1] || homeTab.value;
+
       await switchRouteByTab(activeTab);
       update();
     }
-  }
 
-  /**
-   * Clear tabs
-   *
-   * @param excludes Exclude tab ids
-   */
-  async function clearTabs(excludes: string[] = []) {
-    const remainTabIds = [...getFixedTabIds(tabs.value), ...excludes];
-    const removedTabsIds = tabs.value.map(tab => tab.id).filter(id => !remainTabIds.includes(id));
-
-    const isRemoveActiveTab = removedTabsIds.includes(activeTabId.value);
-    const updatedTabs = filterTabsByIds(removedTabsIds, tabs.value);
-
-    function update() {
-      tabs.value = updatedTabs;
+    /**
+     * Switch route by tab
+     *
+     * @param tab
+     */
+    async function switchRouteByTab(tab: App.Global.Tab) {
+      const fail = await routerPush(tab.fullPath);
+      if (!fail)
+        setActiveTabId(tab.id);
     }
 
-    if (!isRemoveActiveTab) {
-      update();
-      return;
+    /**
+     * Clear left tabs
+     *
+     * @param tabId
+     */
+    async function clearLeftTabs(tabId: string) {
+      const tabIds = tabs.value.map(tab => tab.id);
+      const index = tabIds.indexOf(tabId);
+      if (index === -1) return;
+
+      const excludes = tabIds.slice(index);
+      await clearTabs(excludes);
     }
 
-    const activeTab = updatedTabs[updatedTabs.length - 1] || homeTab.value;
+    /**
+     * Clear right tabs
+     *
+     * @param tabId
+     */
+    async function clearRightTabs(tabId: string) {
+      const tabIds = tabs.value.map(tab => tab.id);
+      const index = tabIds.indexOf(tabId);
+      if (index === -1) return;
 
-    await switchRouteByTab(activeTab);
-    update();
-  }
+      const excludes = tabIds.slice(0, index + 1);
+      await clearTabs(excludes);
+    }
 
-  /**
-   * Switch route by tab
-   *
-   * @param tab
-   */
-  async function switchRouteByTab(tab: App.Global.Tab) {
-    const fail = await routerPush(tab.fullPath);
-    if (!fail)
-      setActiveTabId(tab.id);
-  }
+    /**
+     * Set new label of tab
+     *
+     * @default
+     * @param label New tab label
+     * @param tabId Tab id
+     */
+    function setTabLabel(label: string, tabId?: string) {
+      const id = tabId || activeTabId.value;
 
-  /**
-   * Clear left tabs
-   *
-   * @param tabId
-   */
-  async function clearLeftTabs(tabId: string) {
-    const tabIds = tabs.value.map(tab => tab.id);
-    const index = tabIds.indexOf(tabId);
-    if (index === -1) return;
+      const tab = tabs.value.find(item => item.id === id);
+      if (!tab) return;
 
-    const excludes = tabIds.slice(index);
-    await clearTabs(excludes);
-  }
+      tab.newLabel = label;
+    }
 
-  /**
-   * Clear right tabs
-   *
-   * @param tabId
-   */
-  async function clearRightTabs(tabId: string) {
-    const tabIds = tabs.value.map(tab => tab.id);
-    const index = tabIds.indexOf(tabId);
-    if (index === -1) return;
+    /**
+     * Reset tab label
+     *
+     * @default
+     * @param tabId Tab id
+     */
+    function resetTabLabel(tabId?: string) {
+      const id = tabId || activeTabId.value;
 
-    const excludes = tabIds.slice(0, index + 1);
-    await clearTabs(excludes);
-  }
+      const tab = tabs.value.find(item => item.id === id);
+      if (!tab) return;
 
-  /**
-   * Set new label of tab
-   *
-   * @default
-   * @param label New tab label
-   * @param tabId Tab id
-   */
-  function setTabLabel(label: string, tabId?: string) {
-    const id = tabId || activeTabId.value;
+      tab.newLabel = undefined;
+    }
 
-    const tab = tabs.value.find(item => item.id === id);
-    if (!tab) return;
+    /**
+     * Is tab retain
+     *
+     * @param tabId
+     */
+    function isTabRetain(tabId: string) {
+      if (tabId === homeTab.value?.id) return true;
 
-    tab.newLabel = label;
-  }
+      const fixedTabIds = getFixedTabIds(tabs.value);
 
-  /**
-   * Reset tab label
-   *
-   * @default
-   * @param tabId Tab id
-   */
-  function resetTabLabel(tabId?: string) {
-    const id = tabId || activeTabId.value;
+      return fixedTabIds.includes(tabId);
+    }
 
-    const tab = tabs.value.find(item => item.id === id);
-    if (!tab) return;
+    /** Update tabs by locale */
+    function updateTabsByLocale() {
+      tabs.value = updateTabsByI18nKey(tabs.value);
 
-    tab.newLabel = undefined;
-  }
+      if (homeTab.value)
+        homeTab.value = updateTabByI18nKey(homeTab.value);
+    }
 
-  /**
-   * Is tab retain
-   *
-   * @param tabId
-   */
-  function isTabRetain(tabId: string) {
-    if (tabId === homeTab.value?.id) return true;
+    /** Cache tabs */
+    function cacheTabs() {
+      if (!themeStore.tab.cache) return;
 
-    const fixedTabIds = getFixedTabIds(tabs.value);
+      localStg.set('globalTabs', tabs.value);
+    }
 
-    return fixedTabIds.includes(tabId);
-  }
+    // cache tabs when page is closed or refreshed
+    useEventListener(window, 'beforeunload', () => {
+      cacheTabs();
+    });
 
-  /** Update tabs by locale */
-  function updateTabsByLocale() {
-    tabs.value = updateTabsByI18nKey(tabs.value);
-
-    if (homeTab.value)
-      homeTab.value = updateTabByI18nKey(homeTab.value);
-  }
-
-  /** Cache tabs */
-  function cacheTabs() {
-    if (!themeStore.tab.cache) return;
-
-    localStg.set('globalTabs', tabs.value);
-  }
-
-  // cache tabs when page is closed or refreshed
-  useEventListener(window, 'beforeunload', () => {
-    cacheTabs();
-  });
-
-  return {
+    return {
     /** All tabs */
-    tabs: allTabs,
-    activeTabId,
-    initHomeTab,
-    initTabStore,
-    addTab,
-    removeTab,
-    clearTabs,
-    clearLeftTabs,
-    clearRightTabs,
-    switchRouteByTab,
-    setTabLabel,
-    resetTabLabel,
-    isTabRetain,
-    updateTabsByLocale,
-  };
-});
+      tabs: allTabs,
+      activeTabId,
+      initHomeTab,
+      initTabStore,
+      addTab,
+      removeTab,
+      clearTabs,
+      clearLeftTabs,
+      clearRightTabs,
+      switchRouteByTab,
+      setTabLabel,
+      resetTabLabel,
+      isTabRetain,
+      updateTabsByLocale,
+    };
+  },
+);

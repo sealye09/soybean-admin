@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { $t } from '@/locales';
+
 // import { loginModuleRecord } from "@/constants/app";
 // import { useRouterPush } from "@/hooks/common/router";
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { useAuthStore } from '@/store/modules/auth';
+import { $t } from '@/locales';
 import type { LoginData } from '@/service';
 import { getCaptchaApi } from '@/service';
+import { useAuthStore } from '@/store/modules/auth';
 
 defineOptions({
-  name: 'PwdLogin'
+  name: 'PwdLogin',
 });
 
 const authStore = useAuthStore();
@@ -21,14 +22,14 @@ const model: LoginData = reactive({
   username: 'admin',
   password: '123456',
   captchaCode: '',
-  captchaKey: ''
+  captchaKey: '',
 });
 
 const captchaImageBase64 = ref('');
 
 const rules: Record<'username' | 'password', App.Global.FormRule[]> = {
   username: constantRules.username,
-  password: constantRules.pwd
+  password: constantRules.pwd,
 };
 
 async function handleSubmit() {
@@ -36,15 +37,15 @@ async function handleSubmit() {
   await authStore.login(model);
 }
 
-const getCaptcha = async () => {
+async function getCaptcha() {
   const { data } = await getCaptchaApi();
 
-  if (!data || !data.captchaBase64) {
+  if (!data || !data.captchaBase64)
     return;
-  }
+
   model.captchaKey = data.captchaKey;
   captchaImageBase64.value = data.captchaBase64;
-};
+}
 
 onMounted(() => {
   getCaptcha();
@@ -54,7 +55,7 @@ onMounted(() => {
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false">
     <NFormItem path="username">
-      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
+      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.usernamePlaceholder')" />
     </NFormItem>
     <NFormItem path="password">
       <NInput
@@ -65,14 +66,16 @@ onMounted(() => {
     </NFormItem>
     <NFormItem path="password">
       <NInput v-model:value="model.captchaCode" :placeholder="$t('page.login.common.codePlaceholder')" />
-      <img :src="captchaImageBase64" alt="captcha" style="cursor: pointer" @click="getCaptcha" />
+      <img :src="captchaImageBase64" alt="captcha" style="cursor: pointer" @click="getCaptcha">
     </NFormItem>
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
         <NCheckbox>{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
-        <NButton quaternary>{{ $t('page.login.pwdLogin.forgetPassword') }}</NButton>
+        <NButton quaternary>
+          {{ $t('page.login.pwdLogin.forgetPassword') }}
+        </NButton>
       </div>
-      <NButton type="primary" size="large" block round :loading="authStore.loginLoading" @click="handleSubmit">
+      <NButton type="primary" size="large" round block :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </NButton>
       <!--
@@ -83,7 +86,7 @@ onMounted(() => {
         <NButton class="flex-1" block @click="toggleLoginModule('register')">
           {{ $t(loginModuleRecord.register) }}
         </NButton>
-      </div> 
+      </div>
 -->
     </NSpace>
   </NForm>
