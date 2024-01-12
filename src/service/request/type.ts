@@ -11,39 +11,39 @@ export type RequestErrorType = 'axios' | 'http' | 'backend';
 /** 请求错误 */
 export interface RequestError {
   /** 请求服务的错误类型 */
-  type: RequestErrorType;
+  type: RequestErrorType
   /** 错误码 */
-  code: string | number;
+  code: string | number
   /** 错误信息 */
-  msg: string;
+  msg: string
 }
 
 /** 后端接口返回的数据结构配置 */
 export interface BackendResultConfig {
   /** 表示后端请求状态码的属性字段 */
-  codeKey: string;
+  codeKey: string
   /** 表示后端请求数据的属性字段 */
-  dataKey: string;
+  dataKey: string
   /** 表示后端消息的属性字段 */
-  msgKey: string;
+  msgKey: string
   /** 后端业务上定义的成功请求的状态 */
-  successCodes: (string | number)[];
+  successCodes: (string | number)[]
 }
 
 /** 自定义的请求成功结果 */
 export interface SuccessResult<T = any> {
   /** 请求错误 */
-  error: null;
+  error: null
   /** 请求数据 */
-  data: T;
+  data: T
 }
 
 /** 自定义的请求失败结果 */
 export interface FailedResult {
   /** 请求错误 */
-  error: RequestError;
+  error: RequestError
   /** 请求数据 */
-  data: null;
+  data: null
 }
 
 /** 自定义的请求结果 */
@@ -52,12 +52,12 @@ export type RequestResult<T = any> = SuccessResult<T> | FailedResult;
 /** 多个请求数据结果 */
 export type MultiRequestResult<T extends any[]> = T extends [infer First, ...infer Rest]
   ? [First] extends [any]
-    ? Rest extends any[]
-      ? [RequestResult<First>, ...MultiRequestResult<Rest>]
-      : [RequestResult<First>]
-    : Rest extends any[]
-      ? MultiRequestResult<Rest>
-      : []
+      ? Rest extends any[]
+        ? [RequestResult<First>, ...MultiRequestResult<Rest>]
+        : [RequestResult<First>]
+      : Rest extends any[]
+        ? MultiRequestResult<Rest>
+        : []
   : [];
 
 /** 请求结果的适配器函数 */

@@ -12,16 +12,16 @@ declare namespace Api {
    * Backend api module: "auth"
    */
   namespace Auth {
-    type LoginToken = {
+    interface LoginToken {
       token: string
       refreshToken: string
-    };
+    }
 
-    type UserInfo = {
+    interface UserInfo {
       userId: string
       username: string
       roles: string[]
-    };
+    }
   }
 
   /**
@@ -34,9 +34,9 @@ declare namespace Api {
       id: string
     } & RouteRecordRaw;
 
-    type UserRoute = {
+    interface UserRoute {
       routes: MenuRoute[]
       home: string
-    };
+    }
   }
 }

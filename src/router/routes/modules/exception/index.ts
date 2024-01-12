@@ -9,8 +9,8 @@ const EXCEPTION_ROUTE_403 = {
     i18nKey: 'route.403',
     hidden: true,
     constant: true,
-    keepAlive: false
-  }
+    keepAlive: false,
+  },
 };
 
 const EXCEPTION_ROUTE_404 = {
@@ -22,8 +22,8 @@ const EXCEPTION_ROUTE_404 = {
     i18nKey: 'route.404',
     hidden: true,
     constant: true,
-    keepAlive: false
-  }
+    keepAlive: false,
+  },
 };
 
 const EXCEPTION_ROUTE_500 = {
@@ -35,20 +35,20 @@ const EXCEPTION_ROUTE_500 = {
     i18nKey: 'route.500',
     hidden: true,
     constant: true,
-    keepAlive: false
-  }
+    keepAlive: false,
+  },
 };
 
 export const EXCEPTION_ROUTE = {
   path: '/exception',
   name: 'exception',
   component: BaseLayout,
-  redirect: '/404',
+  redirect: '/exception/404',
   meta: {
     title: 'exception',
     hidden: true,
     constant: true,
-    keepAlive: false
+    keepAlive: false,
   },
-  children: [EXCEPTION_ROUTE_403, EXCEPTION_ROUTE_404, EXCEPTION_ROUTE_500]
+  children: [EXCEPTION_ROUTE_403, EXCEPTION_ROUTE_404, EXCEPTION_ROUTE_500],
 };

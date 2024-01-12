@@ -1,11 +1,14 @@
+import { useEventListener } from '@vueuse/core';
+import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import type { Router } from 'vue-router';
-import { defineStore } from 'pinia';
-import { useEventListener } from '@vueuse/core';
+
 import { SetupStoreId } from '@/enum';
 import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
+
 import { useThemeStore } from '../theme';
+
 import {
   filterTabsById,
   filterTabsByIds,
@@ -15,7 +18,7 @@ import {
   getTabByRoute,
   isTabInTabs,
   updateTabByI18nKey,
-  updateTabsByI18nKey
+  updateTabsByI18nKey,
 } from './shared';
 
 export const useTabStore = defineStore(SetupStoreId.Tab, () => {
@@ -60,9 +63,8 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   function initTabStore(currentRoute: App.Global.TabRoute) {
     const storageTabs = localStg.get('globalTabs');
 
-    if (themeStore.tab.cache && storageTabs) {
+    if (themeStore.tab.cache && storageTabs)
       tabs.value = updateTabsByI18nKey(storageTabs);
-    }
 
     addTab(currentRoute);
   }
@@ -78,13 +80,11 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
 
     const isHomeTab = tab.id === homeTab.value?.id;
 
-    if (!isHomeTab && !isTabInTabs(tab.id, tabs.value)) {
+    if (!isHomeTab && !isTabInTabs(tab.id, tabs.value))
       tabs.value.push(tab);
-    }
 
-    if (active) {
+    if (active)
       setActiveTabId(tab.id);
-    }
   }
 
   /**
@@ -147,9 +147,8 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
    */
   async function switchRouteByTab(tab: App.Global.Tab) {
     const fail = await routerPush(tab.fullPath);
-    if (!fail) {
+    if (!fail)
       setActiveTabId(tab.id);
-    }
   }
 
   /**
@@ -183,7 +182,7 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   /**
    * Set new label of tab
    *
-   * @default activeTabId
+   * @default
    * @param label New tab label
    * @param tabId Tab id
    */
@@ -199,7 +198,7 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   /**
    * Reset tab label
    *
-   * @default activeTabId
+   * @default
    * @param tabId Tab id
    */
   function resetTabLabel(tabId?: string) {
@@ -228,9 +227,8 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
   function updateTabsByLocale() {
     tabs.value = updateTabsByI18nKey(tabs.value);
 
-    if (homeTab.value) {
+    if (homeTab.value)
       homeTab.value = updateTabByI18nKey(homeTab.value);
-    }
   }
 
   /** Cache tabs */
@@ -260,6 +258,6 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
     setTabLabel,
     resetTabLabel,
     isTabRetain,
-    updateTabsByLocale
+    updateTabsByLocale,
   };
 });

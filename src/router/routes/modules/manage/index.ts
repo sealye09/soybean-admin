@@ -11,7 +11,7 @@ export const MANAGE_ROUTE = {
     icon: 'carbon:cloud-service-management',
     roles: ['ADMIN'],
     keepAlive: true,
-    alwaysShow: false
+    alwaysShow: false,
   },
   children: [
     {
@@ -22,8 +22,8 @@ export const MANAGE_ROUTE = {
         title: 'manage_role',
         i18nKey: 'route.manage_role',
         icon: 'carbon:user-role',
-        roles: ['ADMIN']
-      }
+        roles: ['ADMIN'],
+      },
     },
     {
       path: '/manage/route',
@@ -34,8 +34,8 @@ export const MANAGE_ROUTE = {
         i18nKey: 'route.manage_route',
         icon: 'material-symbols:route',
         roles: ['ADMIN'],
-        keepAlive: true
-      }
+        keepAlive: true,
+      },
     },
     {
       path: '/manage/user',
@@ -45,8 +45,8 @@ export const MANAGE_ROUTE = {
         title: 'manage_user',
         i18nKey: 'route.manage_user',
         icon: 'ic:round-manage-accounts',
-        roles: ['ADMIN']
-      }
-    }
-  ]
+        roles: ['ADMIN'],
+      },
+    },
+  ],
 };

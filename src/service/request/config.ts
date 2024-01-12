@@ -20,7 +20,10 @@ export const BACKEND_CONFIG: BackendResultConfig = {
 export const REQUEST_TIMEOUT = 60 * 1000;
 
 /** 错误信息的显示时间 */
-export const ERROR_MSG_DURATION = 3 * 1000;
+export const ERROR_MSG_DURATION = 2 * 1000;
+
+/** 信息提示的显示时间 */
+export const INFO_MSG_DURATION = 2 * 1000;
 
 /** 默认的请求错误code */
 export const DEFAULT_REQUEST_ERROR_CODE = 'DEFAULT';

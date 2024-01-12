@@ -1,40 +1,40 @@
 interface Window {
   /** NProgress instance */
-  NProgress?: import('nprogress').NProgress;
+  NProgress?: import('nprogress').NProgress
   /** Loading bar instance */
-  $loadingBar?: import('naive-ui').LoadingBarProviderInst;
+  $loadingBar?: import('naive-ui').LoadingBarProviderInst
   /** Dialog instance */
-  $dialog?: import('naive-ui').DialogProviderInst;
+  $dialog?: import('naive-ui').DialogProviderInst
   /** Message instance */
-  $message?: import('naive-ui').MessageProviderInst;
+  $message?: import('naive-ui').MessageProviderInst
   /** Notification instance */
-  $notification?: import('naive-ui').NotificationProviderInst;
+  $notification?: import('naive-ui').NotificationProviderInst
 }
 
 interface ViewTransition {
-  ready: Promise<void>;
+  ready: Promise<void>
 }
 
 interface Document {
-  startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition;
+  startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition
 }
 
 interface ImportMeta {
-  readonly env: Env.ImportMeta;
+  readonly env: Env.ImportMeta
 }
 
 /** Build time of the project */
 declare const BUILD_TIME: string;
 
 interface PageQuery {
-  pageNum: number;
-  pageSize: number;
+  pageNum: number
+  pageSize: number
 }
 
 /** 分页响应对象 */
 interface PageResult<T> {
   /** 数据列表 */
-  list: T;
+  list: T
   /** 总数 */
-  total: number;
+  total: number
 }

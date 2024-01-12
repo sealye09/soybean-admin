@@ -1,12 +1,14 @@
-import { effectScope, onScopeDispose, ref, watch } from 'vue';
-import { defineStore } from 'pinia';
-import { breakpointsTailwind, useBreakpoints, useTitle } from '@vueuse/core';
 import { useBoolean } from '@sa/hooks';
+import { breakpointsTailwind, useBreakpoints, useTitle } from '@vueuse/core';
+import { defineStore } from 'pinia';
+import { effectScope, onScopeDispose, ref, watch } from 'vue';
+
 import { SetupStoreId } from '@/enum';
-import { router } from '@/router';
 import { $t, setLocale } from '@/locales';
 import { setDayjsLocale } from '@/locales/dayjs';
+import { router } from '@/router';
 import { localStg } from '@/utils/storage';
+
 import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
 import { useThemeStore } from '../theme';
@@ -36,7 +38,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
     setReloadFlag(false);
 
     if (duration > 0) {
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         setTimeout(resolve, duration);
       });
     }
@@ -49,12 +51,12 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
   const localeOptions: App.I18n.LangOption[] = [
     {
       label: '中文',
-      key: 'zh-CN'
+      key: 'zh-CN',
     },
     {
       label: 'English',
-      key: 'en-US'
-    }
+      key: 'en-US',
+    },
   ];
 
   function changeLocale(lang: App.I18n.LangType) {
@@ -81,14 +83,14 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
     // watch isMobile, if is mobile, collapse sider
     watch(
       isMobile,
-      newValue => {
+      (newValue) => {
         if (newValue) {
           setSiderCollapse(true);
 
           themeStore.setThemeLayout('vertical');
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // watch locale
@@ -97,7 +99,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
       updateDocumentTitleByLocale();
 
       // update global menus by locale
-      // routeStore.updateGlobalMenusByLocale();
+      routeStore.updateGlobalMenusByLocale();
 
       // update tabs by locale
       tabStore.updateTabsByLocale();
@@ -134,6 +136,6 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
     toggleSiderCollapse,
     mixSiderFixed,
     setMixSiderFixed,
-    toggleMixSiderFixed
+    toggleMixSiderFixed,
   };
 });

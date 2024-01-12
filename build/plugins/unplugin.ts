@@ -1,11 +1,12 @@
-import process from 'node:process';
 import path from 'node:path';
-import type { PluginOption } from 'vite';
-import Icons from 'unplugin-icons/vite';
-import IconsResolver from 'unplugin-icons/resolver';
-import Components from 'unplugin-vue-components/vite';
-import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+import process from 'node:process';
+
 import { FileSystemIconLoader } from 'unplugin-icons/loaders';
+import IconsResolver from 'unplugin-icons/resolver';
+import Icons from 'unplugin-icons/vite';
+import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+import Components from 'unplugin-vue-components/vite';
+import type { PluginOption } from 'vite';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
 export function setupUnplugin(viteEnv: Env.ImportMeta) {
@@ -21,29 +22,28 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
       compiler: 'vue3',
       customCollections: {
         [collectionName]: FileSystemIconLoader(localIconPath, svg =>
-          svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')
-        )
+          svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')),
       },
       scale: 1,
-      defaultClass: 'inline-block'
+      defaultClass: 'inline-block',
     }),
     Components({
       dts: 'src/typings/components.d.ts',
       types: [{ from: 'vue-router', names: ['RouterLink', 'RouterView'] }],
       resolvers: [
         AntDesignVueResolver({
-          importStyle: false
+          importStyle: false,
         }),
         NaiveUiResolver(),
-        IconsResolver({ customCollections: [collectionName], componentPrefix: VITE_ICON_PREFIX })
-      ]
+        IconsResolver({ customCollections: [collectionName], componentPrefix: VITE_ICON_PREFIX }),
+      ],
     }),
     createSvgIconsPlugin({
       iconDirs: [localIconPath],
       symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
       inject: 'body-last',
-      customDomId: '__SVG_ICON_LOCAL__'
-    })
+      customDomId: '__SVG_ICON_LOCAL__',
+    }),
   ];
 
   return plugins;

@@ -11,11 +11,13 @@ export default antfu({
   typescript: true,
   vue: true,
   unocss: true,
+
+  ignores: ['node_modules', 'dist', 'build', 'public', 'packages'],
 }, {
   files: ['**/*.ts', '**/*.tsx', '**/*.vue', '**/*.js', '**/*.jsx'],
   rules: {
     // 优先使用 type
-    'ts/consistent-type-definitions': ['ignore', 'type'],
+    'ts/consistent-type-definitions': ['error', 'interface'],
     // 导入顺序
     'import/order': [
       'error',
@@ -43,10 +45,10 @@ export default antfu({
         ],
       },
     ],
+    'antfu/if-newline': 'off',
+    'no-console': 'off',
   },
 }, {
-  'files': ['**/*.vue'],
-  rules: {
-
-  }
+  files: ['**/*.vue'],
+  rules: { },
 });

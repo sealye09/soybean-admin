@@ -1,4 +1,5 @@
 import { createLocalforage, createStorage } from '@sa/utils';
+
 import type { StorageType } from '@/typings/storage';
 
 export const localStg = createStorage<StorageType.Local>('local');

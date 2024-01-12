@@ -1,5 +1,6 @@
-import { useRouter } from 'vue-router';
 import type { RouteLocationRaw } from 'vue-router';
+import { useRouter } from 'vue-router';
+
 import { router as globalRouter } from '@/router';
 
 /**
@@ -18,25 +19,22 @@ export function useRouterPush(inSetup = true) {
   const routerBack = router.back;
 
   interface RouterPushOptions {
-    query?: Record<string, string>;
-    params?: Record<string, string>;
+    query?: Record<string, string>
+    params?: Record<string, string>
   }
 
   async function routerPushByKey(key: string, options?: RouterPushOptions) {
     const { query, params } = options || {};
 
     const routeLocation: RouteLocationRaw = {
-      name: key
+      name: key,
     };
 
-    if (query) {
-      routeLocation.query = query;
-    }
+    if (query) routeLocation.query = query;
 
-    if (params) {
-      routeLocation.params = params;
-    }
+    if (params) routeLocation.params = params;
 
+    console.log('🚀 ~ routerPushByKey ~ routeLocation:', routeLocation);
     return routerPush(routeLocation);
   }
 
@@ -55,14 +53,14 @@ export function useRouterPush(inSetup = true) {
 
     const options: RouterPushOptions = {
       params: {
-        module
-      }
+        module,
+      },
     };
 
     const redirect = redirectUrl || route.value.fullPath;
 
     options.query = {
-      redirect
+      redirect,
     };
 
     return routerPushByKey('login', options);
@@ -85,11 +83,7 @@ export function useRouterPush(inSetup = true) {
     const redirect = route.value.query?.redirect as string;
     console.log('🚀 ~ redirectFromLogin ~ redirect:', redirect);
 
-    if (redirect) {
-      routerPush(redirect);
-    } else {
-      toHome();
-    }
+    redirect ? routerPush(redirect) : toHome();
   }
 
   return {
@@ -99,6 +93,6 @@ export function useRouterPush(inSetup = true) {
     routerPushByKey,
     toLogin,
     toggleLoginModule,
-    redirectFromLogin
+    redirectFromLogin,
   };
 }

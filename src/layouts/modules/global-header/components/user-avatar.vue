@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { VNode } from 'vue';
 import { useSvgIconRender } from '@sa/hooks';
-import { useAuthStore } from '@/store/modules/auth';
+import type { VNode } from 'vue';
+import { computed } from 'vue';
+
+import SvgIcon from '@/components/custom/svg-icon.vue';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
-import SvgIcon from '@/components/custom/svg-icon.vue';
+import { useAuthStore } from '@/store/modules/auth';
 
 defineOptions({
-  name: 'UserAvatar'
+  name: 'UserAvatar',
 });
 
 const authStore = useAuthStore();
@@ -23,31 +24,31 @@ type DropdownKey = 'user-center' | 'logout';
 
 type DropdownOption =
   | {
-      key: DropdownKey;
-      label: string;
-      icon?: () => VNode;
-    }
+    key: DropdownKey
+    label: string
+    icon?: () => VNode
+  }
   | {
-      type: 'divider';
-      key: string;
-    };
+    type: 'divider'
+    key: string
+  };
 
 const options = computed(() => {
   const opts: DropdownOption[] = [
     {
       label: $t('common.userCenter'),
       key: 'user-center',
-      icon: SvgIconVNode({ icon: 'ph:user-circle', fontSize: 18 })
+      icon: SvgIconVNode({ icon: 'ph:user-circle', fontSize: 18 }),
     },
     {
       type: 'divider',
-      key: 'divider'
+      key: 'divider',
     },
     {
       label: $t('common.logout'),
       key: 'logout',
-      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 })
-    }
+      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 }),
+    },
   ];
 
   return opts;
@@ -59,18 +60,19 @@ function logout() {
     content: $t('common.logoutConfirm'),
     positiveText: $t('common.confirm'),
     negativeText: $t('common.cancel'),
-    onPositiveClick: () => {
-      authStore.resetStore();
-    }
+    onPositiveClick: async () => {
+      await authStore.logout();
+      routerPushByKey('login');
+    },
   });
 }
 
 function handleDropdown(key: DropdownKey) {
-  if (key === 'logout') {
+  if (key === 'logout')
     logout();
-  } else {
+
+  else
     routerPushByKey(key);
-  }
 }
 </script>
 
@@ -82,7 +84,7 @@ function handleDropdown(key: DropdownKey) {
     <div>
       <ButtonIcon>
         <SvgIcon icon="ph:user-circle" class="text-icon-large" />
-        <span class="text-16px font-medium">{{ authStore.userInfo.username }}</span>
+        <span class="text-16px font-medium">{{ authStore.userInfo?.username ?? '' }}</span>
       </ButtonIcon>
     </div>
   </NDropdown>

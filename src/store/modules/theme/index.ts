@@ -1,9 +1,11 @@
-import { computed, effectScope, onScopeDispose, ref, toRefs, watch } from 'vue';
-import type { Ref } from 'vue';
-import { defineStore } from 'pinia';
 import { useEventListener, usePreferredColorScheme } from '@vueuse/core';
+import { defineStore } from 'pinia';
+import type { Ref } from 'vue';
+import { computed, effectScope, onScopeDispose, ref, toRefs, watch } from 'vue';
+
 import { SetupStoreId } from '@/enum';
 import { localStg } from '@/utils/storage';
+
 import { addThemeVarsToHtml, createThemeToken, getNaiveTheme, initThemeSettings, toggleCssDarkMode } from './shared';
 
 /** Theme store */
@@ -16,9 +18,9 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
 
   /** Dark mode */
   const darkMode = computed(() => {
-    if (settings.value.themeScheme === 'auto') {
+    if (settings.value.themeScheme === 'auto')
       return osTheme.value === 'dark';
-    }
+
     return settings.value.themeScheme === 'dark';
   });
 
@@ -28,7 +30,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     const colors: App.Theme.ThemeColor = {
       primary: themeColor,
       ...otherColor,
-      info: isInfoFollowPrimary ? themeColor : otherColor.info
+      info: isInfoFollowPrimary ? themeColor : otherColor.info,
     };
     return colors;
   });
@@ -79,11 +81,11 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
    * @param color Theme color
    */
   function updateThemeColors(key: App.Theme.ThemeColorKey, color: string) {
-    if (key === 'primary') {
+    if (key === 'primary')
       settings.value.themeColor = color;
-    } else {
+
+    else
       settings.value.otherColor[key] = color;
-    }
   }
 
   /**
@@ -120,10 +122,10 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     // watch dark mode
     watch(
       darkMode,
-      val => {
+      (val) => {
         toggleCssDarkMode(val);
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // themeColors change, update css vars
@@ -132,7 +134,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
       () => {
         setupThemeVarsToHtml();
       },
-      { immediate: true }
+      { immediate: true },
     );
   });
 
@@ -151,6 +153,6 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     setThemeScheme,
     toggleThemeScheme,
     updateThemeColors,
-    setThemeLayout
+    setThemeLayout,
   };
 });

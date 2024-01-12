@@ -2,21 +2,22 @@ import BaseLayout from '@/layouts/base-layout/index.vue';
 
 export const HOME_ROUTE = {
   path: '/',
-  redirect: '/home',
+  name: 'home',
+  redirect: '/dashboard',
   component: BaseLayout,
   children: [
     {
-      path: '/home',
-      name: 'home',
+      path: '/dashboard',
+      name: 'dashboard',
       component: () => import('@/views/home/index.vue'),
       meta: {
-        title: 'dashboard',
+        title: '看板',
+        constant: true,
         icon: 'mdi:monitor-dashboard',
         affix: true,
         keepAlive: true,
         alwaysShow: false,
-        roles: ['ROOT']
-      }
-    }
-  ]
+      },
+    },
+  ],
 };

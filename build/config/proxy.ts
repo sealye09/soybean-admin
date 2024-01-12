@@ -11,7 +11,7 @@ export function createViteProxy(env: Env.ImportMeta) {
 
   if (!isEnableHttpProxy) return undefined;
 
-  const { baseURL, otherBaseURL } = createServiceConfig(env);
+  const { baseURL } = createServiceConfig(env);
 
   const defaultProxyPattern = createProxyPattern();
 
@@ -22,18 +22,6 @@ export function createViteProxy(env: Env.ImportMeta) {
       rewrite: path => path.replace(new RegExp(`^${defaultProxyPattern}`), '')
     }
   };
-
-  const otherURLEntries = Object.entries(otherBaseURL);
-
-  for (const [key, url] of otherURLEntries) {
-    const proxyPattern = createProxyPattern(key as App.Service.OtherBaseURLKey);
-
-    proxy[proxyPattern] = {
-      target: url,
-      changeOrigin: true,
-      rewrite: path => path.replace(new RegExp(`^${proxyPattern}`), '')
-    };
-  }
 
   return proxy;
 }

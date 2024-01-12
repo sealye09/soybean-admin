@@ -1,4 +1,5 @@
 import type { Router } from 'vue-router';
+
 import { $t } from '@/locales';
 
 /**
@@ -8,9 +9,8 @@ import { $t } from '@/locales';
  * @param homeTab Home tab
  */
 export function getAllTabs(tabs: App.Global.Tab[], homeTab?: App.Global.Tab) {
-  if (!homeTab) {
+  if (!homeTab)
     return [];
-  }
 
   const fixedTabs = tabs.filter(tab => tab.fixedIndex !== undefined).sort((a, b) => a.fixedIndex! - b.fixedIndex!);
 
@@ -61,7 +61,7 @@ export function getTabByRoute(route: App.Global.TabRoute) {
     fixedIndex: fixedIndexInTab,
     icon,
     localIcon,
-    i18nKey
+    i18nKey,
   };
 
   return tab;
@@ -82,14 +82,13 @@ export function getDefaultHomeTab(router: Router) {
     label: i18nLabel || homeRouteName,
     routeKey: homeRouteName,
     routePath: homeRoutePath,
-    fullPath: homeRoutePath
+    fullPath: homeRoutePath,
   };
 
   const routes = router.getRoutes();
   const homeRoute = routes.find(route => route.name === homeRouteName);
-  if (homeRoute) {
+  if (homeRoute)
     homeTab = getTabByRoute(homeRoute);
-  }
 
   return homeTab;
 }
@@ -152,7 +151,7 @@ export function getFixedTabIds(tabs: App.Global.Tab[]) {
 function updateTabsLabel(tabs: App.Global.Tab[]) {
   return tabs.map(tab => ({
     ...tab,
-    label: tab.newLabel || tab.label
+    label: tab.newLabel || tab.label,
   }));
 }
 
@@ -166,7 +165,7 @@ export function updateTabByI18nKey(tab: App.Global.Tab) {
 
   return {
     ...tab,
-    label: i18nKey ? $t(i18nKey) : label
+    label: i18nKey ? $t(i18nKey) : label,
   };
 }
 

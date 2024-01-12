@@ -1,7 +1,27 @@
-import type { RouteLocationNormalizedLoaded, RouteRecordRaw, _RouteRecordBase } from 'vue-router';
 import { useSvgIconRender } from '@sa/hooks';
-import { $t } from '@/locales';
+import { type RouteLocationNormalizedLoaded, type RouteRecordRaw, type _RouteRecordBase, useRouter } from 'vue-router';
+
 import SvgIcon from '@/components/custom/svg-icon.vue';
+import { $t } from '@/locales';
+
+/**
+ *
+ * @param name
+ */
+export function getRoutePathByName(name: string) {
+  const router = useRouter();
+  return router.resolve({ name }).path;
+}
+
+/**
+ * Get route path
+ *
+ * @param path string
+ */
+export function getRouteNameByPath(path: string) {
+  const router = useRouter();
+  return router.resolve({ path }).name;
+}
 
 /**
  * Filter auth routes by roles
@@ -10,11 +30,9 @@ import SvgIcon from '@/components/custom/svg-icon.vue';
  * @param roles Roles
  */
 export function filterAuthRoutesByRoles(routes: RouteRecordRaw[], roles: string[]) {
-  const SUPER_ROLE = 'R_SUPER';
+  const SUPER_ROLE = 'ROOT';
 
-  if (roles.includes(SUPER_ROLE)) {
-    return routes;
-  }
+  if (roles.includes(SUPER_ROLE)) return routes;
 
   return routes.flatMap(route => filterAuthRouteByRoles(route, roles));
 }
@@ -28,17 +46,15 @@ export function filterAuthRoutesByRoles(routes: RouteRecordRaw[], roles: string[
 function filterAuthRouteByRoles(route: RouteRecordRaw, roles: string[]) {
   const routeRoles = (route.meta && route.meta.roles) || [];
 
-  if (!routeRoles.length) {
+  if (!routeRoles.length)
     return [route];
-  }
 
   const hasPermission = routeRoles.some(role => roles.includes(role));
 
   const filterRoute = { ...route };
 
-  if (filterRoute.children?.length) {
+  if (filterRoute.children?.length)
     filterRoute.children = filterRoute.children.flatMap(item => filterAuthRouteByRoles(item, roles));
-  }
 
   return hasPermission ? [filterRoute] : [];
 }
@@ -51,7 +67,7 @@ function filterAuthRouteByRoles(route: RouteRecordRaw, roles: string[]) {
 export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
   const menus: App.Global.Menu[] = [];
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     if (!route.meta?.hidden) {
       const menu = getGlobalMenuByBaseRoute(route);
       const meta = route?.meta;
@@ -99,19 +115,18 @@ export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
 export function updateLocaleOfGlobalMenus(menus: App.Global.Menu[]) {
   const result: App.Global.Menu[] = [];
 
-  menus.forEach(menu => {
+  menus.forEach((menu) => {
     const { i18nKey, label, children } = menu;
 
     const newLabel = i18nKey ? $t(i18nKey) : label;
 
     const newMenu: App.Global.Menu = {
       ...menu,
-      label: newLabel
+      label: newLabel,
     };
 
-    if (children?.length) {
+    if (children?.length)
       newMenu.children = updateLocaleOfGlobalMenus(children);
-    }
 
     result.push(newMenu);
   });
@@ -138,7 +153,7 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | RouteRe
     i18nKey,
     routeKey: name as string,
     routePath: path as string,
-    icon: SvgIconVNode({ icon, localIcon, fontSize: 20 })
+    icon: SvgIconVNode({ icon, localIcon, fontSize: 20 }),
   };
 
   return menu;
@@ -152,12 +167,11 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | RouteRe
 export function getCacheRouteNames(routes: RouteRecordRaw[]) {
   const cacheNames: string[] = [];
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     // only get last two level route, which has component
-    route.children?.forEach(child => {
-      if (child.component && child.meta?.keepAlive) {
+    route.children?.forEach((child) => {
+      if (child.component && child.meta?.keepAlive)
         cacheNames.push(child.name as string);
-      }
     });
   });
 
@@ -183,13 +197,11 @@ export function isRouteExistByRouteName(routeName: string, routes: RouteRecordRa
 function recursiveGetIsRouteExistByRouteName(route: RouteRecordRaw, routeName: string) {
   let isExist = route.name === routeName;
 
-  if (isExist) {
+  if (isExist)
     return true;
-  }
 
-  if (route.children && route.children.length) {
+  if (route.children && route.children.length)
     isExist = route.children.some(item => recursiveGetIsRouteExistByRouteName(item, routeName));
-  }
 
   return isExist;
 }
@@ -203,14 +215,13 @@ function recursiveGetIsRouteExistByRouteName(route: RouteRecordRaw, routeName: s
 export function getSelectedMenuKeyPathByKey(selectedKey: string, menus: App.Global.Menu[]) {
   const keyPath: string[] = [];
 
-  menus.some(menu => {
+  menus.some((menu) => {
     const path = findMenuPath(selectedKey, menu);
 
     const find = Boolean(path?.length);
 
-    if (find) {
+    if (find)
       keyPath.push(...path!);
-    }
 
     return find;
   });
@@ -230,15 +241,13 @@ function findMenuPath(targetKey: string, menu: App.Global.Menu): string[] | null
   function dfs(item: App.Global.Menu): boolean {
     path.push(item.key);
 
-    if (item.key === targetKey) {
+    if (item.key === targetKey)
       return true;
-    }
 
     if (item.children) {
       for (const child of item.children) {
-        if (dfs(child)) {
+        if (dfs(child))
           return true;
-        }
       }
     }
 
@@ -247,9 +256,8 @@ function findMenuPath(targetKey: string, menu: App.Global.Menu): string[] | null
     return false;
   }
 
-  if (dfs(menu)) {
+  if (dfs(menu))
     return path;
-  }
 
   return null;
 }
@@ -263,12 +271,11 @@ function transformMenuToBreadcrumb(menu: App.Global.Menu) {
   const { children, ...rest } = menu;
 
   const breadcrumb: App.Global.Breadcrumb = {
-    ...rest
+    ...rest,
   };
 
-  if (children?.length) {
+  if (children?.length)
     breadcrumb.options = children.map(transformMenuToBreadcrumb);
-  }
 
   return breadcrumb;
 }
@@ -281,7 +288,7 @@ function transformMenuToBreadcrumb(menu: App.Global.Menu) {
  */
 export function getBreadcrumbsByRoute(
   route: RouteLocationNormalizedLoaded,
-  menus: App.Global.Menu[]
+  menus: App.Global.Menu[],
 ): App.Global.Breadcrumb[] {
   const key = route.name as string;
   const activeKey = route.meta?.activeMenu;
@@ -297,9 +304,8 @@ export function getBreadcrumbsByRoute(
 
     if (menu.children?.length) {
       const result = getBreadcrumbsByRoute(route, menu.children);
-      if (result.length > 0) {
+      if (result.length > 0)
         return [transformMenuToBreadcrumb(menu), ...result];
-      }
     }
   }
 

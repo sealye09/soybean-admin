@@ -1,4 +1,5 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import {
   DEFAULT_REQUEST_ERROR_CODE,
   DEFAULT_REQUEST_ERROR_MSG,
@@ -6,15 +7,12 @@ import {
   NETWORK_ERROR_CODE,
   NETWORK_ERROR_MSG,
   REQUEST_TIMEOUT_CODE,
-  REQUEST_TIMEOUT_MSG
+  REQUEST_TIMEOUT_MSG,
 } from './config';
+import { showErrorMsg } from './message';
 import type { BackendResultConfig, FailedResult, RequestError, SuccessResult } from './type';
 
 type ErrorStatus = keyof typeof ERROR_STATUS;
-
-export function showErrorMsg(error: RequestError) {
-  console.log('showErrorMsg', error);
-}
 
 /**
  * 处理axios请求失败的错误
@@ -25,19 +23,21 @@ export function handleAxiosError(axiosError: AxiosError) {
   const error: RequestError = {
     type: 'axios',
     code: DEFAULT_REQUEST_ERROR_CODE,
-    msg: DEFAULT_REQUEST_ERROR_MSG
+    msg: DEFAULT_REQUEST_ERROR_MSG,
   };
 
   if (axiosError.message === 'Network Error') {
     // 请求超时
     Object.assign(error, { code: NETWORK_ERROR_CODE, msg: NETWORK_ERROR_MSG });
-  } else if (axiosError.code === REQUEST_TIMEOUT_CODE && axiosError.message.includes('timeout')) {
+  }
+  else if (axiosError.code === REQUEST_TIMEOUT_CODE && axiosError.message.includes('timeout')) {
     // 超时错误
     Object.assign(error, {
       code: REQUEST_TIMEOUT_CODE,
-      msg: REQUEST_TIMEOUT_MSG
+      msg: REQUEST_TIMEOUT_MSG,
     });
-  } else {
+  }
+  else {
     // 请求不成功的错误
     const errorCode: ErrorStatus = (axiosError.response?.status as ErrorStatus) || 'DEFAULT';
     const msg = ERROR_STATUS[errorCode];
@@ -57,13 +57,14 @@ export function handleResponseError(response: AxiosResponse) {
   const error: RequestError = {
     type: 'axios',
     code: DEFAULT_REQUEST_ERROR_CODE,
-    msg: DEFAULT_REQUEST_ERROR_MSG
+    msg: DEFAULT_REQUEST_ERROR_MSG,
   };
 
   if (!window.navigator.onLine) {
     // 网路错误
     Object.assign(error, { code: NETWORK_ERROR_CODE, msg: NETWORK_ERROR_MSG });
-  } else {
+  }
+  else {
     // 请求成功的状态码非200的错误
     const errorCode: ErrorStatus = response.status as ErrorStatus;
     const msg = ERROR_STATUS[errorCode] || DEFAULT_REQUEST_ERROR_MSG;
@@ -83,7 +84,7 @@ export function handleBackendError(backendResult: Record<string, any>, config: B
   const error: RequestError = {
     type: 'backend',
     code: backendResult[codeKey],
-    msg: backendResult[msgKey]
+    msg: backendResult[msgKey],
   };
   showErrorMsg(error);
   return error;
@@ -119,13 +120,13 @@ export async function handleServiceResult<T = any>(error: RequestError | null, d
   if (error) {
     const fail: FailedResult = {
       error,
-      data: null
+      data: null,
     };
     return fail;
   }
   const success: SuccessResult<T> = {
     error: null,
-    data
+    data,
   };
   return success;
 }
