@@ -7,7 +7,7 @@ export const SERVICE_SUCCESS_CODE: (string | number)[] = ['00000'];
 export const NO_ERROR_MSG_CODE: (string | number)[] = [];
 
 /** Token失效需要刷新token的code(这里的66666只是个例子，需要将后端表示token过期的code填进来) */
-export const REFRESH_TOKEN_CODE: (string | number)[] = ['00001'];
+export const REFRESH_TOKEN_CODE: (string | number)[] = ['A0230'];
 
 export const BACKEND_CONFIG: BackendResultConfig = {
   codeKey: 'code',

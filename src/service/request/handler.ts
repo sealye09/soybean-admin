@@ -1,4 +1,9 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useRouter } from 'vue-router';
+
+import { LOGIN_ROUTE } from '@/router/routes';
+import { useAuthStore } from '@/store/modules/auth';
+import { useRouteStore } from '@/store/modules/route';
 
 import {
   DEFAULT_REQUEST_ERROR_CODE,
@@ -96,22 +101,12 @@ export function handleBackendError(backendResult: Record<string, any>, config: B
  * @param axiosConfig - Token失效时的请求配置
  */
 export async function handleRefreshToken(axiosConfig: AxiosRequestConfig) {
-  // const { resetAuthStore } = useAuthStore();
-  // const refreshToken = localStg.get('refreshToken') || '';
-  // if (data) {
-  //   localStg.set('token', data.token);
-  //   localStg.set('refreshToken', data.refreshToken);
-
-  //   const config = { ...axiosConfig };
-  //   if (config.headers) {
-  //     config.headers.Authorization = data.token;
-  //   }
-  //   return config;
-  // }
-
-  // resetAuthStore();
-  axiosConfig.data = {};
-  console.error('handleRefreshToken 未配置');
+  const authStore = useAuthStore();
+  const router = useRouter();
+  router.push({ name: LOGIN_ROUTE.name, query: { redirect: router.currentRoute.value.fullPath } });
+  authStore.resetStore();
+  window.$message?.success('登录已过期，请重新登录');
+  axiosConfig.headers?.Authorization && delete axiosConfig.headers.Authorization;
   return null;
 }
 

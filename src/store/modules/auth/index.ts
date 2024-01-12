@@ -87,6 +87,7 @@ export const useAuthStore = defineStore(
     /** Logout */
     async function logout() {
       logoutApi();
+      routeStore.resetStore();
       resetStore();
     }
 

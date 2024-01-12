@@ -1,3 +1,5 @@
+import type { RouteLocationNormalized } from 'vue-router';
+
 import BaseLayout from '@/layouts/base-layout/index.vue';
 
 export const HOME_ROUTE = {
@@ -12,7 +14,6 @@ export const HOME_ROUTE = {
       component: () => import('@/views/home/index.vue'),
       meta: {
         title: '看板',
-        constant: true,
         icon: 'mdi:monitor-dashboard',
         affix: true,
         keepAlive: true,
@@ -21,3 +22,5 @@ export const HOME_ROUTE = {
     },
   ],
 };
+
+export const isHomeRoute = (route: RouteLocationNormalized) => route.name === HOME_ROUTE.name;

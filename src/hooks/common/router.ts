@@ -79,10 +79,7 @@ export function useRouterPush(inSetup = true) {
 
   /** Redirect from login */
   async function redirectFromLogin() {
-    console.log('redirect');
     const redirect = route.value.query?.redirect as string;
-    console.log('🚀 ~ redirectFromLogin ~ redirect:', redirect);
-
     redirect ? routerPush(redirect) : toHome();
   }
 

@@ -1,4 +1,4 @@
-import { router } from '..';
+import type { RouteLocationNormalized } from 'vue-router';
 
 import { ERROR_ROUTE } from './modules/error';
 import { EXCEPTION_ROUTE } from './modules/exception';
@@ -6,6 +6,13 @@ import { HOME_ROUTE } from './modules/home';
 import { LOGIN_ROUTE } from './modules/login';
 import { MANAGE_ROUTE } from './modules/manage';
 import { MULTI_ROUTE } from './modules/multi';
+
+export * from './modules/error';
+export * from './modules/exception';
+export * from './modules/home';
+export * from './modules/login';
+export * from './modules/manage';
+export * from './modules/multi';
 
 export const ROOT_ROUTE = {
   name: 'root',
@@ -18,6 +25,8 @@ export const ROOT_ROUTE = {
     hidden: true,
   },
 };
+
+export const isRootRoute = (route: RouteLocationNormalized) => route.name === ROOT_ROUTE.name;
 
 export const ANY_ROUTE = {
   name: 'any',
@@ -36,7 +45,7 @@ export const constantRoutes = [
   LOGIN_ROUTE,
   HOME_ROUTE,
   ERROR_ROUTE,
-  // ANY_ROUTE,
+  ANY_ROUTE,
 ];
 
 export const dynamicRoutes = [
@@ -44,7 +53,3 @@ export const dynamicRoutes = [
   MULTI_ROUTE,
   EXCEPTION_ROUTE,
 ];
-
-export function addAnyRoute() {
-  router.addRoute(ANY_ROUTE);
-}

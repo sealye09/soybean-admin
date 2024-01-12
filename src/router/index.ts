@@ -2,6 +2,8 @@ import type { App } from 'vue';
 import type { RouteRecordRaw, RouterHistory } from 'vue-router';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
+import { useRouteStore } from '@/store/modules/route';
+
 import { createRouterGuard } from './guard';
 import { constantRoutes } from './routes';
 
@@ -32,13 +34,21 @@ export function resetRouter() {
 export function addRoutes(filteredRoutes: RouteRecordRaw[]) {
   filteredRoutes.forEach((route) => {
     const { name } = route;
-    console.log('🚀 ~ filteredRoutes.forEach ~ name:', name);
     if (name && !router.hasRoute(name)) router.addRoute(route);
   });
 }
 
 /** Setup Vue Router */
 export async function setupRouter(app: App) {
+  // await router list init
+  /**
+   * the key to solve lots problems in dynamic routing
+   * 1. white screen：router created but not matched in guard
+   * 2. to 404：404page matched any path，so，matched and then enter guard
+   * 3. dead in guard：
+   */
+  const routeStore = useRouteStore();
+  await routeStore.initAuthRoute();
   app.use(router);
   createRouterGuard(router);
   await router.isReady();

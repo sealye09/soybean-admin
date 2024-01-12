@@ -1,3 +1,5 @@
+import type { RouteLocationNormalized } from 'vue-router';
+
 export const LOGIN_ROUTE = {
   path: '/login',
   name: 'login',
@@ -8,6 +10,8 @@ export const LOGIN_ROUTE = {
     hidden: true,
     keepAlive: true,
     alwaysShow: false,
-    constant: true
-  }
+    constant: true,
+  },
 };
+
+export const isLoginRoute = (route: RouteLocationNormalized) => route.name === LOGIN_ROUTE.name;

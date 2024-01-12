@@ -5,7 +5,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { SetupStoreId } from '@/enum';
 import { addRoutes, router } from '@/router';
-import { addAnyRoute, constantRoutes, dynamicRoutes } from '@/router/routes';
+import { constantRoutes, dynamicRoutes } from '@/router/routes';
 import { listRoutes } from '@/service';
 
 import { useAppStore } from '../app';
@@ -111,7 +111,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   /** Reset store */
   async function resetStore() {
     const routeStore = useRouteStore();
-
+    // resetRouter();
     routeStore.$reset();
   }
 
@@ -128,8 +128,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   /** Init static auth route */
   async function initStaticAuthRoute() {
     if (!authStore.userInfo) return;
+    setIsInitAuthRoute(false);
     console.log('静态路由模式：初始化中');
-    addAnyRoute();
     const filteredAuthRoutes = filterAuthRoutesByRoles(dynamicRoutes as RouteRecordRaw[], authStore.userInfo.roles);
 
     handleAuthRoutes(filteredAuthRoutes);
@@ -141,12 +141,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   /** Init dynamic auth route */
   async function initDynamicAuthRoute() {
     console.log('动态路由模式：初始化中');
+    setIsInitAuthRoute(false);
     const { data } = await listRoutes();
 
     handleAuthRoutes(data as RouteRecordRaw[]);
 
-    // setRouteHome(home);
-
+    // routeHome.value = data.home
     // handleUpdateRootRouteRedirect(home);
 
     setIsInitAuthRoute(true);
@@ -165,19 +165,21 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   }
 
   /**
-   * Update root route redirect when auth route mode is dynamic 动态路由模式下，更新根路由的重定向
+   * Update root route redirect when auth route mode is dynamic
+   * 动态路由模式下，更新根路由的重定向
    *
    * @param redirectKey Redirect route key
    */
-  function handleUpdateRootRouteRedirect(redirectKey: string) {
-    // const redirect = getRoutePath(redirectKey);
-    // if (redirect) {
-    //   const rootRoute = { ...ROOT_ROUTE, redirect };
-    //   router.removeRoute(rootRoute.name);
-    //   const [rootVueRoute] = getAuthVueRoutes([rootRoute]);
-    //   router.addRoute(rootVueRoute);
-    // }
-  }
+  // function handleUpdateRootRouteRedirect(redirectKey: string) {
+  //   // const redirect = getRoutePath(redirectKey);
+  //   // if (redirect) {
+  //   //   const rootRoute = { ...ROOT_ROUTE, redirect };
+  //   //   router.removeRoute(rootRoute.name);
+  //   //   const [rootVueRoute] = getAuthVueRoutes([rootRoute]);
+  //   //   router.addRoute(rootVueRoute);
+  //   // }
+  //   console.log('动态路由模式下，更新根路由的重定向');
+  // }
 
   /**
    * Get is auth route exist
