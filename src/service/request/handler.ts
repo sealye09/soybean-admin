@@ -30,25 +30,31 @@ function handleError(err: RequestError) {
   showErrorMsg(err);
 
   if (code === '401' || code === 'A0230') {
-    window.$dialog?.error({
-      title: '登录已过期',
-      content: '登录已过期，请重新登录',
-      closable: false,
-      positiveText: '去登录',
-      onPositiveClick: () => {
-        const authStore = useAuthStore();
-        const routeStore = useRouteStore();
+    const path = window.location.pathname;
+    if (!path.includes(LOGIN_ROUTE.path)) {
+      console.log('🚀 ~ handleError ~ path:', path);
 
-        if (routeStore.isInitAuthRoute) {
-          authStore.resetStore();
-          routeStore.resetStore();
-        } else {
-          localStg.remove('auth-store' as any);
-          localStg.remove('route-store' as any);
-          localStg.remove('token');
-        }
-      },
-    });
+      window.$dialog?.error({
+        title: '登录已过期',
+        content: '登录已过期，请重新登录',
+        closable: false,
+        maskClosable: false,
+        positiveText: '去登录',
+        onPositiveClick: () => {
+          const authStore = useAuthStore();
+          const routeStore = useRouteStore();
+
+          if (routeStore.isInitAuthRoute) {
+            authStore.resetStore();
+            routeStore.resetStore();
+          } else {
+            localStg.remove('auth-store' as any);
+            localStg.remove('route-store' as any);
+            localStg.remove('token');
+          }
+        },
+      });
+    }
   }
 }
 

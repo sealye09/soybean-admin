@@ -10,7 +10,6 @@ import {
   isErrorRoute,
   isExceptionRoute,
   isLoginRoute,
-  isRootRoute,
 } from '../routes';
 
 const ROOT_USER = 'root';
@@ -63,8 +62,19 @@ export function createPermissionGuard(router: Router) {
       },
       // 4. 用户已登录，且有权限，则放行
       {
-        condition: isLogin && needLogin && hasPermission,
-        callback: () => next(),
+        condition: isLogin && needLogin && hasPermission && !!to.matched.length,
+        callback: () => {
+          console.log('4.1 匹配上');
+          next();
+        },
+      },
+      // 4. 用户已登录，且有权限，则放行
+      {
+        condition: isLogin && needLogin && hasPermission && !to.matched.length,
+        callback: () => {
+          console.log('4.2 没匹配上');
+          next({ ...to });
+        },
       },
       // 5. 用户已登录，但是没有权限，则跳转到403页面
       {

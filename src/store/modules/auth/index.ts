@@ -85,9 +85,12 @@ export const useAuthStore = defineStore(
 
     /** Logout */
     async function logout() {
-      logoutApi();
+      await logoutApi();
       routeStore.resetStore();
       resetStore();
+      window.$message?.success('退出成功', {
+        duration: INFO_MSG_DURATION,
+      });
     }
 
     /** 双token时，使用refreshToken更新token */

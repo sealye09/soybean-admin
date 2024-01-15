@@ -47,8 +47,9 @@ export async function setupRouter(app: App) {
    * 2. to 404：404page matched any path，so，matched and then enter guard
    * 3. dead in guard：
    */
-  // const auth = useAuthStore();
-  // await auth.updateInfo();
+  const auth = useAuthStore();
+  await auth.updateInfo();
+
   app.use(router);
   createRouterGuard(router);
   await router.isReady();

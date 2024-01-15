@@ -13,7 +13,7 @@ defineOptions({
 });
 
 const authStore = useAuthStore();
-const { routerPushByKey, toLogin } = useRouterPush();
+const { toLogin } = useRouterPush();
 const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
 function loginOrRegister() {
@@ -24,13 +24,13 @@ type DropdownKey = 'user-center' | 'logout';
 
 type DropdownOption =
   | {
-    key: DropdownKey
-    label: string
-    icon?: () => VNode
+    key: DropdownKey;
+    label: string;
+    icon?: () => VNode;
   }
   | {
-    type: 'divider'
-    key: string
+    type: 'divider';
+    key: string;
   };
 
 const options = computed(() => {
@@ -62,14 +62,13 @@ function logout() {
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await authStore.logout();
-      routerPushByKey('login');
     },
   });
 }
 
 function handleDropdown(key: DropdownKey) {
-  if (key === 'logout')logout();
-  else routerPushByKey(key);
+  if (key === 'logout') logout();
+  else window.$message?.info(key);
 }
 </script>
 
