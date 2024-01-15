@@ -108,12 +108,14 @@ export default class CustomAxiosInstance {
         }
 
         // 网络错误
-        const error = handleResponseError(response);
+        // const error = handleResponseError(response);
+        const error = handleBackendError(data, this.backendConfig);
         return handleServiceResult(error, null);
       }) as unknown as (response: AxiosResponse<any, any>) => Promise<AxiosResponse<any, any>>,
       (axiosError: AxiosError) => {
         // 请求失败 axios错误
-        const error = handleAxiosError(axiosError);
+        // const error = handleAxiosError(axiosError);
+        const error = handleBackendError(axiosError.response?.data as any, this.backendConfig);
         return handleServiceResult(error, null);
       },
     );

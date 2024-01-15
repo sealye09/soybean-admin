@@ -5,7 +5,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { SetupStoreId } from '@/enum';
 import { addRoutes, router } from '@/router';
-import { constantRoutes, dynamicRoutes } from '@/router/routes';
+import { addAnyRoute, constantRoutes, dynamicRoutes } from '@/router/routes';
 import { listRoutes } from '@/service';
 
 import { useAppStore } from '../app';
@@ -64,7 +64,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
    * @param routeKey
    */
   function addCacheRoutes(routeKey: string) {
-    if (cacheRoutes.value.includes(routeKey)) return;
+    if (cacheRoutes.value.includes(routeKey))
+      return;
 
     cacheRoutes.value.push(routeKey);
   }
@@ -77,7 +78,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   function removeCacheRoutes(routeKey: string) {
     const index = cacheRoutes.value.findIndex(item => item === routeKey);
 
-    if (index === -1) return;
+    if (index === -1)
+      return;
 
     cacheRoutes.value.splice(index, 1);
   }
@@ -117,8 +119,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init auth route */
   async function initAuthRoute() {
-    if (authRouteMode.value === 'static') await initStaticAuthRoute();
-    else await initDynamicAuthRoute();
+    if (isInitAuthRoute.value) return;
+
+    if (authRouteMode.value === 'static')
+      await initStaticAuthRoute();
+    else
+      await initDynamicAuthRoute();
 
     tabStore.initHomeTab(router);
   }
@@ -131,6 +137,11 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const filteredAuthRoutes = filterAuthRoutesByRoles(dynamicRoutes as RouteRecordRaw[], authStore.userInfo.roles);
 
     handleAuthRoutes(filteredAuthRoutes);
+    /**
+     * any route 需要在权限路由添加完成后添加
+     * 被 any route 匹配到直接到 404
+     */
+    addAnyRoute();
 
     setIsInitAuthRoute(true);
     console.log('路由初始化完成！');
@@ -140,24 +151,20 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   async function initDynamicAuthRoute() {
     if (!authStore.userInfo) return;
 
-    try {
-      console.log('动态路由模式：初始化中');
-      setIsInitAuthRoute(false);
-      const { data } = await listRoutes();
+    console.log('动态路由模式：初始化中');
+    setIsInitAuthRoute(false);
+    console.log('获取数据...');
+    const { data } = await listRoutes();
 
+    if (data) {
       const filteredAuthRoutes = filterAsyncRoutesByRoles(data as RouteRecordRaw[], authStore.userInfo.roles);
-      console.log('🚀 ~ initDynamicAuthRoute ~ filteredAuthRoutes:', filteredAuthRoutes);
-
       handleAuthRoutes(filteredAuthRoutes);
-      // routeHome.value = data.home
-      // handleUpdateRootRouteRedirect(home);
-
+      addAnyRoute();
       setIsInitAuthRoute(true);
       console.log('路由初始化完成！');
-    }
-    catch (e) {
-      console.log(e);
-      // to login
+    } else {
+      console.log('获取数据失败！');
+      setIsInitAuthRoute(false);
       authStore.logout();
     }
   }

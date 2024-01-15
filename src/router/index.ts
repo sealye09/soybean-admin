@@ -2,7 +2,7 @@ import type { App } from 'vue';
 import type { RouteRecordRaw, RouterHistory } from 'vue-router';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
-import { useRouteStore } from '@/store/modules/route';
+import { useAuthStore } from '@/store';
 
 import { createRouterGuard } from './guard';
 import { constantRoutes } from './routes';
@@ -47,8 +47,8 @@ export async function setupRouter(app: App) {
    * 2. to 404：404page matched any path，so，matched and then enter guard
    * 3. dead in guard：
    */
-  const routeStore = useRouteStore();
-  await routeStore.initAuthRoute();
+  // const auth = useAuthStore();
+  // await auth.updateInfo();
   app.use(router);
   createRouterGuard(router);
   await router.isReady();

@@ -21,7 +21,7 @@ export const useAuthStore = defineStore(
     const token = ref<string>();
     const tokenType = ref<string>();
     const refreshToken = ref<string>();
-    const userInfo = ref<UserInfo>();
+    const userInfo = ref<UserInfo | null>(null);
 
     const isLogin = computed(() => Boolean(token.value));
 
@@ -30,7 +30,8 @@ export const useAuthStore = defineStore(
       const authStore = useAuthStore();
       authStore.$reset();
 
-      if (!route.value.meta.constant) await toLogin();
+      if (!route.value.meta.constant)
+        await toLogin();
       routeStore.resetStore();
     }
 
@@ -42,8 +43,8 @@ export const useAuthStore = defineStore(
       startLoading();
 
       try {
-        const { data } = await loginApi(LoginData);
-        if (!data) throw new Error('Login failed');
+        const { data, error } = await loginApi(LoginData);
+        if (!data || error) return;
 
         // 存储token信息
         token.value = data.accessToken;
@@ -55,32 +56,31 @@ export const useAuthStore = defineStore(
 
         await redirectFromLogin();
 
-        if (routeStore.isInitAuthRoute) {
-          window.$notification?.success({
-            title: $t('page.login.common.loginSuccess'),
-            content: $t('page.login.common.welcomeBack', {
-              username: userInfo.value?.username,
-            }),
-            duration: INFO_MSG_DURATION,
-          });
-        }
-      }
-      catch (err) {
+        window.$notification?.success({
+          title: $t('page.login.common.loginSuccess'),
+          content: $t('page.login.common.welcomeBack', {
+            username: userInfo.value?.username,
+          }),
+          duration: INFO_MSG_DURATION,
+        });
+      } catch (err) {
         console.log(err);
         resetStore();
-      }
-      finally {
+      } finally {
         endLoading();
       }
     }
 
     async function updateInfo() {
-      const { data: info } = await getUserInfoApi();
-      if (!info) throw new Error('Get user info failed');
-      await routeStore.initAuthRoute();
+      const { data, error } = await getUserInfoApi();
+      if (!data) {
+        window.$message?.error(error.msg);
+      } else {
+        await routeStore.initAuthRoute();
 
-      // update user info
-      userInfo.value = info;
+        // update user info
+        userInfo.value = data;
+      }
     }
 
     /** Logout */

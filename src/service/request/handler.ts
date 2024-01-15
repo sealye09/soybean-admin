@@ -2,7 +2,9 @@ import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useRouter } from 'vue-router';
 
 import { LOGIN_ROUTE } from '@/router/routes';
+import { useRouteStore } from '@/store';
 import { useAuthStore } from '@/store/modules/auth';
+import { localStg } from '@/utils/storage';
 
 import {
   DEFAULT_REQUEST_ERROR_CODE,
@@ -19,6 +21,38 @@ import type { BackendResultConfig, FailedResult, RequestError, SuccessResult } f
 type ErrorStatus = keyof typeof ERROR_STATUS;
 
 /**
+ * 处理常见的异常
+ * router 没挂载
+ * @param err
+ */
+function handleError(err: RequestError) {
+  const code = err.code.toString();
+  showErrorMsg(err);
+
+  if (code === '401' || code === 'A0230') {
+    window.$dialog?.error({
+      title: '登录已过期',
+      content: '登录已过期，请重新登录',
+      closable: false,
+      positiveText: '去登录',
+      onPositiveClick: () => {
+        const authStore = useAuthStore();
+        const routeStore = useRouteStore();
+
+        if (routeStore.isInitAuthRoute) {
+          authStore.resetStore();
+          routeStore.resetStore();
+        } else {
+          localStg.remove('auth-store' as any);
+          localStg.remove('route-store' as any);
+          localStg.remove('token');
+        }
+      },
+    });
+  }
+}
+
+/**
  * 处理axios请求失败的错误
  *
  * @param axiosError - 错误
@@ -33,19 +67,17 @@ export function handleAxiosError(axiosError: AxiosError) {
   if (axiosError.message === 'Network Error') {
     // 请求超时
     Object.assign(error, { code: NETWORK_ERROR_CODE, msg: NETWORK_ERROR_MSG });
-  }
-  else if (axiosError.code === REQUEST_TIMEOUT_CODE && axiosError.message.includes('timeout')) {
+  } else if (axiosError.code === REQUEST_TIMEOUT_CODE && axiosError.message.includes('timeout')) {
     // 超时错误
     Object.assign(error, { code: REQUEST_TIMEOUT_CODE, msg: REQUEST_TIMEOUT_MSG });
-  }
-  else {
+  } else {
     // 请求不成功的错误
     const errorCode: ErrorStatus = (axiosError.response?.status as ErrorStatus) || 'DEFAULT';
     const msg = ERROR_STATUS[errorCode];
     Object.assign(error, { code: errorCode, msg });
   }
 
-  showErrorMsg(error);
+  handleError(error);
   return error;
 }
 
@@ -64,14 +96,13 @@ export function handleResponseError(response: AxiosResponse) {
   if (!window.navigator.onLine) {
     // 网路错误
     Object.assign(error, { code: NETWORK_ERROR_CODE, msg: NETWORK_ERROR_MSG });
-  }
-  else {
+  } else {
     // 请求成功的状态码非200的错误
     const errorCode: ErrorStatus = response.status as ErrorStatus;
     const msg = ERROR_STATUS[errorCode] || DEFAULT_REQUEST_ERROR_MSG;
     Object.assign(error, { type: 'http', code: errorCode, msg });
   }
-  showErrorMsg(error);
+  handleError(error);
   return error;
 }
 
@@ -87,7 +118,7 @@ export function handleBackendError(backendResult: Record<string, any>, config: B
     code: backendResult[codeKey],
     msg: backendResult[msgKey],
   };
-  showErrorMsg(error);
+  handleError(error);
   return error;
 }
 

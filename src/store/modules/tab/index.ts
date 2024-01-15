@@ -149,8 +149,7 @@ export const useTabStore = defineStore(
      */
     async function switchRouteByTab(tab: App.Global.Tab) {
       const fail = await routerPush(tab.fullPath);
-      if (!fail)
-        setActiveTabId(tab.id);
+      if (!fail) setActiveTabId(tab.id);
     }
 
     /**
@@ -236,14 +235,11 @@ export const useTabStore = defineStore(
     /** Cache tabs */
     function cacheTabs() {
       if (!themeStore.tab.cache) return;
-
       localStg.set('globalTabs', tabs.value);
     }
 
     // cache tabs when page is closed or refreshed
-    useEventListener(window, 'beforeunload', () => {
-      cacheTabs();
-    });
+    useEventListener(window, 'beforeunload', () => cacheTabs());
 
     return {
     /** All tabs */

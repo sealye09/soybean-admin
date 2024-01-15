@@ -15,3 +15,9 @@ export function setupStore(app: App) {
   app.use(pinia);
   subscribeAuthStore();
 }
+
+export * from './modules/app';
+export * from './modules/auth';
+export * from './modules/route';
+export * from './modules/tab';
+export * from './modules/theme';

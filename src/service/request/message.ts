@@ -22,8 +22,8 @@ export function showErrorMsg(error: RequestError) {
   if (!error.msg || NO_ERROR_MSG_CODE.includes(error.code) || hasErrorMsg(error)) return;
 
   addErrorMsg(error);
-  window.console.warn(error.code, error.msg);
-  // window.$message?.error(error.msg, { duration: ERROR_MSG_DURATION });
+  console.log(error);
+  window.$message?.error(error.msg, { duration: ERROR_MSG_DURATION });
   setTimeout(() => {
     removeErrorMsg(error);
   }, ERROR_MSG_DURATION);

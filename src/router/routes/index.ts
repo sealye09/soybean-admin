@@ -1,5 +1,7 @@
 import type { RouteLocationNormalized } from 'vue-router';
 
+import { router } from '..';
+
 import { ERROR_ROUTE } from './modules/error';
 import { EXCEPTION_ROUTE } from './modules/exception';
 import { HOME_ROUTE } from './modules/home';
@@ -46,8 +48,12 @@ export const constantRoutes = [
   HOME_ROUTE,
   EXCEPTION_ROUTE,
   ERROR_ROUTE,
-  ANY_ROUTE,
+  // ANY_ROUTE,
 ];
+
+export function addAnyRoute() {
+  router.addRoute(ANY_ROUTE);
+}
 
 export const dynamicRoutes = [
   SYSTEM_ROUTE,

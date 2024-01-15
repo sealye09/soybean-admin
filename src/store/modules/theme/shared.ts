@@ -10,10 +10,9 @@ const DARK_CLASS = 'dark';
 
 /** Init theme settings */
 export function initThemeSettings() {
-  // const isProd = import.meta.env.PROD;
-
   // if it is development mode, the theme settings will not be cached, by update `themeSettings` in `src/theme/settings.ts` to update theme settings
-  // if (!isProd) return themeSettings;
+  const isProd = import.meta.env.PROD;
+  if (!isProd) return themeSettings;
 
   // if it is production mode, the theme settings will be cached in localStorage
   // if want to update theme settings when publish new version, please update `overrideThemeSettings` in `src/theme/settings.ts`
@@ -183,8 +182,8 @@ type NaiveColorScene = '' | 'Suppl' | 'Hover' | 'Pressed' | 'Active';
 type NaiveColorKey = `${App.Theme.ThemeColorKey}Color${NaiveColorScene}`;
 type NaiveThemeColor = Partial<Record<NaiveColorKey, string>>;
 interface NaiveColorAction {
-  scene: NaiveColorScene
-  handler: (color: string) => string
+  scene: NaiveColorScene;
+  handler: (color: string) => string;
 }
 
 /**

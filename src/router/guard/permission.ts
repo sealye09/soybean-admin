@@ -87,6 +87,7 @@ async function createAuthRouteGuard(
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
+  console.log(to, from);
   const routeStore = useRouteStore();
   const authStore = useAuthStore();
   const isLogin = Boolean(authStore.token);
@@ -110,13 +111,10 @@ async function createAuthRouteGuard(
     console.log('3. 如果路由已经初始化，判断是否匹配上。');
     if (to.matched.length) {
       console.log('3.1. 匹配上');
-      next();
-      return true;
-    }
-    else {
-      console.log('3.2. 未匹配上');
+      next({ name: EXCEPTION_ROUTE_403.name });
       return false;
     }
+    return true;
   }
 
   // 4. 如果用户未登录，则跳转到登录页。
@@ -127,15 +125,15 @@ async function createAuthRouteGuard(
     return false;
   }
 
-  // 5. 初始化路由
+  // 5. 用户未登录, 初始化路由
   await routeStore.initAuthRoute();
   console.log('5. 初始化路由');
 
   // 6. 路由被 exception error 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。
   if (isErrorOrExceptionRoute) {
     console.log('6. 路由被 exception error 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。', from, to);
-    const path = isRootRoute(to) ? '/' : to.fullPath;
-    next({ path, replace: true, query: to.query, hash: to.hash });
+    const path = to.redirectedFrom?.name === ROOT_ROUTE.name ? '/' : to.fullPath;
+    next({ path: path as string, replace: true, query: to.query, hash: to.hash });
 
     return false;
   }
