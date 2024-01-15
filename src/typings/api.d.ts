@@ -13,14 +13,14 @@ declare namespace Api {
    */
   namespace Auth {
     interface LoginToken {
-      token: string
-      refreshToken: string
+      token: string;
+      refreshToken: string;
     }
 
     interface UserInfo {
-      userId: string
-      username: string
-      roles: string[]
+      userId: string;
+      username: string;
+      roles: string[];
     }
   }
 
@@ -31,12 +31,12 @@ declare namespace Api {
    */
   namespace Route {
     type MenuRoute = {
-      id: string
+      id: string;
     } & RouteRecordRaw;
 
     interface UserRoute {
-      routes: MenuRoute[]
-      home: string
+      routes: MenuRoute[];
+      home: string;
     }
   }
 }
