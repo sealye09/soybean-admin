@@ -1,4 +1,5 @@
 import { request } from '../../request';
+
 import type { UserForm, UserInfo, UserPageVO, UserQuery } from './types';
 
 /** 登录成功后获取用户信息（昵称、头像、权限集合和角色集合） */
@@ -13,7 +14,7 @@ export function getUserInfoApi() {
  */
 export function getUserPage(queryParams: UserQuery) {
   return request.get<PageResult<UserPageVO[]>>('/api/v1/users/page', {
-    params: queryParams
+    params: queryParams,
   });
 }
 
@@ -53,7 +54,7 @@ export function updateUser(id: number, data: UserForm) {
  */
 export function updateUserPassword(id: number, password: string) {
   return request.put(`/api/v1/users/${id}/password`, null, {
-    params: { password }
+    params: { password },
   });
 }
 
@@ -73,7 +74,7 @@ export function deleteUsers(ids: string) {
  */
 export function downloadTemplateApi() {
   return request.get('/api/v1/users/template', {
-    responseType: 'arraybuffer'
+    responseType: 'arraybuffer',
   });
 }
 
@@ -86,7 +87,7 @@ export function downloadTemplateApi() {
 export function exportUser(queryParams: UserQuery) {
   return request.get('/api/v1/users/_export', {
     params: queryParams,
-    responseType: 'arraybuffer'
+    responseType: 'arraybuffer',
   });
 }
 
@@ -102,7 +103,7 @@ export function importUser(deptId: number, file: File) {
     params: { deptId },
     data: formData,
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 }

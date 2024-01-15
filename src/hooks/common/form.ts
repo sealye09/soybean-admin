@@ -1,5 +1,6 @@
-import { ref } from 'vue';
 import type { FormInst } from 'naive-ui';
+import { ref } from 'vue';
+
 import { REG_CODE_SIX, REG_EMAIL, REG_PHONE, REG_PWD, REG_USER_NAME } from '@/constants/reg';
 import { $t } from '@/locales';
 
@@ -10,53 +11,53 @@ export function useFormRules() {
       {
         pattern: REG_USER_NAME,
         message: $t('form.username.invalid'),
-        trigger: 'change'
-      }
+        trigger: 'change',
+      },
     ],
     phone: [
       createRequiredRule($t('form.phone.required')),
       {
         pattern: REG_PHONE,
         message: $t('form.phone.invalid'),
-        trigger: 'change'
-      }
+        trigger: 'change',
+      },
     ],
     pwd: [
       createRequiredRule($t('form.pwd.required')),
       {
         pattern: REG_PWD,
         message: $t('form.pwd.invalid'),
-        trigger: 'change'
-      }
+        trigger: 'change',
+      },
     ],
     code: [
       createRequiredRule($t('form.code.required')),
       {
         pattern: REG_CODE_SIX,
         message: $t('form.code.invalid'),
-        trigger: 'change'
-      }
+        trigger: 'change',
+      },
     ],
     email: [
       createRequiredRule($t('form.email.required')),
       {
         pattern: REG_EMAIL,
         message: $t('form.email.invalid'),
-        trigger: 'change'
-      }
-    ]
+        trigger: 'change',
+      },
+    ],
   } satisfies Record<string, App.Global.FormRule[]>;
 
   function createRequiredRule(message: string) {
     return {
       required: true,
-      message
+      message,
     };
   }
 
   return {
     constantRules,
-    createRequiredRule
+    createRequiredRule,
   };
 }
 
@@ -69,6 +70,6 @@ export function useNaiveForm() {
 
   return {
     formRef,
-    validate
+    validate,
   };
 }

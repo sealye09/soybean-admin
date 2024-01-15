@@ -6,6 +6,7 @@ export * from './api/menu';
 export * from './api/role';
 export * from './api/user';
 
+export * from './api/type';
 export * from './api/auth/types';
 export * from './api/dept/types';
 export * from './api/dict/types';

@@ -1,3 +1,5 @@
+import type { Status } from '../type';
+
 /** 字典类型查询参数 */
 export interface DictTypeQuery extends PageQuery {
   /** 关键字(字典类型名称/编码) */
@@ -13,7 +15,7 @@ export interface DictTypePageVO {
   /** 类型名称 */
   name: string;
   /** 状态(1:启用;0:禁用) */
-  status?: number;
+  status: Status;
   /** 备注 */
   remark?: string;
 }
@@ -30,7 +32,7 @@ export interface DictTypeForm {
   /** 类型编码 */
   code?: string;
   /** 类型状态：1:启用;0:禁用 */
-  status: number;
+  status: Status;
   /** 备注 */
   remark?: string;
 }
@@ -50,7 +52,7 @@ export interface DictPageVO {
   /** 字典名称 */
   name?: string;
   /** 状态(1:启用;0:禁用) */
-  status?: number;
+  status: Status;
   /** 字典值 */
   value?: string;
 }
@@ -67,7 +69,7 @@ export interface DictForm {
   /** 排序 */
   sort?: number;
   /** 状态(1:启用;0:禁用) */
-  status?: number;
+  status: Status;
   /** 类型编码 */
   typeCode?: string;
   /** 值 */

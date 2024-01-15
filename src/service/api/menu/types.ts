@@ -1,4 +1,4 @@
-import type { MenuTypeEnum } from '@/enums/MenuTypeEnum';
+import type { MenuTypeEnum } from '@/enum';
 
 /** 菜单查询参数类型 */
 export interface MenuQuery {

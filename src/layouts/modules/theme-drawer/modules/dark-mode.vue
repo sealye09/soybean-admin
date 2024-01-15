@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { themeSchemaRecord } from '@/constants/app';
-import { useThemeStore } from '@/store/modules/theme';
 import { $t } from '@/locales';
+import { useThemeStore } from '@/store/modules/theme';
+
 import SettingItem from '../components/setting-item.vue';
 
 defineOptions({
-  name: 'DarkMode'
+  name: 'DarkMode',
 });
 
 const themeStore = useThemeStore();
@@ -14,7 +16,7 @@ const themeStore = useThemeStore();
 const icons: Record<UnionKey.ThemeScheme, string> = {
   light: 'material-symbols:sunny',
   dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
+  auto: 'material-symbols:hdr-auto',
 };
 
 function handleSegmentChange(value: string | number) {

@@ -1,4 +1,6 @@
 import { request } from '../../request';
+import type { OptionType } from '../type';
+
 import type { DeptForm, DeptQuery, DeptVO } from './types';
 
 /**
@@ -8,7 +10,7 @@ import type { DeptForm, DeptQuery, DeptVO } from './types';
  */
 export function listDepts(queryParams?: DeptQuery) {
   return request.get<DeptVO[]>('/api/v1/dept', {
-    params: queryParams
+    params: queryParams,
   });
 }
 

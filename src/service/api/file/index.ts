@@ -1,4 +1,5 @@
 import { request } from '../../request';
+
 import type { FileInfo } from './types';
 
 /**
@@ -11,8 +12,8 @@ export function uploadFileApi(file: File) {
   formData.append('file', file);
   return request.post<FileInfo>('/api/v1/files', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 }
 
@@ -23,6 +24,6 @@ export function uploadFileApi(file: File) {
  */
 export function deleteFileApi(filePath?: string) {
   return request.delete('/api/v1/files', {
-    params: { filePath }
+    params: { filePath },
   });
 }

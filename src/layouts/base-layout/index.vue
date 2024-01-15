@@ -116,7 +116,7 @@ setupMixMenuContext();
     <template #sider>
       <GlobalSider />
     </template>
-    <GlobalContent />
+    <GlobalContent show-padding />
     <ThemeDrawer />
     <template #footer>
       <GlobalFooter />

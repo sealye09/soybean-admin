@@ -23,7 +23,7 @@ export function showErrorMsg(error: RequestError) {
 
   addErrorMsg(error);
   window.console.warn(error.code, error.msg);
-  window.$message?.error(error.msg, { duration: ERROR_MSG_DURATION });
+  // window.$message?.error(error.msg, { duration: ERROR_MSG_DURATION });
   setTimeout(() => {
     removeErrorMsg(error);
   }, ERROR_MSG_DURATION);

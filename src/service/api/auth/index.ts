@@ -1,4 +1,5 @@
 import { request } from '../../request';
+
 import type { CaptchaResult, LoginData, LoginResult } from './types';
 
 /**

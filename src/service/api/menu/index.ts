@@ -1,4 +1,6 @@
 import { request } from '../../request';
+import type { OptionType } from '../type';
+
 import type { MenuForm, MenuQuery, MenuVO } from './types';
 
 /** 获取路由列表 */
@@ -13,7 +15,7 @@ export function listRoutes() {
  */
 export function listMenus(queryParams: MenuQuery) {
   return request.get<MenuVO[]>('/api/v1/menus', {
-    params: queryParams
+    params: queryParams,
   });
 }
 

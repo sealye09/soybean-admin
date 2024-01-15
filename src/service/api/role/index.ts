@@ -1,4 +1,6 @@
 import { request } from '../../request';
+import type { OptionType } from '../type';
+
 import type { RoleForm, RolePageResult, RoleQuery } from './types';
 
 /**
@@ -8,7 +10,7 @@ import type { RoleForm, RolePageResult, RoleQuery } from './types';
  */
 export function getRolePage(queryParams?: RoleQuery) {
   return request.get<RolePageResult>('/api/v1/roles/page', {
-    params: queryParams
+    params: queryParams,
   });
 }
 
@@ -19,7 +21,7 @@ export function getRolePage(queryParams?: RoleQuery) {
  */
 export function getRoleOptions(queryParams?: RoleQuery) {
   return request.get<OptionType[]>('/api/v1/roles/options', {
-    params: queryParams
+    params: queryParams,
   });
 }
 

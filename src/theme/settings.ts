@@ -1,34 +1,35 @@
 /** Default theme settings */
 export const themeSettings: App.Theme.ThemeSetting = {
   themeScheme: 'light',
-  themeColor: '#646cff',
+  // themeColor: '#646cff',
+  themeColor: '#1677ff',
   otherColor: {
-    info: '#2080f0',
+    info: '#1677ff',
     success: '#52c41a',
     warning: '#faad14',
-    error: '#f5222d'
+    error: '#ff4d4f',
   },
   isInfoFollowPrimary: true,
   layout: {
     mode: 'vertical',
-    scrollMode: 'content'
+    scrollMode: 'content',
   },
   page: {
     animate: true,
-    animateMode: 'fade-slide'
+    animateMode: 'fade-slide',
   },
   header: {
     height: 56,
     breadcrumb: {
       visible: true,
-      showIcon: true
-    }
+      showIcon: true,
+    },
   },
   tab: {
     visible: true,
     cache: true,
     height: 44,
-    mode: 'chrome'
+    mode: 'chrome',
   },
   fixedHeaderAndTab: true,
   sider: {
@@ -37,14 +38,14 @@ export const themeSettings: App.Theme.ThemeSetting = {
     collapsedWidth: 64,
     mixWidth: 90,
     mixCollapsedWidth: 64,
-    mixChildMenuWidth: 200
+    mixChildMenuWidth: 200,
   },
   footer: {
     visible: true,
     fixed: false,
     height: 48,
-    right: true
-  }
+    right: true,
+  },
 };
 
 /**

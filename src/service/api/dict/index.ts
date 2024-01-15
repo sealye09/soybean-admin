@@ -1,4 +1,6 @@
 import { request } from '../../request';
+import type { OptionType } from '../type';
+
 import type { DictForm, DictPageResult, DictQuery, DictTypeForm, DictTypePageResult, DictTypeQuery } from './types';
 
 /**
@@ -8,7 +10,7 @@ import type { DictForm, DictPageResult, DictQuery, DictTypeForm, DictTypePageRes
  */
 export function getDictTypePage(queryParams: DictTypeQuery) {
   return request.get<DictTypePageResult>('/api/v1/dict/types/page', {
-    params: queryParams
+    params: queryParams,
   });
 }
 
@@ -57,7 +59,7 @@ export function getDictOptions(typeCode: string) {
 /** 字典分页列表 */
 export function getDictPage(queryParams: DictQuery) {
   return request.get<DictPageResult>('/api/v1/dict/page', {
-    params: queryParams
+    params: queryParams,
   });
 }
 

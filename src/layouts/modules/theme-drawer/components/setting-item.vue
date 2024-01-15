@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'SettingItem'
+  name: 'SettingItem',
 });
 
 defineProps<Props>();
@@ -12,12 +12,12 @@ interface Props {
 </script>
 
 <template>
-  <div class="flex-y-center justify-between w-full">
+  <div class="w-full flex-y-center justify-between">
     <div>
-      <span class="text-base_text pr-8px">{{ label }}</span>
-      <slot name="suffix"></slot>
+      <span class="pr-8px text-base_text">{{ label }}</span>
+      <slot name="suffix" />
     </div>
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
