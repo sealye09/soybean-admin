@@ -59,6 +59,14 @@ export default antfu(
     files: ['**/*.vue'],
     rules: {
       'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
+      'vue/component-name-in-template-casing': [
+        'error',
+        'PascalCase',
+        {
+          registeredComponentsOnly: false,
+          ignores: [],
+        },
+      ],
     },
   },
 );

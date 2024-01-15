@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="text-#FFF">
+  <div class="text-primary">
     level1
     <router-view />
   </div>

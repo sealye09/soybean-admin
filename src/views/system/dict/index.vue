@@ -8,7 +8,6 @@ import { statusLabels } from '@/constants';
 import type { DictTypeForm, DictTypePageVO, DictTypeQuery, Status } from '@/service';
 import { deleteDictTypes, getDictTypeForm, getDictTypePage } from '@/service';
 
-import ColumnSetting from './components/column-setting.vue';
 import DictDetailModal from './components/dict-detail-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
@@ -202,9 +201,9 @@ function handleDeleteMany() {
       deleteDictTypes(deleteIds).then(() => {
         window.$message?.success('删除成功');
         resetQuery();
+      }).finally(() => {
+        selectedIds.value = [];
       });
-    },
-    onNegativeClick() {
     },
   });
 }
@@ -231,51 +230,51 @@ onMounted(() => {
 
 <template>
   <div class="overflow-hidden">
-    <n-card title="字典管理" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard title="字典管理" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex flex-col">
-        <n-form label-placement="left" inline>
-          <n-form-item label="关键字">
-            <n-input v-model:value="keywords" placeholder="请输入搜索关键字" />
-          </n-form-item>
+        <NForm label-placement="left" inline>
+          <NFormItem label="关键字">
+            <NInput v-model:value="keywords" placeholder="请输入搜索关键字" />
+          </NFormItem>
 
-          <n-form-item>
+          <NFormItem>
             <NButton type="primary" @click="handleQuery">
               <template #icon>
-                <icon-lucide:plus class="text-20px" />
+                <SvgIcon icon="lucide:plus" class="text-20px" />
               </template>
               搜索
             </NButton>
-          </n-form-item>
+          </NFormItem>
 
-          <n-form-item>
+          <NFormItem>
             <NButton
               @click="resetQuery"
             >
               <template #icon>
-                <icon-lucide:x class="text-20px" />
+                <SvgIcon icon="lucide:x" class="text-20px" />
               </template>
               重置
             </NButton>
-          </n-form-item>
-        </n-form>
+          </NFormItem>
+        </NForm>
 
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>
             <NButton type="primary" @click="showAddModal">
               <template #icon>
-                <icon-lucide:plus class="text-20px" />
+                <SvgIcon icon="lucide:plus" class="text-20px" />
               </template>
               新增
             </NButton>
             <NButton type="error" @click="handleDeleteMany">
               <template #icon>
-                <icon-lucide:trash-2 class="text-20px" />
+                <SvgIcon icon="lucide:trash-2" class="text-20px" />
               </template>
               删除
             </NButton>
             <NButton type="success">
               <template #icon>
-                <icon-lucide:download class="text-20px" />
+                <SvgIcon icon="lucide:download" class="text-20px" />
               </template>
               导出数据
             </NButton>
@@ -283,11 +282,20 @@ onMounted(() => {
           <NSpace align="center" :size="18">
             <NButton ghost size="small" type="primary" @click="handleQuery">
               <template #icon>
-                <icon-lucide:refresh-cw class="text-16px" :class="{ 'animate-spin': loading }" />
+                <SvgIcon icon="lucide:refresh-cw" class="text-16px" :class="{ 'animate-spin': loading }" />
               </template>
               刷新表格
             </NButton>
-            <ColumnSetting v-model:columns="columns" />
+            <ColumnSetting v-model:columns="columns">
+              <template #trigger>
+                <NButton size="small" type="primary" ghost>
+                  <template #icon>
+                    <SvgIcon icon="lucide:settings" class="text-16px" />
+                  </template>
+                  表格列设置
+                </NButton>
+              </template>
+            </ColumnSetting>
           </NSpace>
         </NSpace>
 
@@ -306,7 +314,7 @@ onMounted(() => {
           @update:checked-row-keys="handleSelect"
         />
       </div>
-    </n-card>
+    </NCard>
 
     <TableActionModal
       :visible="modalVisible"

@@ -21,7 +21,7 @@ export const ROOT_ROUTE = {
   path: '/',
   redirect: '/dashboard',
   meta: {
-    title: 'root',
+    title: '首页',
     constant: true,
     keepAlive: false,
     hidden: true,

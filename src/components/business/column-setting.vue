@@ -42,29 +42,26 @@ watch(
 </script>
 
 <template>
-  <n-popover placement="bottom" trigger="click">
+  <NPopover placement="bottom" trigger="click">
     <template #trigger>
-      <n-button size="small" type="primary" ghost>
-        <template #icon>
-          <icon-lucide:settings class="text-16px" />
-        </template>
-        表格列设置
-      </n-button>
+      <div>
+        <slot name="trigger" />
+      </div>
     </template>
 
     <div class="w-180px">
       <VueDraggable v-model="list" item-key="key">
         <template #item="{ element }">
           <div v-if="element.key" class="hover:bg-primary_active h-36px flex-y-center px-12px">
-            <icon-lucide:grip class="mr-8px cursor-move text-20px" />
-            <n-checkbox v-model:checked="element.checked">
+            <SvgIcon icon="lucide:grip" class="mr-8px cursor-move text-20px" />
+            <NCheckbox v-model:checked="element.checked">
               {{ element.title }}
-            </n-checkbox>
+            </NCheckbox>
           </div>
         </template>
       </VueDraggable>
     </div>
-  </n-popover>
+  </NPopover>
 </template>
 
 <style scoped></style>

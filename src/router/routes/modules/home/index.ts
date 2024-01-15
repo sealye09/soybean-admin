@@ -14,7 +14,7 @@ export const HOME_ROUTE = {
       component: () => import('@/views/home/index.vue'),
       meta: {
         title: '看板',
-        icon: 'mdi:monitor-dashboard',
+        icon: 'lucide:home',
         affix: true,
         keepAlive: true,
         alwaysShow: false,
