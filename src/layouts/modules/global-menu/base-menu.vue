@@ -18,9 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 interface Props {
-  darkTheme?: boolean
-  mode?: MenuProps['mode']
-  menus: App.Global.Menu[]
+  darkTheme?: boolean;
+  mode?: MenuProps['mode'];
+  menus: App.Global.Menu[];
 }
 
 const route = useRoute();
@@ -82,7 +82,7 @@ watch(
       :collapsed-icon-size="22"
       :options="naiveMenus"
       :inverted="darkTheme"
-      :inline-indent="18"
+      :indent="18"
       class="transition-300"
       :style="menuHeightStyle"
       @update:value="handleClickMenu"

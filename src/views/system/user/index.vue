@@ -5,7 +5,7 @@ import type { RowKey } from 'naive-ui/es/data-table/src/interface';
 import type { TreeNodeProps, TreeOption } from 'naive-ui/es/tree/src/interface';
 import { onMounted, reactive, ref } from 'vue';
 
-import { statusLabels } from '@/constants';
+import { getStatusLabel } from '@/constants';
 import type { OptionType, Status, UserForm, UserPageVO } from '@/service';
 import { deleteUsers, getDeptOptions, getUserForm, getUserPage } from '@/service';
 
@@ -126,15 +126,10 @@ const columns = ref<DataTableColumns<UserPageVO>>([
     width: 80,
     align: 'center',
     render: (row) => {
-      const tagTypes: Record<Status, NaiveUI.ThemeColor> = {
-        0: 'error',
-        1: 'success',
-      };
-      const status = +Boolean(row.status) as Status;
-      if (row.status)
-        return <NTag type={tagTypes[status]}>{statusLabels[status]}</NTag>;
-      else
-        return <NTag type={tagTypes[status]}>{statusLabels[status]}</NTag>;
+      const status: Status = (row.status ?? 0) as Status;
+      const tag = getStatusLabel(status);
+
+      return <NTag type={tag.color}>{tag.label}</NTag>;
     },
   },
   {
@@ -253,15 +248,17 @@ onMounted(() => {
 
 <template>
   <div class="h-full w-full flex flex-row items-start gap-16px overflow-hidden <lg:flex-col">
-    <NCard class="h-full min-w-fit w-1/5 <lg:h-fit <lg:w-full" :bordered="false">
+    <NCard class="h-full min-w-fit w-1/4 <lg:h-fit <lg:w-full" :bordered="false">
       <NInput v-model:value="treeKeyword" placeholder="搜索" />
       <NTree
         class="mt-16px"
+        key-field="value"
+        expand-on-click
+        show-irrelevant-nodes
+        accordion
+        block-line
         :pattern="treeKeyword"
         :data="treeData"
-        key-field="value"
-
-        expand-on-click show-irrelevant-nodes accordion block-line
         :node-props="nodeProps"
       />
     </NCard>

@@ -4,7 +4,7 @@ import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { RowKey } from 'naive-ui/es/data-table/src/interface';
 import { onMounted, reactive, ref } from 'vue';
 
-import { statusLabels } from '@/constants';
+import { getStatusLabel } from '@/constants';
 import type { DictTypeForm, DictTypePageVO, DictTypeQuery, Status } from '@/service';
 import { deleteDictTypes, getDictTypeForm, getDictTypePage } from '@/service';
 
@@ -86,14 +86,10 @@ const columns = ref<DataTableColumns<DictTypePageVO>>([
     title: '状态',
     align: 'center',
     render: (row) => {
-      const tagTypes: Record<Status, NaiveUI.ThemeColor> = {
-        0: 'error',
-        1: 'success',
-      };
-      if (row.status)
-        return <NTag type={tagTypes[row.status]}>{statusLabels[row.status]}</NTag>;
-      else
-        return <NTag type={tagTypes[row.status]}>{statusLabels[row.status]}</NTag>;
+      const status: Status = row.status;
+      const tag = getStatusLabel(status);
+
+      return <NTag type={tag.color}>{tag.label}</NTag>;
     },
   },
   {
@@ -157,7 +153,6 @@ async function handleQuery() {
 
   dictTypeList.value = data?.list;
   pagination.itemCount = data?.total || 0;
-  console.log('🚀 ~ handleQuery ~ pagination:', pagination);
   loading.value = false;
 }
 
@@ -301,9 +296,8 @@ onMounted(() => {
 
         <NDataTable
           class="flex-1-hidden"
-          flex-height
-          remote
-          striped
+
+          remote striped flex-height
           :single-line="false"
           :columns="columns"
           :data="dictTypeList"

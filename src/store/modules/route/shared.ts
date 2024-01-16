@@ -107,7 +107,6 @@ export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string
  * @param routes Auth routes
  */
 export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
-  console.log('🚀 ~ getGlobalMenusByAuthRoutes ~ routes:', routes);
   const menus: App.Global.Menu[] = [];
 
   routes.forEach((route) => {

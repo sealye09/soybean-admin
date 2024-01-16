@@ -59,9 +59,12 @@ type FormModel = UserForm;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
-const deptOptions = ref<(TreeOption & OptionType)[]>();
-const roleOptions = ref<(SelectOption & OptionType)[]>();
-const genderOptions = ref<(SelectOption & OptionType)[]>();
+type TreeOptions = (TreeOption & OptionType)[];
+type SelectOptions = (SelectOption & OptionType)[];
+
+const deptOptions = ref<TreeOptions>();
+const roleOptions = ref<SelectOptions>();
+const genderOptions = ref<SelectOptions>();
 
 function createDefaultFormModel(): FormModel {
   return {
@@ -105,17 +108,17 @@ function handleUpdateFormModelByModalType() {
 
   ]) => {
     if (depts && depts.length)
-      deptOptions.value = depts as any;
+      deptOptions.value = depts as TreeOptions;
     else
       window.$message?.error(deptErr?.msg || '获取部门列表失败');
 
     if (roles && roles.length)
-      roleOptions.value = roles as any;
+      roleOptions.value = roles as SelectOptions;
     else
       window.$message?.error(roleErr?.msg || '获取角色列表失败');
 
     if (genders)
-      genderOptions.value = genders as any;
+      genderOptions.value = genders as SelectOptions;
     else
       window.$message?.error(genderErr?.msg || '获取性别列表失败');
   });
@@ -181,7 +184,7 @@ watch(
         </NFormItemGridItem>
 
         <NFormItemGridItem :span="12" label="角色" path="roleIds">
-          <NSelect v-model:value="formModel.roleIds" multiple :options="roleOptions" clearable />
+          <NSelect v-model:value="formModel.roleIds" :options="roleOptions" clearable multiple />
         </NFormItemGridItem>
 
         <NFormItemGridItem :span="12" label="性别" path="gender">

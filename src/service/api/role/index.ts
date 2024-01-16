@@ -28,7 +28,7 @@ export function getRoleOptions(queryParams?: RoleQuery) {
 /**
  * 获取角色的菜单ID集合
  *
- * @param queryParams
+ * @param roleId
  */
 export function getRoleMenuIds(roleId: number) {
   return request.get<number[]>(`/api/v1/roles/${roleId}/menuIds`);
@@ -37,7 +37,8 @@ export function getRoleMenuIds(roleId: number) {
 /**
  * 分配菜单权限给角色
  *
- * @param queryParams
+ * @param roleId
+ * @param data
  */
 export function updateRoleMenus(roleId: number, data: number[]) {
   return request.put<unknown>(`/api/v1/roles/${roleId}/menus`, data);

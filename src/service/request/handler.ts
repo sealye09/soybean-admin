@@ -32,8 +32,6 @@ function handleError(err: RequestError) {
   if (code === '401' || code === 'A0230') {
     const path = window.location.pathname;
     if (!path.includes(LOGIN_ROUTE.path)) {
-      console.log('🚀 ~ handleError ~ path:', path);
-
       window.$dialog?.error({
         title: '登录已过期',
         content: '登录已过期，请重新登录',
