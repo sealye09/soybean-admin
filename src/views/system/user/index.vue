@@ -252,7 +252,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full flex flex-1-hidden flex-row items-start gap-16px <lg:flex-col">
+  <div class="h-full w-full flex flex-row items-start gap-16px overflow-hidden <lg:flex-col">
     <NCard class="h-full min-w-fit w-1/5 <lg:h-fit <lg:w-full" :bordered="false">
       <NInput v-model:value="treeKeyword" placeholder="搜索" />
       <NTree
@@ -266,87 +266,89 @@ onMounted(() => {
       />
     </NCard>
 
-    <NCard class="h-full flex-1-hidden" title="用户管理" :bordered="false">
-      <NForm label-placement="left" inline>
-        <NFormItem label="关键字">
-          <NInput v-model:value="queryParams.keywords" placeholder="请输入搜索关键字" />
-        </NFormItem>
+    <NCard title="用户管理" :bordered="false" class="h-full rounded-8px shadow-sm">
+      <div class="h-full flex flex-col">
+        <NForm label-placement="left" inline>
+          <NFormItem label="关键字">
+            <NInput v-model:value="queryParams.keywords" placeholder="请输入搜索关键字" />
+          </NFormItem>
 
-        <NFormItem>
-          <NButton type="primary" @click="handleQuery">
-            <template #icon>
-              <SvgIcon icon="lucide:plus" class="text-20px" />
-            </template>
-            搜索
-          </NButton>
-        </NFormItem>
+          <NFormItem>
+            <NButton type="primary" @click="handleQuery">
+              <template #icon>
+                <SvgIcon icon="lucide:plus" class="text-20px" />
+              </template>
+              搜索
+            </NButton>
+          </NFormItem>
 
-        <NFormItem>
-          <NButton
-            @click="resetQuery"
-          >
-            <template #icon>
-              <SvgIcon icon="lucide:x" class="text-20px" />
-            </template>
-            重置
-          </NButton>
-        </NFormItem>
-      </NForm>
+          <NFormItem>
+            <NButton
+              @click="resetQuery"
+            >
+              <template #icon>
+                <SvgIcon icon="lucide:x" class="text-20px" />
+              </template>
+              重置
+            </NButton>
+          </NFormItem>
+        </NForm>
 
-      <NSpace class="pb-12px" justify="space-between">
-        <NSpace>
-          <NButton type="primary" @click="showAddModal">
-            <template #icon>
-              <SvgIcon icon="lucide:plus" class="text-20px" />
-            </template>
-            新增
-          </NButton>
-          <NButton type="error" @click="handleDeleteMany">
-            <template #icon>
-              <SvgIcon icon="lucide:trash-2" class="text-20px" />
-            </template>
-            删除
-          </NButton>
-          <NButton type="success">
-            <template #icon>
-              <SvgIcon icon="lucide:download" class="text-20px" />
-            </template>
-            导出数据
-          </NButton>
+        <NSpace class="pb-12px" justify="space-between">
+          <NSpace>
+            <NButton type="primary" @click="showAddModal">
+              <template #icon>
+                <SvgIcon icon="lucide:plus" class="text-20px" />
+              </template>
+              新增
+            </NButton>
+            <NButton type="error" @click="handleDeleteMany">
+              <template #icon>
+                <SvgIcon icon="lucide:trash-2" class="text-20px" />
+              </template>
+              删除
+            </NButton>
+            <NButton type="success">
+              <template #icon>
+                <SvgIcon icon="lucide:download" class="text-20px" />
+              </template>
+              导出数据
+            </NButton>
+          </NSpace>
+
+          <NSpace align="center" :size="18">
+            <NButton ghost size="small" type="primary" @click="handleQuery">
+              <template #icon>
+                <SvgIcon icon="lucide:refresh-cw" class="text-16px" :class="{ 'animate-spin': loading }" />
+              </template>
+              刷新表格
+            </NButton>
+            <ColumnSetting v-model:columns="columns">
+              <template #trigger>
+                <NButton size="small" type="primary" ghost>
+                  <template #icon>
+                    <SvgIcon icon="lucide:settings" class="text-16px" />
+                  </template>
+                  表格列设置
+                </NButton>
+              </template>
+            </ColumnSetting>
+          </NSpace>
         </NSpace>
-        <NSpace align="center" :size="18">
-          <NButton ghost size="small" type="primary" @click="handleQuery">
-            <template #icon>
-              <SvgIcon icon="lucide:refresh-cw" class="text-16px" :class="{ 'animate-spin': loading }" />
-            </template>
-            刷新表格
-          </NButton>
-          <ColumnSetting v-model:columns="columns">
-            <template #trigger>
-              <NButton size="small" type="primary" ghost>
-                <template #icon>
-                  <SvgIcon icon="lucide:settings" class="text-16px" />
-                </template>
-                表格列设置
-              </NButton>
-            </template>
-          </ColumnSetting>
-        </NSpace>
-      </NSpace>
 
-      <NDataTable
-        class="h-full flex-1-hidden"
-        remote striped flex-height
-        :single-line="false"
-        :bordered="false"
-        :columns="columns"
-        :data="users"
-        :loading="loading"
-        :row-key="(row) => row.id"
-        :pagination="pagination"
-        :paginate-single-page="false"
-        @update:checked-row-keys="handleSelect"
-      />
+        <NDataTable
+          class="flex-1-hidden"
+          remote striped flex-height
+          :single-line="false"
+          :bordered="false"
+          :columns="columns"
+          :data="users"
+          :loading="loading"
+          :row-key="(row) => row.id"
+          :pagination="pagination"
+          @update:checked-row-keys="handleSelect"
+        />
+      </div>
     </NCard>
 
     <TableActionModal

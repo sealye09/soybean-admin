@@ -7,7 +7,7 @@ export const MULTI_ROUTE = {
   component: BaseLayout,
   meta: {
     title: '多级菜单',
-    showAlways: true,
+    alwaysShow: true,
   },
   children: [
     {
@@ -17,7 +17,7 @@ export const MULTI_ROUTE = {
       component: () => import('@/views/multi-level/level1.vue'),
       meta: {
         title: '多级菜单1级',
-        showAlways: true,
+        alwaysShow: true,
       },
       children: [
         {
@@ -27,7 +27,7 @@ export const MULTI_ROUTE = {
           component: () => import('@/views/multi-level/children/level2.vue'),
           meta: {
             title: '多级菜单2级',
-            showAlways: true,
+            alwaysShow: true,
           },
           children: [
             {
@@ -36,6 +36,7 @@ export const MULTI_ROUTE = {
               component: () => import('@/views/multi-level/children/children/level3-1.vue'),
               meta: {
                 title: 'level3-1',
+                alwaysShow: true,
               },
             },
             {
@@ -44,6 +45,7 @@ export const MULTI_ROUTE = {
               component: () => import('@/views/multi-level/children/children/level3-2.vue'),
               meta: {
                 title: 'level3-2',
+                alwaysShow: true,
               },
             },
           ],

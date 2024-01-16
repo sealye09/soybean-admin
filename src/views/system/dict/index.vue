@@ -310,7 +310,6 @@ onMounted(() => {
           :loading="loading"
           :row-key="row => row.id"
           :pagination="pagination"
-          :paginate-single-page="false"
           @update:checked-row-keys="handleSelect"
         />
       </div>

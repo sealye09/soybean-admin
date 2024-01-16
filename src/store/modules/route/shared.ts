@@ -82,8 +82,7 @@ export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string
     if (hasPermission) {
       if (tmpRoute.component?.toString() === 'Layout') {
         tmpRoute.component = BaseLayout;
-      }
-      else {
+      } else {
         const component = modules[`/src/views/${tmpRoute.component}.vue`];
         if (component)
           tmpRoute.component = component;
@@ -108,28 +107,30 @@ export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string
  * @param routes Auth routes
  */
 export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
+  console.log('🚀 ~ getGlobalMenusByAuthRoutes ~ routes:', routes);
   const menus: App.Global.Menu[] = [];
 
   routes.forEach((route) => {
     if (!route.meta?.hidden) {
       const menu = getGlobalMenuByBaseRoute(route);
       const length = route.children?.length ?? 0;
-      const showAlways = route.meta?.showAlways;
+      const alwaysShow = route.meta?.alwaysShow ?? true;
 
+      // 子节点数量大于1，当做目录处理
       if (length > 1) {
         menu.children = getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]);
         menus.push(menu);
-      }
-      else if (length === 1) {
-        if (showAlways) {
+      } else if (length === 1) {
+        // 子节点数量等于1，alwaysShow === true 当做菜单处理
+        if (alwaysShow) {
           menu.children = getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]);
           menus.push(menu);
-        }
-        else {
+        } else {
+          // 子节点数量等于1，alwaysShow === false 当做目录处理
           menus.push(...getGlobalMenusByAuthRoutes(route.children as RouteRecordRaw[]));
         }
-      }
-      else if (length === 0) {
+      } else if (length === 0) {
+        // 子节点数量等于0，当做菜单处理
         menus.push(menu);
       }
     }

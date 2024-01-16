@@ -7,6 +7,9 @@ export const HOME_ROUTE = {
   name: 'home',
   redirect: '/dashboard',
   component: BaseLayout,
+  meta: {
+    alwaysShow: false,
+  },
   children: [
     {
       path: '/dashboard',
