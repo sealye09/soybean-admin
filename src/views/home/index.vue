@@ -2,7 +2,9 @@
 
 <template>
   <div>
-    <NCalendar />
+    <NCard>
+      <NCalendar />
+    </NCard>
   </div>
 </template>
 
