@@ -1,11 +1,231 @@
-<script setup>
+<script setup lang="tsx">
+import type { DataTableColumns } from 'naive-ui';
+import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
+import { onMounted, ref } from 'vue';
+
+import SvgIcon from '@/components/custom/svg-icon.vue';
+import { getStatusLabel } from '@/constants';
+import type { DeptForm, DeptQuery, DeptVO, Status } from '@/service';
+import { deleteDept, getDeptForm, listDepts } from '@/service';
+
+import type { ModalType } from './components/table-action-modal.vue';
+import TableActionModal from './components/table-action-modal.vue';
+
+defineOptions({ name: 'MenuPage' });
+
+const loading = ref<boolean>(false);
+const dictTypeList = ref<DeptVO[]>();
+const keywords = ref<string>('');
+
+const modalVisible = ref<boolean>(false);
+const modalType = ref<ModalType>('add');
+const editData = ref<DeptForm>();
+
+const columns = ref<DataTableColumns<DeptVO>>([
+  {
+    key: 'index',
+    title: '#',
+    align: 'center',
+    width: 80,
+    render: () => null,
+  },
+  {
+    key: 'id',
+    title: '部门id',
+    align: 'center',
+    width: 80,
+  },
+  {
+    key: 'name',
+    title: '部门名称',
+    align: 'center',
+  },
+  {
+    key: 'sort',
+    title: '排序',
+    align: 'center',
+    width: 80,
+  },
+  {
+    key: 'status',
+    title: '状态',
+    align: 'center',
+    minWidth: 80,
+    render: (row) => {
+      const status: Status = row.status as Status;
+      const tag = getStatusLabel(status);
+
+      return <NTag type={tag.color}>{tag.label}</NTag>;
+    },
+  },
+  {
+    key: 'actions',
+    title: '操作',
+    align: 'center',
+    width: 300,
+    fixed: 'right',
+    render: (row) => {
+      return (
+        <NSpace justify="center">
+          <NButton
+            size="small"
+            type="info"
+            ghost
+            onClick={() => showAddModal(row.id)}
+          >
+            新增
+          </NButton>
+          <NButton
+            size="small"
+            type="warning"
+            ghost
+            onClick={() => showEditModal(row.id)}
+          >
+            编辑
+          </NButton>
+          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+            {{
+              default: () => '确认删除',
+              trigger: () => (
+                <NButton
+                  size="small"
+                  type="error"
+                  ghost
+                >
+                  删除
+                </NButton>
+              ),
+            }}
+          </NPopconfirm>
+        </NSpace>
+      );
+    },
+  },
+]);
+
+/** 查询 */
+async function handleQuery() {
+  loading.value = true;
+  const queryParams: DeptQuery = {
+    keywords: keywords.value,
+  };
+  const { data, error } = await listDepts(queryParams);
+  if (!data) {
+    window.$message?.error(error?.msg ?? '查询失败');
+    return;
+  }
+
+  dictTypeList.value = data;
+  loading.value = false;
+}
+
+/**
+ * 重置查询
+ */
+function resetQuery() {
+  keywords.value = '';
+  handleQuery();
+}
+
+function handleDelete(id?: number) {
+  if (!id)
+    window.$message?.error('id 不能为空');
+  const ids = [id].join(',');
+  deleteDept(ids).then(({ error }) => {
+    if (error) {
+      window.$message?.error(error.msg);
+      return;
+    }
+    window.$message?.success('删除成功');
+    resetQuery();
+  });
+}
+
+function showAddModal(parentId?: number) {
+  modalType.value = 'add';
+  if (parentId)
+    editData.value = { parentId } as DeptForm;
+  modalVisible.value = true;
+}
+
+function showEditModal(id?: number) {
+  if (!id) {
+    window.$message?.error('id 不能为空');
+    return;
+  }
+
+  getDeptForm(id).then(({ data, error }) => {
+    if (!data) {
+      window.$message?.error(error?.msg ?? '获取数据失败');
+      return;
+    }
+    editData.value = data;
+    modalType.value = 'edit';
+    modalVisible.value = true;
+  });
+}
+
+onMounted(() => {
+  handleQuery();
+});
 </script>
 
 <template>
-  <div class="text-18px text-red">
-    dept
+  <div class="h-full flex flex-col gap-16px overflow-hidden">
+    <NCard :bordered="false" class="h-fit shadow">
+      <KeywordsSearch
+        v-model:keywords="keywords"
+        placeholder="请输入搜索部门名称"
+        label="部门名称"
+        @query="handleQuery"
+        @reset="resetQuery"
+      />
+    </NCard>
+
+    <NCard :bordered="false" class="h-full shadow">
+      <div class="h-full flex flex-col gap-12px">
+        <NSpace justify="space-between">
+          <NSpace>
+            <NButton type="primary" @click="() => showAddModal()">
+              <template #icon>
+                <SvgIcon icon="lucide:plus" class="text-20px" />
+              </template>
+              新增部门
+            </NButton>
+          </NSpace>
+          <NSpace align="center" :size="18">
+            <RefreshIconButton
+              :loading="loading"
+              @refresh="handleQuery"
+            />
+            <ColumnSetting v-model:columns="columns">
+              <template #trigger>
+                <ColumnSettingButton />
+              </template>
+            </ColumnSetting>
+          </NSpace>
+        </NSpace>
+
+        <NDataTable
+          class="flex-1-hidden"
+          :bordered="false" remote flex-height
+          single-column
+          single-line
+          :scroll-x="1000"
+          :columns="columns"
+          :data="dictTypeList"
+          :loading="loading"
+          :row-key="row => row.id"
+        />
+      </div>
+    </NCard>
+
+    <TableActionModal
+      :visible="modalVisible"
+      :type="modalType"
+      :edit-data="editData"
+      @refresh="handleQuery"
+      @update:visible="(v) => modalVisible = v"
+    />
   </div>
 </template>
-
-<style scoped>
-</style>
