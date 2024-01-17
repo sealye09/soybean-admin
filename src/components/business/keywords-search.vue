@@ -33,8 +33,8 @@ function resetQuery() {
 
 <template>
   <NSpace class="simple-search">
-    <NFormItem :label="props.label" label-placement="left">
-      <NInput v-model:value="searchKeywords" :placeholder="props.placeholder" />
+    <NFormItem :label="props.label" label-placement="left" :show-feedback="false">
+      <NInput v-model:value="searchKeywords" :placeholder="props.placeholder" clearable />
     </NFormItem>
 
     <NButton type="primary" @click="handleQuery">
@@ -56,9 +56,9 @@ function resetQuery() {
 </template>
 
 <style lang="scss" scoped>
-.simple-search{
-  ::v-deep(.n-form-item-feedback-wrapper){
-    min-height: 6px !important;
-  }
-}
+// .simple-search{
+//   ::v-deep(.n-form-item-feedback-wrapper){
+//     min-height: 6px !important;
+//   }
+// }
 </style>

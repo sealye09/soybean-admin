@@ -49,3 +49,34 @@ export const dataScopes = [
     label: '本人数据',
   },
 ];
+
+type MenuType = 'CATALOG' | 'MENU' | 'BUTTON' | 'EXTLINK';
+type MenuTypeLabel = '目录' | '菜单' | '按钮' | '外链';
+type MenuTag = {
+  value: MenuType;
+  label: MenuTypeLabel;
+  color: NaiveUI.ThemeColor;
+};
+
+export const menuTypes: MenuTag[] = [
+  {
+    value: 'CATALOG',
+    label: '目录',
+    color: 'warning',
+  },
+  {
+    value: 'MENU',
+    label: '菜单',
+    color: 'success',
+  },
+  {
+    value: 'BUTTON',
+    label: '按钮',
+    color: 'error',
+  },
+  {
+    value: 'EXTLINK',
+    label: '外链',
+    color: 'info',
+  },
+];
