@@ -87,6 +87,7 @@ function handleUpdateFormModelByModalType() {
   const handlers: Record<ModalType, () => void> = {
     add: () => {
       const defaultFormModel = createDefaultFormModel();
+      defaultFormModel.id = undefined;
       handleUpdateFormModel(defaultFormModel);
     },
     edit: () => {
@@ -129,7 +130,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
 
   if (props.type === 'add') {
-    const { error } = await addUser({ ...formModel, status: formModel.status ? 1 : 0 });
+    const { error } = await addUser(formModel);
     if (error) {
       window.$message?.error(error.msg);
       return;
@@ -142,7 +143,7 @@ async function handleSubmit() {
   if (props.type === 'edit') {
     if (!props.editData || !props.editData.id) throw new Error('缺少编辑的数据');
 
-    const { error } = await updateUser(props.editData.id, { ...formModel, status: formModel.status ? 1 : 0 });
+    const { error } = await updateUser(props.editData.id, formModel);
     if (error) {
       window.$message?.error(error.msg);
       return;
@@ -200,7 +201,11 @@ watch(
         </NFormItemGridItem>
 
         <NFormItemGridItem :span="12" label="状态" path="status">
-          <NSwitch :value="!!formModel.status" @update:value="(v) => formModel.status = v" />
+          <NSwitch
+            v-model:value="formModel.status"
+            :checked-value="1"
+            :unchecked-value="0"
+          />
         </NFormItemGridItem>
       </NGrid>
 
