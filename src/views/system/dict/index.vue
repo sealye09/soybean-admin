@@ -97,6 +97,7 @@ const columns = ref<DataTableColumns<DictTypePageVO>>([
     title: '操作',
     align: 'center',
     width: 300,
+    fixed: 'right',
     render: (row) => {
       return (
         <NSpace justify="center">
@@ -224,36 +225,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="字典管理" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex flex-col">
-        <NForm label-placement="left" inline>
-          <NFormItem label="关键字">
-            <NInput v-model:value="keywords" placeholder="请输入搜索关键字" />
-          </NFormItem>
+  <div class="h-full flex flex-col gap-16px overflow-hidden">
+    <NCard :bordered="false" class="h-fit shadow">
+      <KeywordsSearch
+        v-model:keywords="keywords"
+        placeholder="请输入搜索关键字"
+        label="关键字"
+        @query="handleQuery"
+        @reset="resetQuery"
+      />
+    </NCard>
 
-          <NFormItem>
-            <NButton type="primary" @click="handleQuery">
-              <template #icon>
-                <SvgIcon icon="lucide:plus" class="text-20px" />
-              </template>
-              搜索
-            </NButton>
-          </NFormItem>
-
-          <NFormItem>
-            <NButton
-              @click="resetQuery"
-            >
-              <template #icon>
-                <SvgIcon icon="lucide:x" class="text-20px" />
-              </template>
-              重置
-            </NButton>
-          </NFormItem>
-        </NForm>
-
-        <NSpace class="pb-12px" justify="space-between">
+    <NCard :bordered="false" class="h-full shadow">
+      <div class="h-full flex flex-col gap-12px">
+        <NSpace justify="space-between">
           <NSpace>
             <NButton type="primary" @click="showAddModal">
               <template #icon>
@@ -267,28 +252,15 @@ onMounted(() => {
               </template>
               删除
             </NButton>
-            <NButton type="success">
-              <template #icon>
-                <SvgIcon icon="lucide:download" class="text-20px" />
-              </template>
-              导出数据
-            </NButton>
           </NSpace>
           <NSpace align="center" :size="18">
-            <NButton ghost size="small" type="primary" @click="handleQuery">
-              <template #icon>
-                <SvgIcon icon="lucide:refresh-cw" class="text-16px" :class="{ 'animate-spin': loading }" />
-              </template>
-              刷新表格
-            </NButton>
+            <RefreshIconButton
+              :loading="loading"
+              @refresh="handleQuery"
+            />
             <ColumnSetting v-model:columns="columns">
               <template #trigger>
-                <NButton size="small" type="primary" ghost>
-                  <template #icon>
-                    <SvgIcon icon="lucide:settings" class="text-16px" />
-                  </template>
-                  表格列设置
-                </NButton>
+                <ColumnSettingButton />
               </template>
             </ColumnSetting>
           </NSpace>
@@ -296,8 +268,8 @@ onMounted(() => {
 
         <NDataTable
           class="flex-1-hidden"
-
           remote striped flex-height
+          :scroll-x="1000"
           :single-line="false"
           :columns="columns"
           :data="dictTypeList"
@@ -324,5 +296,3 @@ onMounted(() => {
     />
   </div>
 </template>
-
-<style scoped></style>

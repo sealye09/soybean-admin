@@ -143,6 +143,7 @@ const columns = ref<DataTableColumns<UserPageVO>>([
     title: '操作',
     align: 'center',
     width: 150,
+    fixed: 'right',
     render: _row => (
       <NSpace justify="center">
         <NButton
@@ -247,8 +248,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full flex flex-row items-start gap-16px overflow-hidden <lg:flex-col">
-    <NCard class="h-full min-w-fit w-1/4 <lg:h-fit <lg:w-full" :bordered="false">
+  <div class="h-full w-full flex flex-1-hidden flex-row items-start gap-16px <xl:flex-col">
+    <NCard class="h-full min-w-fit w-1/4 shadow <xl:h-fit <xl:w-full" :bordered="false">
       <NInput v-model:value="treeKeyword" placeholder="搜索" />
       <NTree
         class="mt-16px"
@@ -263,90 +264,70 @@ onMounted(() => {
       />
     </NCard>
 
-    <NCard title="用户管理" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex flex-col">
-        <NForm label-placement="left" inline>
-          <NFormItem label="关键字">
-            <NInput v-model:value="queryParams.keywords" placeholder="请输入搜索关键字" />
-          </NFormItem>
-
-          <NFormItem>
-            <NButton type="primary" @click="handleQuery">
-              <template #icon>
-                <SvgIcon icon="lucide:plus" class="text-20px" />
-              </template>
-              搜索
-            </NButton>
-          </NFormItem>
-
-          <NFormItem>
-            <NButton
-              @click="resetQuery"
-            >
-              <template #icon>
-                <SvgIcon icon="lucide:x" class="text-20px" />
-              </template>
-              重置
-            </NButton>
-          </NFormItem>
-        </NForm>
-
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="showAddModal">
-              <template #icon>
-                <SvgIcon icon="lucide:plus" class="text-20px" />
-              </template>
-              新增
-            </NButton>
-            <NButton type="error" @click="handleDeleteMany">
-              <template #icon>
-                <SvgIcon icon="lucide:trash-2" class="text-20px" />
-              </template>
-              删除
-            </NButton>
-            <NButton type="success">
-              <template #icon>
-                <SvgIcon icon="lucide:download" class="text-20px" />
-              </template>
-              导出数据
-            </NButton>
-          </NSpace>
-
-          <NSpace align="center" :size="18">
-            <NButton ghost size="small" type="primary" @click="handleQuery">
-              <template #icon>
-                <SvgIcon icon="lucide:refresh-cw" class="text-16px" :class="{ 'animate-spin': loading }" />
-              </template>
-              刷新表格
-            </NButton>
-            <ColumnSetting v-model:columns="columns">
-              <template #trigger>
-                <NButton size="small" type="primary" ghost>
-                  <template #icon>
-                    <SvgIcon icon="lucide:settings" class="text-16px" />
-                  </template>
-                  表格列设置
-                </NButton>
-              </template>
-            </ColumnSetting>
-          </NSpace>
-        </NSpace>
-
-        <NDataTable
-          class="flex-1-hidden"
-          remote striped flex-height
-          :single-line="false"
-          :bordered="false"
-          :columns="columns"
-          :data="users"
-          :loading="loading"
-          :row-key="(row) => row.id"
-          :pagination="pagination"
-          @update:checked-row-keys="handleSelect"
+    <div class="h-full w-full flex flex-1-hidden flex-col gap-16px">
+      <NCard :bordered="false" class="h-fit shadow">
+        <KeywordsSearch
+          v-model:keywords="queryParams.keywords"
+          placeholder="请输入搜索关键字"
+          label="关键字"
+          @query="handleQuery"
+          @reset="resetQuery"
         />
-      </div>
-    </NCard>
+      </NCard>
+
+      <NCard :bordered="false" class="h-full shadow">
+        <div class="h-full flex flex-col gap-16px">
+          <NSpace justify="space-between" class="w-full">
+            <NSpace>
+              <NButton type="primary" @click="showAddModal">
+                <template #icon>
+                  <SvgIcon icon="lucide:plus" class="text-20px" />
+                </template>
+                新增
+              </NButton>
+              <NButton type="error" @click="handleDeleteMany">
+                <template #icon>
+                  <SvgIcon icon="lucide:trash-2" class="text-20px" />
+                </template>
+                删除
+              </NButton>
+              <NButton type="success">
+                <template #icon>
+                  <SvgIcon icon="lucide:download" class="text-20px" />
+                </template>
+                导出数据
+              </NButton>
+            </NSpace>
+
+            <NSpace align="center" :size="18">
+              <RefreshIconButton
+                :loading="loading"
+                @refresh="handleQuery"
+              />
+              <ColumnSetting v-model:columns="columns">
+                <template #trigger>
+                  <ColumnSettingButton />
+                </template>
+              </ColumnSetting>
+            </NSpace>
+          </NSpace>
+
+          <NDataTable
+            class="flex-1-hidden"
+            remote striped flex-height
+            scroll-x="960"
+            :single-line="false"
+            :bordered="false"
+            :columns="columns"
+            :data="users"
+            :loading="loading"
+            :row-key="(row) => row.id"
+            :pagination="pagination"
+            @update:checked-row-keys="handleSelect"
+          />
+        </div>
+      </NCard>
+    </div>
 
     <TableActionModal
       :visible="modalVisible"

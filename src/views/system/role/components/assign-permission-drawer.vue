@@ -40,11 +40,6 @@ function initFn() {
 }
 
 function assignPermission() {
-  if (!menuIds.value.length) {
-    window.$message?.warning('请勾选权限');
-    return;
-  }
-
   window.$dialog?.warning({
     title: '确认分配权限？',
     content: '分配权限后，该角色的权限将会被覆盖',
