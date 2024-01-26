@@ -15,6 +15,6 @@
     "localforage": "1.10.0"
   },
   "devDependencies": {
-    "@types/crypto-js": "4.2.1"
+    "@types/crypto-js": "4.2.2"
   }
 }
