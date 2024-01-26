@@ -242,7 +242,7 @@ watch(
         </NFormItemGridItem>
 
         <NFormItemGridItem
-          v-if="formModel.type === MenuTypeEnum.CATALOG"
+          v-if="formModel.type !== MenuTypeEnum.BUTTON"
           :span="12" label="始终显示" path="alwaysShow"
           feedback="是否在只有一个子路由时显示"
         >

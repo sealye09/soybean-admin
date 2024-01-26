@@ -113,7 +113,7 @@ export function getGlobalMenusByAuthRoutes(routes: RouteRecordRaw[]) {
     if (!route.meta?.hidden) {
       const menu = getGlobalMenuByBaseRoute(route);
       const length = route.children?.length ?? 0;
-      const alwaysShow = route.meta?.alwaysShow ?? true;
+      const alwaysShow = route.meta?.alwaysShow ?? false;
 
       // 子节点数量大于1，当做目录处理
       if (length > 1) {

@@ -26,7 +26,7 @@ const columns = ref<DataTableColumns<MenuVO>>([
     key: 'index',
     title: '#',
     align: 'center',
-    width: 80,
+    width: 120,
     render: (_, index) => {
       return index + 1;
     },
