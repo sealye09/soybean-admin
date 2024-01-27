@@ -69,6 +69,7 @@ function filterAuthRouteByRoles(route: RouteRecordRaw, roles: string[]) {
  * @returns 返回用户有权限的异步(动态)路由
  */
 export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string[]) {
+  const ROOT_USER = 'ROOT';
   const asyncRoutes: RouteRecordRaw[] = [];
   const modules = import.meta.glob('/src/views/**/**.vue');
 
@@ -76,7 +77,7 @@ export function filterAsyncRoutesByRoles(routes: RouteRecordRaw[], roles: string
     const tmpRoute = { ...route }; // ES6扩展运算符复制新对象
     if (!route.name) tmpRoute.name = route.path;
 
-    const hasPermission = tmpRoute.meta?.roles?.some(role => roles.includes(role));
+    const hasPermission = tmpRoute.meta?.roles?.some(role => roles.includes(role)) || roles.includes(ROOT_USER);
 
     // 判断用户(角色)是否有该路由的访问权限
     if (hasPermission) {

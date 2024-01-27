@@ -7,15 +7,15 @@ import {
   EXCEPTION_ROUTE_403,
   LOGIN_ROUTE,
   ROOT_ROUTE,
-  isErrorRoute,
-  isExceptionRoute,
+  is404ErrorRoute,
   isLoginRoute,
 } from '../routes';
 
-const ROOT_USER = 'root';
+const ROOT_USER = 'ROOT';
 
 export function createPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
+    console.log(to, from);
     const meta = to.meta;
     const authStore = useAuthStore();
 
@@ -48,17 +48,26 @@ export function createPermissionGuard(router: Router) {
       // 1. 已登录且访问登录页，则跳转到根路由
       {
         condition: isLogin && isLoginRoute(to),
-        callback: () => next({ name: ROOT_ROUTE.name }),
+        callback: () => {
+          console.log('1. 已登录且访问登录页，则跳转到根路由');
+          next({ name: ROOT_ROUTE.name });
+        },
       },
       // 2. 常量路由，无需登录，直接放行
       {
         condition: !needLogin,
-        callback: () => next(),
+        callback: () => {
+          console.log('2. 常量路由，无需登录，直接放行');
+          next();
+        },
       },
       // 3. 页面需要登录，但是用户未登录，则跳转到登录页
       {
         condition: !isLogin && needLogin,
-        callback: () => next({ name: LOGIN_ROUTE.name, query: { redirect: to.fullPath } }),
+        callback: () => {
+          console.log('3. 页面需要登录，但是用户未登录，则跳转到登录页');
+          next({ name: LOGIN_ROUTE.name, query: { redirect: to.fullPath } });
+        },
       },
       // 4. 用户已登录，且有权限，则放行
       {
@@ -79,7 +88,10 @@ export function createPermissionGuard(router: Router) {
       // 5. 用户已登录，但是没有权限，则跳转到403页面
       {
         condition: isLogin && needLogin && !hasPermission,
-        callback: () => next({ name: EXCEPTION_ROUTE_403.name }),
+        callback: () => {
+          console.log('5. 用户已登录，但是没有权限，则跳转到403页面');
+          next({ name: EXCEPTION_ROUTE_403.name });
+        },
       },
     ];
 
@@ -97,33 +109,32 @@ async function createAuthRouteGuard(
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
-  console.log(to, from);
   const routeStore = useRouteStore();
   const authStore = useAuthStore();
   const isLogin = Boolean(authStore.token);
-  const isErrorOrExceptionRoute = isErrorRoute(to) || isExceptionRoute(to);
+  const isNotFoundRoute = is404ErrorRoute(to);
   const isConstantRoute = to.meta.constant;
 
   // 1. 如果路由是常量路由，且不是 exception error 路由，则允许访问。
-  if (isConstantRoute && !isErrorOrExceptionRoute) {
+  if (isConstantRoute && !isNotFoundRoute) {
     console.log('1. 如果路由是常量路由，且不是 exception error 路由，则允许访问。');
     return true;
   }
 
   // 2. 如果路由已经初始化，且不是 exception error 路由，则允许访问。
-  if (routeStore.isInitAuthRoute && !isErrorOrExceptionRoute) {
+  if (routeStore.isInitAuthRoute && !isNotFoundRoute) {
     console.log('2. 如果路由已经初始化，且不是 exception error 路由，则允许访问。');
     return true;
   }
 
   // 3. 如果路由已经初始化，判断是否匹配上。
-  if (routeStore.isInitAuthRoute && isErrorOrExceptionRoute) {
+  if (routeStore.isInitAuthRoute && isNotFoundRoute) {
     console.log('3. 如果路由已经初始化，判断是否匹配上。');
-    if (to.matched.length) {
-      console.log('3.1. 匹配上');
-      next({ name: EXCEPTION_ROUTE_403.name });
-      return false;
-    }
+    // if (to.matched.length) {
+    //   console.log('3.1. 匹配上');
+    //   next({ name: EXCEPTION_ROUTE_403.name });
+    //   return false;
+    // }
     return true;
   }
 
@@ -139,9 +150,9 @@ async function createAuthRouteGuard(
   await routeStore.initAuthRoute();
   console.log('5. 初始化路由');
 
-  // 6. 路由被 exception error 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。
-  if (isErrorOrExceptionRoute) {
-    console.log('6. 路由被 exception error 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。', from, to);
+  // 6. 路由被 error 404 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。
+  if (isNotFoundRoute) {
+    console.log('6. 路由被 error 404 路由捕获，因为自动路由未初始化。自动路由初始化后，重定向到原始路由。', from, to);
     const path = to.redirectedFrom?.name === ROOT_ROUTE.name ? '/' : to.fullPath;
     next({ path: path as string, replace: true, query: to.query, hash: to.hash });
 

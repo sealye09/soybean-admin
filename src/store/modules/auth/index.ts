@@ -15,7 +15,7 @@ export const useAuthStore = defineStore(
   SetupStoreId.Auth,
   () => {
     const routeStore = useRouteStore();
-    const { route, toLogin, redirectFromLogin } = useRouterPush(false);
+    const { toLogin, redirectFromLogin } = useRouterPush(false);
     const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
     const token = ref<string>();
@@ -29,9 +29,6 @@ export const useAuthStore = defineStore(
     async function resetStore() {
       const authStore = useAuthStore();
       authStore.$reset();
-
-      if (!route.value.meta.constant)
-        await toLogin();
       routeStore.resetStore();
     }
 
@@ -85,12 +82,20 @@ export const useAuthStore = defineStore(
 
     /** Logout */
     async function logout() {
-      await logoutApi();
-      routeStore.resetStore();
-      resetStore();
-      window.$message?.success('退出成功', {
-        duration: INFO_MSG_DURATION,
-      });
+      try {
+        const res = await logoutApi();
+        console.log('🚀 ~ logout ~ res:', res);
+
+        routeStore.resetStore();
+        resetStore();
+        window.$message?.success('退出成功', {
+          duration: INFO_MSG_DURATION,
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        await toLogin(undefined, '/');
+      }
     }
 
     /** 双token时，使用refreshToken更新token */

@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useRouter } from 'vue-router';
 
+import { useRouterPush } from '@/hooks/common/router';
 import { LOGIN_ROUTE } from '@/router/routes';
 import { useRouteStore } from '@/store';
 import { useAuthStore } from '@/store/modules/auth';
@@ -38,7 +39,7 @@ function handleError(err: RequestError) {
         closable: false,
         maskClosable: false,
         positiveText: '去登录',
-        onPositiveClick: () => {
+        onPositiveClick: async () => {
           const authStore = useAuthStore();
           const routeStore = useRouteStore();
 
@@ -50,6 +51,8 @@ function handleError(err: RequestError) {
             localStg.remove('route-store' as any);
             localStg.remove('token');
           }
+
+          await useRouterPush(false).toLogin(undefined, '/');
         },
       });
     }

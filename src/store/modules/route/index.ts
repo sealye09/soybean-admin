@@ -111,9 +111,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   const breadcrumbs = computed(() => getBreadcrumbsByRoute(router.currentRoute.value, menus.value));
 
   /** Reset store */
-  async function resetStore() {
+  function resetStore() {
     const routeStore = useRouteStore();
-    // resetRouter();
     routeStore.$reset();
   }
 
