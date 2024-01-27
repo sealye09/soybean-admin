@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'SoybeanAdmin',
+    title: 'SoybeanAdmin'
   },
   common: {
     tip: 'Tip',
@@ -19,21 +19,21 @@ const local: App.I18n.Schema = {
     lookForward: 'Coming soon',
     userCenter: 'User Center',
     logout: 'Logout',
-    logoutConfirm: 'Are you sure you want to log out?',
+    logoutConfirm: 'Are you sure you want to log out?'
   },
   theme: {
     themeSchema: {
       title: 'Theme Schema',
       light: 'Light',
       dark: 'Dark',
-      auto: 'Follow System',
+      auto: 'Follow System'
     },
     layoutMode: {
-      'title': 'Layout Mode',
-      'vertical': 'Vertical Menu Mode',
-      'horizontal': 'Horizontal Menu Mode',
+      title: 'Layout Mode',
+      vertical: 'Vertical Menu Mode',
+      horizontal: 'Horizontal Menu Mode',
       'vertical-mix': 'Vertical Mix Menu Mode',
-      'horizontal-mix': 'Horizontal Mix menu Mode',
+      'horizontal-mix': 'Horizontal Mix menu Mode'
     },
     themeColor: {
       title: 'Theme Color',
@@ -42,33 +42,33 @@ const local: App.I18n.Schema = {
       success: 'Success',
       warning: 'Warning',
       error: 'Error',
-      followPrimary: 'Follow Primary',
+      followPrimary: 'Follow Primary'
     },
     scrollMode: {
       title: 'Scroll Mode',
       wrapper: 'Wrapper',
-      content: 'Content',
+      content: 'Content'
     },
     page: {
       animate: 'Page Animate',
       mode: {
-        'title': 'Page Animate Mode',
-        'fade': 'Fade',
+        title: 'Page Animate Mode',
+        fade: 'Fade',
         'fade-slide': 'Slide',
         'fade-bottom': 'Fade Zoom',
         'fade-scale': 'Fade Scale',
         'zoom-fade': 'Zoom Fade',
         'zoom-out': 'Zoom Out',
-        'none': 'None',
-      },
+        none: 'None'
+      }
     },
     fixedHeaderAndTab: 'Fixed Header And Tab',
     header: {
       height: 'Header Height',
       breadcrumb: {
         visible: 'Breadcrumb Visible',
-        showIcon: 'Breadcrumb Icon Visible',
-      },
+        showIcon: 'Breadcrumb Icon Visible'
+      }
     },
     tab: {
       visible: 'Tab Visible',
@@ -77,8 +77,8 @@ const local: App.I18n.Schema = {
       mode: {
         title: 'Tab Mode',
         chrome: 'Chrome',
-        button: 'Button',
-      },
+        button: 'Button'
+      }
     },
     sider: {
       inverted: 'Dark Sider',
@@ -86,13 +86,13 @@ const local: App.I18n.Schema = {
       collapsedWidth: 'Sider Collapsed Width',
       mixWidth: 'Mix Sider Width',
       mixCollapsedWidth: 'Mix Sider Collapse Width',
-      mixChildMenuWidth: 'Mix Child Menu Width',
+      mixChildMenuWidth: 'Mix Child Menu Width'
     },
     footer: {
       visible: 'Footer Visible',
       fixed: 'Fixed Footer',
       height: 'Footer Height',
-      right: 'Right Footer',
+      right: 'Right Footer'
     },
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
@@ -100,8 +100,8 @@ const local: App.I18n.Schema = {
       copyConfig: 'Copy Config',
       copySuccessMsg: 'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
       resetConfig: 'Reset Config',
-      resetSuccessMsg: 'Reset Success',
-    },
+      resetSuccessMsg: 'Reset Success'
+    }
   },
   route: {
     'login': 'Login',
@@ -122,6 +122,10 @@ const local: App.I18n.Schema = {
     'multi-menu_second': 'Menu Two',
     'multi-menu_second_child': 'Menu Two Child',
     'multi-menu_second_child_home': 'Menu Two Child Home',
+    exception: 'Exception',
+    exception_403: '403',
+    exception_404: '404',
+    exception_500: '500'
   },
   page: {
     login: {

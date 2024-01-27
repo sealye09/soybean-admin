@@ -9,9 +9,9 @@ const props = defineProps<Props>();
 
 interface Props {
   /** Show collapsed icon */
-  collapsed?: boolean
+  collapsed?: boolean;
   /** Arrow style icon */
-  arrowIcon?: boolean
+  arrowIcon?: boolean;
 }
 
 const arrowIcons = ['line-md:chevron-double-left', 'line-md:chevron-double-right'];

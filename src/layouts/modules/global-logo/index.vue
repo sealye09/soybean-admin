@@ -2,26 +2,25 @@
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'GlobalLogo',
-});
-
-withDefaults(defineProps<Props>(), {
-  showTitle: true,
+  name: 'GlobalLogo'
 });
 
 interface Props {
   /** Whether to show the title */
-  showTitle?: boolean
+  showTitle?: boolean;
 }
+
+withDefaults(defineProps<Props>(), {
+  showTitle: true
+});
 </script>
 
 <template>
-  <RouterLink to="/" class="w-full flex-center nowrap-hidden">
+  <RouterLink to="/" class="flex-center w-full nowrap-hidden">
     <SystemLogo class="text-32px text-primary" />
-
-    <NGradientText v-show="showTitle" type="primary" class="pl-8px text-16px font-bold transition duration-300 ease-in-out">
+    <h2 v-show="showTitle" class="pl-8px text-16px font-bold text-primary transition duration-300 ease-in-out">
       {{ $t('system.title') }}
-    </NGradientText>
+    </h2>
   </RouterLink>
 </template>
 

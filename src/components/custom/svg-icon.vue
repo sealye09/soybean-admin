@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
 import { computed, useAttrs } from 'vue';
+import { Icon } from '@iconify/vue';
 
 defineOptions({ name: 'SvgIcon' });
-
-const props = defineProps<Props>();
 
 /**
  * Props
@@ -19,17 +17,19 @@ interface Props {
   localIcon?: string;
 }
 
+const props = defineProps<Props>();
+
 const attrs = useAttrs();
 
 const bindAttrs = computed<{ class: string; style: string }>(() => ({
   class: (attrs.class as string) || '',
-  style: (attrs.style as string) || '',
+  style: (attrs.style as string) || ''
 }));
 
 const symbolId = computed(() => {
   const { VITE_ICON_LOCAL_PREFIX: prefix } = import.meta.env;
 
-  const defaultLocalIcon = 'codicon:blank';
+  const defaultLocalIcon = 'no-icon';
 
   const icon = props.localIcon || defaultLocalIcon;
 

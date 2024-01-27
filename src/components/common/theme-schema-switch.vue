@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import type { PopoverPlacement } from 'naive-ui';
 import { computed } from 'vue';
-
+import type { PopoverPlacement } from 'naive-ui';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ThemeSchemaSwitch' });
 
-const props = withDefaults(defineProps<Props>(), {
-  showTooltip: true,
-  tooltipPlacement: 'bottom',
-});
-
-const emit = defineEmits<Emits>();
-
 interface Props {
   /** Theme schema */
-  themeSchema: UnionKey.ThemeScheme
+  themeSchema: UnionKey.ThemeScheme;
   /** Show tooltip */
-  showTooltip?: boolean
+  showTooltip?: boolean;
   /** Tooltip placement */
-  tooltipPlacement?: PopoverPlacement
+  tooltipPlacement?: PopoverPlacement;
 }
 
+const props = withDefaults(defineProps<Props>(), {
+  showTooltip: true,
+  tooltipPlacement: 'bottom'
+});
+
 interface Emits {
-  (e: 'switch'): void
+  (e: 'switch'): void;
 }
+
+const emit = defineEmits<Emits>();
 
 function handleSwitch() {
   emit('switch');
@@ -33,7 +32,7 @@ function handleSwitch() {
 const icons: Record<UnionKey.ThemeScheme, string> = {
   light: 'material-symbols:sunny',
   dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto',
+  auto: 'material-symbols:hdr-auto'
 };
 
 const icon = computed(() => icons[props.themeSchema]);

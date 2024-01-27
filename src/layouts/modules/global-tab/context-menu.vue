@@ -10,15 +10,6 @@ defineOptions({
   name: 'ContextMenu'
 });
 
-const props = withDefaults(defineProps<Props>(), {
-  excludeKeys: () => [],
-  disabledKeys: () => []
-});
-
-const emits = defineEmits<{
-  (e: 'update:visible', val: boolean): void;
-}>();
-
 interface Props {
   /** ClientX */
   x: number;
@@ -27,17 +18,14 @@ interface Props {
   tabId: string;
   excludeKeys?: App.Global.DropdownKey[];
   disabledKeys?: App.Global.DropdownKey[];
-  visible: boolean;
 }
 
-const visible = computed({
-  get() {
-    return props.visible;
-  },
-  set(val) {
-    emits('update:visible', val);
-  }
+const props = withDefaults(defineProps<Props>(), {
+  excludeKeys: () => [],
+  disabledKeys: () => []
 });
+
+const visible = defineModel<boolean>('visible');
 
 const { removeTab, clearTabs, clearLeftTabs, clearRightTabs } = useTabStore();
 const { SvgIconVNode } = useSvgIconRender(SvgIcon);
@@ -59,26 +47,17 @@ const options = computed(() => {
     {
       key: 'closeOther',
       label: $t('dropdown.closeOther'),
-      icon: SvgIconVNode({
-        icon: 'ant-design:column-width-outlined',
-        fontSize: 18
-      })
+      icon: SvgIconVNode({ icon: 'ant-design:column-width-outlined', fontSize: 18 })
     },
     {
       key: 'closeLeft',
       label: $t('dropdown.closeLeft'),
-      icon: SvgIconVNode({
-        icon: 'mdi:format-horizontal-align-left',
-        fontSize: 18
-      })
+      icon: SvgIconVNode({ icon: 'mdi:format-horizontal-align-left', fontSize: 18 })
     },
     {
       key: 'closeRight',
       label: $t('dropdown.closeRight'),
-      icon: SvgIconVNode({
-        icon: 'mdi:format-horizontal-align-right',
-        fontSize: 18
-      })
+      icon: SvgIconVNode({ icon: 'mdi:format-horizontal-align-right', fontSize: 18 })
     },
     {
       key: 'closeAll',

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { getColorPalette } from '@sa/utils';
 import { computed } from 'vue';
+import { getColorPalette } from '@sa/utils';
+
+defineOptions({ name: 'WaveBg' });
 
 interface Props {
   /** Theme color */
-  themeColor: string
+  themeColor: string;
 }
 
 const props = defineProps<Props>();
@@ -34,7 +36,7 @@ const darkColor = computed(() => getColorPalette(props.themeColor, 6));
         </g>
       </svg>
     </div>
-    <div class="absolute -bottom-400px -left-200px <sm:(-bottom-760px -left-100px)">
+    <div class="absolute -left-200px -bottom-400px <sm:(-left-100px -bottom-760px)">
       <svg height="896" width="967.8852157128662">
         <defs>
           <path

@@ -1,23 +1,23 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'SettingItem',
+  name: 'SettingItem'
 });
-
-defineProps<Props>();
 
 interface Props {
   /** Label */
   label: string;
 }
+
+defineProps<Props>();
 </script>
 
 <template>
-  <div class="w-full flex-y-center justify-between">
+  <div class="flex-y-center justify-between w-full">
     <div>
-      <span class="pr-8px text-base_text">{{ label }}</span>
-      <slot name="suffix" />
+      <span class="text-base_text pr-8px">{{ label }}</span>
+      <slot name="suffix"></slot>
     </div>
-    <slot />
+    <slot></slot>
   </div>
 </template>
 

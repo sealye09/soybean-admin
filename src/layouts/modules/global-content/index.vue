@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store/modules/app';
-import { useRouteStore } from '@/store/modules/route';
 import { useThemeStore } from '@/store/modules/theme';
+import { useRouteStore } from '@/store/modules/route';
 
 defineOptions({
-  name: 'GlobalContent',
-});
-
-withDefaults(defineProps<Props>(), {
-  showPadding: true,
+  name: 'GlobalContent'
 });
 
 interface Props {
   /** Show padding for content */
   showPadding?: boolean;
 }
+
+withDefaults(defineProps<Props>(), {
+  showPadding: true
+});
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();

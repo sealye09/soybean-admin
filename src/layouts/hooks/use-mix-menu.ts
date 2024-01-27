@@ -14,10 +14,10 @@ export function useMixMenu() {
   }
 
   function getActiveFirstLevelMenuKey() {
-    const { hidden, activeMenu } = route.meta;
+    const { hideInMenu, activeMenu } = route.meta;
     const name = route.name as string;
 
-    const routeName = (hidden ? activeMenu : name) || name;
+    const routeName = (hideInMenu ? activeMenu : name) || name;
 
     const [firstLevelRouteName] = routeName.split('_');
 

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
-
+import { $t } from '@/locales';
 import LayoutModeCard from '../components/layout-mode-card.vue';
 
 defineOptions({
-  name: 'LayoutMode',
+  name: 'LayoutMode'
 });
 
 const appStore = useAppStore();
@@ -17,31 +16,31 @@ const themeStore = useThemeStore();
   <NDivider>{{ $t('theme.layoutMode.title') }}</NDivider>
   <LayoutModeCard v-model:mode="themeStore.layout.mode" :disabled="appStore.isMobile">
     <template #vertical>
-      <div class="layout-sider h-full w-18px" />
+      <div class="layout-sider w-18px h-full"></div>
       <div class="vertical-wrapper">
-        <div class="layout-header" />
-        <div class="layout-main" />
+        <div class="layout-header"></div>
+        <div class="layout-main"></div>
       </div>
     </template>
     <template #vertical-mix>
-      <div class="layout-sider h-full w-8px" />
-      <div class="layout-sider h-full w-16px" />
+      <div class="layout-sider w-8px h-full"></div>
+      <div class="layout-sider w-16px h-full"></div>
       <div class="vertical-wrapper">
-        <div class="layout-header" />
-        <div class="layout-main" />
+        <div class="layout-header"></div>
+        <div class="layout-main"></div>
       </div>
     </template>
     <template #horizontal>
-      <div class="layout-header" />
+      <div class="layout-header"></div>
       <div class="horizontal-wrapper">
-        <div class="layout-main" />
+        <div class="layout-main"></div>
       </div>
     </template>
     <template #horizontal-mix>
-      <div class="layout-header" />
+      <div class="layout-header"></div>
       <div class="horizontal-wrapper">
-        <div class="layout-sider w-18px" />
-        <div class="layout-main" />
+        <div class="layout-sider w-18px"></div>
+        <div class="layout-main"></div>
       </div>
     </template>
   </LayoutModeCard>

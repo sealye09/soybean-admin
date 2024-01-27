@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-
-import { themePageAnimationModeOptions, themeScrollModeOptions, themeTabModeOptions } from '@/constants/app';
 import { $t } from '@/locales';
 import { useThemeStore } from '@/store/modules/theme';
-
+import { themePageAnimationModeOptions, themeScrollModeOptions, themeTabModeOptions } from '@/constants/app';
 import SettingItem from '../components/setting-item.vue';
 
 defineOptions({
-  name: 'PageFun',
+  name: 'PageFun'
 });
 
 const themeStore = useThemeStore();
@@ -22,7 +20,7 @@ const isWrapperScrollMode = computed(() => themeStore.layout.scrollMode === 'wra
 function translateOptions(options: Common.Option<string>[]) {
   return options.map(option => ({
     ...option,
-    label: $t(option.label as App.I18n.I18nKey),
+    label: $t(option.label as App.I18n.I18nKey)
   }));
 }
 </script>
@@ -36,7 +34,7 @@ function translateOptions(options: Common.Option<string>[]) {
         :options="translateOptions(themeScrollModeOptions)"
         size="small"
         class="w-120px"
-      />
+      ></NSelect>
     </SettingItem>
     <SettingItem key="1-1" :label="$t('theme.page.animate')">
       <NSwitch v-model:value="themeStore.page.animate" />
