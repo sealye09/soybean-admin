@@ -39,7 +39,7 @@ function resetQuery() {
 
     <NButton type="primary" @click="handleQuery">
       <template #icon>
-        <SvgIcon icon="lucide:plus" class="text-20px" />
+        <SvgIcon icon="lucide:search" class="text-20px" />
       </template>
       搜索
     </NButton>
