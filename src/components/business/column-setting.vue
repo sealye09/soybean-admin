@@ -3,9 +3,7 @@ import type { DataTableColumn } from 'naive-ui';
 import { ref, watch } from 'vue';
 import VueDraggable from 'vuedraggable';
 
-import type { DictTypePageVO } from '@/service';
-
-type Column = DataTableColumn<DictTypePageVO>;
+type Column = DataTableColumn<any>;
 
 const props = defineProps<{
   columns: Column[];
