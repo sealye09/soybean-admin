@@ -55,3 +55,22 @@ export function updateDept(id: number, data: DeptForm) {
 export function deleteDept(ids: string) {
   return request.delete(`/api/v1/dept/${ids}`);
 }
+
+/**
+ * 根据层级获取部门列表
+ *
+ * @param depth
+ * @returns 部门列表
+ */
+export function getDeptsByDepth(depth: number) {
+  return request.get<DeptVO[]>(`/api/v1/dept/tree/${depth}`);
+}
+
+/**
+ * 根据父级id获取部门列表
+ * @param parentId
+ * @returns 部门列表
+ */
+export function getDeptsByParentId(parentId: number) {
+  return request.get<DeptVO[]>(`/api/v1/dept/listByParentId/${parentId}`);
+}

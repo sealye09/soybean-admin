@@ -27,6 +27,8 @@ type ErrorStatus = keyof typeof ERROR_STATUS;
  * @param err
  */
 function handleError(err: RequestError) {
+  if (!err.code) console.error(err);
+
   const code = err.code.toString();
   showErrorMsg(err);
 
