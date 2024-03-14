@@ -104,8 +104,8 @@ function handleUpdateFormModelByModalType() {
     getDictOptions('gender'),
   ]).then(([
     { data: depts, error: deptErr },
-    { data: roles, error: roleErr }
-    , { data: genders, error: genderErr },
+    { data: roles, error: roleErr },
+    { data: genders, error: genderErr },
 
   ]) => {
     if (depts && depts.length)
@@ -119,7 +119,7 @@ function handleUpdateFormModelByModalType() {
       window.$message?.error(roleErr?.msg || '获取角色列表失败');
 
     if (genders)
-      genderOptions.value = genders as SelectOptions;
+      genderOptions.value = genders.map(item => ({ value: Number(item.value), label: item.label })) as SelectOptions;
     else
       window.$message?.error(genderErr?.msg || '获取性别列表失败');
   });

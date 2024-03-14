@@ -313,8 +313,7 @@ onMounted(() => {
           </NSpace>
 
           <NDataTable
-            class="flex-1-hidden"
-            remote striped flex-height
+            class="remote flex-height striped flex-1-hidden"
             scroll-x="960"
             :single-line="false"
             :bordered="false"
