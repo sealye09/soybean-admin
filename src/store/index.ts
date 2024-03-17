@@ -21,3 +21,4 @@ export * from './modules/auth';
 export * from './modules/route';
 export * from './modules/tab';
 export * from './modules/theme';
+export * from './modules/photo';

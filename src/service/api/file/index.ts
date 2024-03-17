@@ -7,10 +7,10 @@ import type { FileInfo } from './types';
  *
  * @param file
  */
-export function uploadFileApi(file: File) {
+export function uploadImageApi(file: File) {
   const formData = new FormData();
   formData.append('file', file);
-  return request.post<FileInfo>('/api/v1/files', formData, {
+  return request.post<FileInfo>('/api/v1/files/images/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

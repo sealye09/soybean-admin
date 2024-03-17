@@ -74,6 +74,7 @@ function createDefaultFormModel(): FormModel {
     alwaysShow: 1,
     type: MenuTypeEnum.CATALOG,
     parentId: 0,
+    redirect: '',
   };
 }
 

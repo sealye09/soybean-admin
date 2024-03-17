@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store/modules/app';
-import { useThemeStore } from '@/store/modules/theme';
 import { useRouteStore } from '@/store/modules/route';
+import { useThemeStore } from '@/store/modules/theme';
 
 defineOptions({
-  name: 'GlobalContent'
+  name: 'GlobalContent',
+});
+
+withDefaults(defineProps<Props>(), {
+  showPadding: true,
 });
 
 interface Props {
   /** Show padding for content */
   showPadding?: boolean;
 }
-
-withDefaults(defineProps<Props>(), {
-  showPadding: true
-});
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
@@ -29,7 +29,8 @@ const routeStore = useRouteStore();
       @before-leave="appStore.setContentXScrollable(true)"
       @after-enter="appStore.setContentXScrollable(false)"
     >
-      <KeepAlive :include="routeStore.cacheRoutes">
+      <!-- set page cache -->
+      <KeepAlive :include="routeStore.cacheRoutes" :max="6">
         <component
           :is="Component"
           v-if="appStore.reloadFlag"
