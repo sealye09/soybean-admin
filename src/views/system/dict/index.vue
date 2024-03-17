@@ -12,9 +12,7 @@ import DictDetailModal from './components/dict-detail-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
-defineOptions({
-  name: 'DictType',
-});
+defineOptions({ name: 'Dict' });
 
 const loading = ref<boolean>(false);
 const selectedIds = ref<number[]>([]);

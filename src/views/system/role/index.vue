@@ -13,7 +13,7 @@ import DictDetailModal from './components/assign-permission-drawer.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
-defineOptions({ name: 'RolePage' });
+defineOptions({ name: 'Role' });
 
 const loading = ref<boolean>(false);
 const selectedIds = ref<number[]>([]);

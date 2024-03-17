@@ -11,7 +11,8 @@ import { deleteMenu, getMenuForm, listMenus } from '@/service';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
-defineOptions({ name: 'MenuPage' });
+// eslint-disable-next-line vue/no-reserved-component-names
+defineOptions({ name: 'Menu' });
 
 const loading = ref<boolean>(false);
 const dictTypeList = ref<MenuVO[]>();

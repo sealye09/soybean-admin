@@ -11,7 +11,7 @@ import { deleteDept, getDeptForm, listDepts } from '@/service';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
-defineOptions({ name: 'MenuPage' });
+defineOptions({ name: 'Dept' });
 
 const loading = ref<boolean>(false);
 const dictTypeList = ref<DeptVO[]>();

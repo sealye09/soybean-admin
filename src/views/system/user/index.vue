@@ -12,7 +12,7 @@ import { deleteUsers, getDeptOptions, getUserForm, getUserPage } from '@/service
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
-defineOptions({ name: 'UserPage' });
+defineOptions({ name: 'User' });
 
 const treeData = ref<(TreeOption & OptionType)[]>();
 const loading = ref<boolean>(false);
@@ -313,7 +313,10 @@ onMounted(() => {
           </NSpace>
 
           <NDataTable
-            class="remote flex-height striped flex-1-hidden"
+            class="flex-1-hidden"
+            remote
+            flex-height
+            striped
             scroll-x="960"
             :single-line="false"
             :bordered="false"
