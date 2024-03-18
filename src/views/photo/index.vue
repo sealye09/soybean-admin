@@ -14,8 +14,14 @@ const photoStore = usePhotoStore();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
 const photoRef = ref<HTMLImageElement | null>();
+const photoSrc = ref<string>('');
 const deviceList = ref<MediaDeviceInfo[]>([]);
-const showButtons = ref(false);
+
+// some flag for status
+const isCameraOpened = ref(false);
+const isImageUploaded = ref(false);
+const isPictureTaken = ref(false);
+const isPhotoGenerated = ref(false);
 
 function toStudentPage() {
   router.push('/student');
@@ -63,10 +69,11 @@ function selectCamera(option: string) {
     if (videoRef.value) {
       videoRef.value.srcObject = stream;
       videoRef.value.play();
-      showButtons.value = true;
+      isCameraOpened.value = true;
     }
   }).catch((err) => {
     console.log(err);
+    isCameraOpened.value = false;
     window.$message?.error('打开摄像头失败');
   });
 }
@@ -79,10 +86,8 @@ function shoot() {
   canvas.width = videoRef.value.videoWidth;
   canvas.height = videoRef.value.videoHeight;
   canvas.getContext('2d')?.drawImage(videoRef.value, 0, 0, canvas.width, canvas.height);
-  photoRef.value.src = canvas.toDataURL('image/png');
-  photoRef.value.style.width = `${videoRef.value.videoWidth}px`;
-  photoRef.value.style.height = `${videoRef.value.videoHeight}px`;
-  showButtons.value = true;
+  photoSrc.value = canvas.toDataURL('image/png');
+  isPictureTaken.value = true;
 }
 
 type PhotoApiBody = {
@@ -92,12 +97,12 @@ type PhotoApiBody = {
 };
 
 function generateIdPhoto() {
-  if (!photoRef.value || !photoRef.value.src) {
+  if (!photoRef.value || !photoSrc.value) {
     window.$message?.error('请先拍照');
     return;
   }
   const body: PhotoApiBody = {
-    image: photoRef.value.src,
+    image: photoSrc.value,
     size: photoStore.size,
     background_color: photoStore.backgroundColor,
   };
@@ -111,11 +116,11 @@ function generateIdPhoto() {
   }).then(res => res.json()).then(({ data }) => {
     console.log('🚀 ~ generateIdPhoto ~ data:', data);
     if (!photoRef.value) return;
-    photoRef.value.src = data.image;
-    photoRef.value.style.width = '295px';
-    photoRef.value.style.height = '413px';
+    photoSrc.value = data.image;
+    isPhotoGenerated.value = true;
     console.log(data);
   }).catch((err) => {
+    isPhotoGenerated.value = false;
     console.log(err);
   });
 }
@@ -130,9 +135,8 @@ function uploadImage() {
     const reader = new FileReader();
     reader.onload = (e) => {
       if (!photoRef.value) return;
-      photoRef.value.src = e.target?.result as string;
-      photoRef.value.width = 540;
-      showButtons.value = true;
+      photoSrc.value = e.target?.result as string;
+      isImageUploaded.value = true;
     };
     reader.readAsDataURL(file);
   };
@@ -141,7 +145,9 @@ function uploadImage() {
 
 function reShoot() {
   if (!videoRef.value || !photoRef.value) return;
-  photoRef.value.src = '';
+  photoSrc.value = '';
+  isPictureTaken.value = false;
+  isPhotoGenerated.value = false;
 }
 
 function base64ToFile(base64: string) {
@@ -159,13 +165,13 @@ function base64ToFile(base64: string) {
 }
 
 async function handleNext() {
-  if (!photoRef.value || !photoRef.value.src) {
+  if (!photoRef.value || !photoSrc.value) {
     window.$message?.error('请先拍照');
     return false;
   }
 
   const current = photoStore.waitList[photoStore.currentIdx];
-  const photoBase64 = photoRef.value.src;
+  const photoBase64 = photoSrc.value;
   const photoBinary = base64ToFile(photoBase64);
 
   const { error: uploadError, data: uploadData } = await uploadImageApi(photoBinary);
@@ -181,7 +187,11 @@ async function handleNext() {
   }
 
   photoStore.next();
-  if (photoRef.value) photoRef.value.src = '';
+  if (photoRef.value) photoSrc.value = '';
+  window.$message?.success('上传成功');
+  isPictureTaken.value = false;
+  isPhotoGenerated.value = false;
+  isImageUploaded.value = false;
   return true;
 }
 
@@ -221,7 +231,10 @@ async function handleComplete() {
               </NButton>
             </div>
 
-            <div v-if="showButtons" class="flex gap-12px">
+            <div
+              v-if="isPictureTaken || isCameraOpened || isPhotoGenerated || isImageUploaded"
+              class="flex gap-12px"
+            >
               <NButton type="primary" class="w-fit" @click="shoot">
                 拍照
               </NButton>
@@ -269,9 +282,9 @@ async function handleComplete() {
             </div>
           </div>
 
-          <div class="flex gap-32px">
+          <div class="h-full max-h-[600px] flex gap-32px">
             <video ref="videoRef" />
-            <img ref="photoRef" class="h-fit w-fit">
+            <NImage ref="photoRef" :src="photoSrc" class="max-h-[50%]" object-fit="scale-down" />
           </div>
         </div>
       </div>
