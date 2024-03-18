@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { updateStudentPhoto, uploadImageApi } from '@/service';
 import type { BackgroundColor, PhotoSize } from '@/store';
 import { usePhotoStore } from '@/store';
 
@@ -142,6 +143,56 @@ function reShoot() {
   if (!videoRef.value || !photoRef.value) return;
   photoRef.value.src = '';
 }
+
+function base64ToFile(base64: string) {
+  const byteString = atob(base64.split(',')[1]);
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  const extMatch = base64.split(';')[0].match(/jpeg|png|jpg/);
+  const ext = extMatch ? extMatch[0] : 'png';
+  for (let i = 0; i < byteString.length; i++)
+    ia[i] = byteString.charCodeAt(i);
+
+  const blob = new Blob([ab], { type: `image/${ext}` });
+
+  return new File([blob], `photo.${ext}`, { type: `image/${ext}` });
+}
+
+async function handleNext() {
+  if (!photoRef.value || !photoRef.value.src) {
+    window.$message?.error('请先拍照');
+    return false;
+  }
+
+  const current = photoStore.waitList[photoStore.currentIdx];
+  const photoBase64 = photoRef.value.src;
+  const photoBinary = base64ToFile(photoBase64);
+
+  const { error: uploadError, data: uploadData } = await uploadImageApi(photoBinary);
+  if (uploadError) {
+    window.$message?.error(uploadError.msg);
+    return false;
+  }
+  const { error } = await updateStudentPhoto(+current.id, { photo: uploadData.url });
+
+  if (error) {
+    window.$message?.error(error.msg);
+    return false;
+  }
+
+  photoStore.next();
+  if (photoRef.value) photoRef.value.src = '';
+  return true;
+}
+
+async function handleComplete() {
+  const success = await handleNext();
+  if (success) {
+    window.$message?.success('采集完成');
+    photoStore.clearWaitList();
+    photoStore.currentIdx = 0;
+  }
+}
 </script>
 
 <template>
@@ -157,7 +208,7 @@ function reShoot() {
           </NButton>
         </div>
 
-        <div class="flex flex-col gap-12px">
+        <div v-else class="flex flex-col gap-12px">
           <div class="flex gap-128px">
             <div class="flex gap-12px">
               <NDropdown trigger="click" :options="deviceList" @select="selectCamera">
@@ -175,8 +226,18 @@ function reShoot() {
                 拍照
               </NButton>
 
-              <NButton type="primary" secondary class="w-fit" @click="shoot">
+              <NButton
+                v-if="photoStore.currentIdx < photoStore.waitList.length - 1"
+                type="primary" secondary class="w-fit" @click="handleNext"
+              >
                 下一个
+              </NButton>
+
+              <NButton
+                v-else
+                type="primary" secondary class="w-fit" @click="handleComplete"
+              >
+                完成
               </NButton>
 
               <NButton
@@ -189,6 +250,22 @@ function reShoot() {
               <NButton type="warning" dashed class="w-fit" @click="reShoot">
                 重拍
               </NButton>
+
+              <div class="mx-32px flex gap-24px text-primary">
+                <span class="text-16px">当前：{{ photoStore.waitList[photoStore.currentIdx].name }}</span>
+                <span
+                  v-if="photoStore.currentIdx < photoStore.waitList.length - 1"
+                  class="text-16px"
+                >
+                  下一个：{{ photoStore.waitList[photoStore.currentIdx + 1].name }}
+                </span>
+                <span
+                  v-else
+                  class="text-16px text-red"
+                >
+                  已经是最后一个了
+                </span>
+              </div>
             </div>
           </div>
 

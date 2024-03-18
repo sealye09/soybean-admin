@@ -1,6 +1,6 @@
 import { request } from '../../request';
 
-import type { StudentForm, StudentPageQuery, StudentPageResult } from './types';
+import type { StudentForm, StudentPageQuery, StudentPageResult, UpdateStudentPhoto } from './types';
 
 /**
  * 获取学生分页数据
@@ -39,6 +39,16 @@ export function addStudent(data: StudentForm) {
  */
 export function updateStudent(id: number, data: StudentForm) {
   return request.put(`/api/v1/students/${id}`, data);
+}
+
+/**
+ * 更新学生照片
+ * @param id
+ * @param data
+ * @returns 更新学生
+ */
+export function updateStudentPhoto(id: number, data: UpdateStudentPhoto) {
+  return request.put(`/api/v1/students/${id}/photo`, data);
 }
 
 /**

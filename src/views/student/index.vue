@@ -1,7 +1,9 @@
 <script setup lang="tsx">
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
+import type { RowData, RowKey } from 'naive-ui/es/data-table/src/interface';
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import type { DeptVO, StudentForm, StudentPageQuery, StudentPageVO } from '@/service';
 import {
@@ -10,6 +12,8 @@ import {
   getStudentForm,
   getStudentList,
 } from '@/service';
+import type { WaitItem } from '@/store';
+import { usePhotoStore } from '@/store';
 
 import TableActionModal from './components/table-action-modal.vue';
 
@@ -33,6 +37,8 @@ const students = ref<StudentPageVO[]>([]);
 const modalType = ref<'add' | 'edit'>();
 const modalVisible = ref<boolean>(false);
 const editData = ref<StudentForm>();
+
+const selected = ref<WaitItem[]>();
 
 const pagination: PaginationProps = reactive({
   disabled: loading.value,
@@ -89,6 +95,10 @@ function showEditModal(id?: number) {
 }
 
 const columns = ref<DataTableColumns<StudentPageVO>>([
+  {
+    type: 'selection',
+    align: 'center',
+  },
   {
     key: 'index',
     title: '#',
@@ -164,6 +174,10 @@ const columns = ref<DataTableColumns<StudentPageVO>>([
     },
   },
 ]);
+
+function handleSelect(_selectedRowKeys: RowKey[], rows: RowData[]) {
+  selected.value = rows as WaitItem[];
+}
 
 function handleDelete(id: number | undefined): any {
   if (id === undefined) return;
@@ -253,6 +267,19 @@ function handleClassChange(value: number) {
   classId.value = value;
   handleQuery();
 }
+
+const router = useRouter();
+const photoStore = usePhotoStore();
+
+function gotoPhotoPage() {
+  if (!selected.value || !selected.value.length) {
+    window.$message?.error('请选择学生');
+    return;
+  }
+  photoStore.waitList = selected.value;
+
+  router.push('/photo');
+}
 </script>
 
 <template>
@@ -330,6 +357,10 @@ function handleClassChange(value: number) {
               </template>
               新增学生
             </NButton>
+
+            <NButton type="primary" @click="gotoPhotoPage">
+              采集照片
+            </NButton>
           </NSpace>
           <NSpace align="center" :size="18">
             <RefreshIconButton
@@ -357,6 +388,7 @@ function handleClassChange(value: number) {
           :loading="loading"
           :row-key="row => row.id"
           :pagination="pagination"
+          @update:checked-row-keys="handleSelect"
         />
       </div>
     </NCard>

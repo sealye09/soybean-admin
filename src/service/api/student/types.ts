@@ -79,3 +79,7 @@ export interface StudentForm {
   // 专业、班级、学院
   deptId: number;
 }
+
+export interface UpdateStudentPhoto {
+  photo: string;
+}

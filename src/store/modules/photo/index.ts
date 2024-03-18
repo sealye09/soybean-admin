@@ -5,6 +5,8 @@ import { SetupStoreId } from '@/enum';
 
 export type PhotoSize = 'small' | 'large';
 export type BackgroundColor = 'white' | 'red' | 'blue';
+
+export type WaitItem = { name: string;id: number | string };
 export const usePhotoStore = defineStore(
   SetupStoreId.Photo,
   () => {
@@ -23,6 +25,8 @@ export const usePhotoStore = defineStore(
      */
     const canModifyAfterUploadPhoto = ref<boolean>(false);
 
+    const currentIdx = ref<number>(0);
+
     function setSize(newSize: PhotoSize) {
       size.value = newSize;
     }
@@ -38,30 +42,30 @@ export const usePhotoStore = defineStore(
     /**
      * 待拍照的人员列表 （id）
      */
-    const waitList = ref<(string | number)[]>([]);
+    const waitList = ref<WaitItem[]>([]);
 
     /**
      * 添加待拍照的人员
-     * @param newId
+     * @param item
      */
-    function addWaitList(newId: string | number) {
-      waitList.value.push(newId);
+    function addWaitList(item: WaitItem) {
+      waitList.value.push(item);
 
       return waitList.value;
     }
 
-    function addWaitListList(newIds: (string | number)[]) {
-      waitList.value.push(...newIds);
+    function addWaitListList(items: WaitItem[]) {
+      waitList.value.push(...items);
 
       return waitList.value;
     }
 
     /**
      * 移除待拍照的人员
-     * @param newId
+     * @param item
      */
-    function removeWaitList(newId: string | number) {
-      const index = waitList.value.indexOf(newId);
+    function removeWaitList(item: WaitItem) {
+      const index = waitList.value.indexOf(item);
       if (index > -1)
         waitList.value.splice(index, 1);
 
@@ -70,6 +74,10 @@ export const usePhotoStore = defineStore(
 
     function clearWaitList() {
       waitList.value = [];
+    }
+
+    function next() {
+      currentIdx.value++;
     }
 
     return {
@@ -85,6 +93,9 @@ export const usePhotoStore = defineStore(
       addWaitListList,
       removeWaitList,
       clearWaitList,
+
+      currentIdx,
+      next,
 
     };
   },
