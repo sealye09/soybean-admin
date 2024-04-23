@@ -3,13 +3,7 @@ import type { FormInst, SelectOption, TreeOption, UploadCustomRequestOptions, Up
 import { computed, reactive, ref, watch } from 'vue';
 
 import type { OptionType, StudentForm } from '@/service';
-import {
-  addStudent,
-  getDeptOptions,
-  getDictOptions,
-  updateStudent,
-  uploadImageApi,
-} from '@/service';
+import { addStudent, getDeptOptions, getDictOptions, updateStudent, uploadImageApi } from '@/service';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -168,7 +162,8 @@ watch(
 const previewFileList = computed<UploadFileInfo[]>(() => {
   if (formModel.photo)
     return [{ id: formModel.photo, name: formModel.photo, url: formModel.photo, status: 'finished' }];
-  return [];
+  else
+    return [];
 });
 
 const showPreviewModal = ref(false);
@@ -177,11 +172,7 @@ function handlePreview() {
   showPreviewModal.value = true;
 }
 
-function customRequest({
-  file,
-  onFinish,
-  onError,
-}: UploadCustomRequestOptions) {
+function customRequest({ file, onFinish, onError }: UploadCustomRequestOptions) {
   if (!file.file) {
     window.$message?.error('文件不存在');
     return;
@@ -197,6 +188,10 @@ function customRequest({
       onFinish();
     }
   });
+}
+
+function handleRemove() {
+  formModel.photo = '';
 }
 </script>
 
@@ -229,13 +224,14 @@ function customRequest({
           path="photo"
         >
           <NUpload
-            :default-file-list="previewFileList"
+            :file-list="previewFileList"
             list-type="image-card"
             :custom-request="customRequest"
             accept=".png,.jpg"
             :default-upload="true"
             :max="1"
             @preview="handlePreview"
+            @remove="handleRemove"
           />
           <NModal
             v-model:show="showPreviewModal"

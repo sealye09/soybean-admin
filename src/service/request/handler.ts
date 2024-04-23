@@ -54,7 +54,10 @@ function handleError(err: RequestError) {
             localStg.remove('token');
           }
 
-          await useRouterPush(false).toLogin(undefined, '/');
+          useRouterPush(false).toLogin(undefined, '/').catch((e) => {
+            console.error(e);
+            window.location.reload();
+          });
         },
       });
     }

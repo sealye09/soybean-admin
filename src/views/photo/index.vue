@@ -203,6 +203,10 @@ async function handleComplete() {
     photoStore.currentIdx = 0;
   }
 }
+
+function resetQueue() {
+  photoStore.$reset();
+}
 </script>
 
 <template>
@@ -228,6 +232,9 @@ async function handleComplete() {
               </NDropdown>
               <NButton type="primary" class="w-fit" @click="uploadImage">
                 上传图片
+              </NButton>
+              <NButton type="error" class="mx-6 w-fit" @click="resetQueue">
+                重新选择
               </NButton>
             </div>
 

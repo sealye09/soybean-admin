@@ -1,8 +1,8 @@
 <script setup lang="tsx">
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { NButton, NPopconfirm, NSpace } from 'naive-ui';
+import { NButton, NImage, NPopconfirm, NSpace } from 'naive-ui';
 import type { RowData, RowKey } from 'naive-ui/es/data-table/src/interface';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 import type { DeptVO, StudentForm, StudentPageQuery, StudentPageVO } from '@/service';
@@ -41,7 +41,7 @@ const editData = ref<StudentForm>();
 const selected = ref<WaitItem[]>();
 
 const pagination: PaginationProps = reactive({
-  disabled: loading.value,
+  disabled: false,
   page: 1,
   pageSize: 10,
   showSizePicker: true,
@@ -56,6 +56,10 @@ const pagination: PaginationProps = reactive({
     pagination.page = 1;
     handleQuery();
   },
+});
+
+watchEffect(() => {
+  pagination.disabled = loading.value;
 });
 
 const queryParams = computed<StudentPageQuery>(() => {
@@ -117,9 +121,10 @@ const columns = ref<DataTableColumns<StudentPageVO>>([
     title: '照片',
     align: 'center',
     render: row => (
-      <n-image
+      <NImage
         width="100"
         src={row.photo}
+        objectFit="cover"
       />
     ),
   },

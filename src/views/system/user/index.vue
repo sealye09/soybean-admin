@@ -9,6 +9,7 @@ import { getStatusLabel } from '@/constants';
 import type { OptionType, Status, UserForm, UserPageVO } from '@/service';
 import { deleteUsers, getDeptOptions, getUserForm, getUserPage } from '@/service';
 
+import ChangePasswordModal from './components/change-password-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
@@ -43,6 +44,9 @@ const nodeProps: TreeNodeProps = ({ option }) => {
 const modalVisible = ref<boolean>(false);
 const modalType = ref<ModalType>('add');
 const editData = ref<UserForm | null>(null);
+
+const passwordModalVisible = ref<boolean>(false);
+const passwordModalUserId = ref<number | undefined>(undefined);
 
 const pagination: PaginationProps = reactive({
   disabled: loading.value,
@@ -142,7 +146,7 @@ const columns = ref<DataTableColumns<UserPageVO>>([
     key: 'actions',
     title: '操作',
     align: 'center',
-    width: 150,
+    width: 250,
     fixed: 'right',
     render: _row => (
       <NSpace justify="center">
@@ -153,6 +157,14 @@ const columns = ref<DataTableColumns<UserPageVO>>([
           onClick={() => showEditModal(_row)}
         >
           编辑
+        </NButton>
+        <NButton
+          size="small"
+          type="warning"
+          ghost
+          onClick={() => showChangePasswordModal(_row)}
+        >
+          修改密码
         </NButton>
         <NPopconfirm onPositiveClick={() => handleDeleteOne(_row.id)}>
           {{
@@ -245,6 +257,11 @@ onMounted(() => {
     await handleQuery();
   });
 });
+
+function showChangePasswordModal(_row: UserPageVO): void {
+  passwordModalUserId.value = _row.id;
+  passwordModalVisible.value = true;
+}
 </script>
 
 <template>
@@ -337,6 +354,11 @@ onMounted(() => {
       :edit-data="editData"
       @refresh="handleQuery"
       @update:visible="(v: boolean) => modalVisible = v"
+    />
+    <ChangePasswordModal
+      :user-id="passwordModalUserId"
+      :visible="passwordModalVisible"
+      @update:visible="(v: boolean) => passwordModalVisible = v"
     />
   </div>
 </template>
