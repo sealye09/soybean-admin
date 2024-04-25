@@ -61,13 +61,14 @@ onMounted(() => {
       <NInput
         v-model:value="model.password"
         type="password"
+        show-password-on="click"
         :placeholder="$t('page.login.common.passwordPlaceholder')"
       />
     </NFormItem>
-    <NFormItem path="password">
+    <!-- <NFormItem path="captchaCode">
       <NInput v-model:value="model.captchaCode" :placeholder="$t('page.login.common.codePlaceholder')" />
       <img :src="captchaImageBase64" alt="captcha" style="cursor: pointer" @click="getCaptcha">
-    </NFormItem>
+    </NFormItem> -->
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
         <NCheckbox>{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>

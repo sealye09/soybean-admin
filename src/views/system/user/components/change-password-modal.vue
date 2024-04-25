@@ -59,11 +59,11 @@ watchEffect(() => {
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="24" label="新密码" path="password">
-          <NInput v-model:value="formModel.password" type="password" show-password-on="mousedown" />
+          <NInput v-model:value="formModel.password" type="password" show-password-on="click" />
         </NFormItemGridItem>
 
         <NFormItemGridItem :span="24" label="确认新密码" path="confirmPassword">
-          <NInput v-model:value="formModel.confirmPassword" type="password" show-password-on="mousedown" />
+          <NInput v-model:value="formModel.confirmPassword" type="password" show-password-on="click" />
         </NFormItemGridItem>
       </NGrid>
 
