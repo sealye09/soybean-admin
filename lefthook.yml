@@ -1,0 +1,14 @@
+# lefthook.yml
+
+lefthook: ./node_modules/.bin/lefthook
+
+pre-commit:
+  commands:
+    format:
+      run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+    lint:
+      run: pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files} && eslint --fix {staged_files}
+      stage_fixed: true
+    typecheck:
+      run: pnpm typecheck

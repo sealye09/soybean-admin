@@ -4,5 +4,6 @@ packages:
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
+  - lefthook
   - simple-git-hooks
   - vue-demi

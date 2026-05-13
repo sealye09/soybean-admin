@@ -16,5 +16,6 @@
     "moduleResolution": "node"
   },
   "oxc.fmt.configPath": ".oxfmtrc.json",
-  "unocss.root": ["./"]
+  "unocss.root": ["./"],
+  "cSpell.words": ["lefthook"]
 }
