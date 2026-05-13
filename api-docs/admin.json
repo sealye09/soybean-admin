@@ -1,0 +1,2298 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "多租户酒店管理系统 API",
+    "description": "Boarder 多租户分销酒店预订系统接口文档",
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.31.60:6972",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [{ "Bearer JWT": [] }],
+  "paths": {
+    "/admin/admin/update": {
+      "put": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "updateAdmin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminUpdateDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultAdminVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/permissions": {
+      "get": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "getAllPermissions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultListPermissionModuleVO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "updatePermissions",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tenant/save": {
+      "post": {
+        "tags": ["admin-tenant-controller"],
+        "operationId": "saveTenant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Tenant" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/service/handle": {
+      "post": {
+        "tags": ["admin-service-controller"],
+        "operationId": "handleServiceOrder",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "serviceId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["PENDING", "PROCESSING", "COMPLETED", "CANCELLED"]
+            }
+          },
+          {
+            "name": "handlerRemark",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/select-tenant": {
+      "post": {
+        "tags": ["admin-auth-controller"],
+        "operationId": "selectTenant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminSelectTenantDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultTokenVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/type/save": {
+      "post": {
+        "tags": ["admin-room-controller"],
+        "operationId": "saveRoomType",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RoomType" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/sync": {
+      "post": {
+        "tags": ["admin-room-controller"],
+        "operationId": "syncFromBypms",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/price/batch": {
+      "post": {
+        "tags": ["admin-room-controller"],
+        "operationId": "batchSetPrice",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "type": "object", "additionalProperties": {} }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/review/reply": {
+      "post": {
+        "tags": ["admin-review-controller"],
+        "operationId": "replyReview",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "reviewId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "replyContent",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/review/hide": {
+      "post": {
+        "tags": ["admin-review-controller"],
+        "operationId": "hideReview",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "reviewId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/refresh": {
+      "post": {
+        "tags": ["admin-auth-controller"],
+        "operationId": "refresh",
+        "parameters": [
+          {
+            "name": "Refresh-Token",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultTokenVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/doorPwd": {
+      "post": {
+        "tags": ["admin-order-controller"],
+        "operationId": "changeDoorPassword",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "pwd",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/checkout": {
+      "post": {
+        "tags": ["admin-order-controller"],
+        "operationId": "checkout",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/checkin": {
+      "post": {
+        "tags": ["admin-order-controller"],
+        "operationId": "checkin",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/changeRoom": {
+      "post": {
+        "tags": ["admin-order-controller"],
+        "operationId": "changeRoom",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "newRoomId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logout": {
+      "post": {
+        "tags": ["admin-auth-controller"],
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "tags": ["admin-auth-controller"],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminLoginDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultTokenVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/home/config": {
+      "get": {
+        "tags": ["admin-home-controller"],
+        "operationId": "getConfig",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultTenantHomeConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["admin-home-controller"],
+        "operationId": "saveConfig",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TenantHomeConfig" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/guide/save": {
+      "post": {
+        "tags": ["admin-guide-controller"],
+        "operationId": "saveGuide",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TenantGuide" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupon/template/save": {
+      "post": {
+        "tags": ["admin-coupon-controller"],
+        "operationId": "saveTemplate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CouponTemplate" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupon/dispatch": {
+      "post": {
+        "tags": ["admin-coupon-controller"],
+        "operationId": "dispatchCoupon",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "templateId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "type": "integer", "format": "int64" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/config/save": {
+      "post": {
+        "tags": ["admin-config-controller"],
+        "operationId": "saveConfig_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SystemConfig" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/commission/withdraw/audit": {
+      "post": {
+        "tags": ["admin-commission-controller"],
+        "operationId": "auditWithdraw",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "withdrawId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["PENDING", "APPROVED", "REJECTED", "PAYING", "PAID", "PAY_FAILED"]
+            }
+          },
+          {
+            "name": "auditRemark",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/commission/config": {
+      "get": {
+        "tags": ["admin-commission-controller"],
+        "operationId": "getCommissionConfig",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["admin-commission-controller"],
+        "operationId": "saveCommissionConfig",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommissionConfig" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/create": {
+      "post": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "createAdmin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminCreateDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultAdminVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/bind-tenants": {
+      "post": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "bindTenants",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminBindTenantDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/list": {
+      "get": {
+        "tags": ["admin-user-controller"],
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/user/detail": {
+      "get": {
+        "tags": ["admin-user-controller"],
+        "operationId": "getDetail",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/tenant/list": {
+      "get": {
+        "tags": ["admin-tenant-controller"],
+        "operationId": "listTenants",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/stat/dashboard": {
+      "get": {
+        "tags": ["admin-stat-controller"],
+        "operationId": "dashboard",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultMapStringObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/service/list": {
+      "get": {
+        "tags": ["admin-service-controller"],
+        "operationId": "listServiceOrders",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/type/list": {
+      "get": {
+        "tags": ["admin-room-controller"],
+        "operationId": "listRoomTypes",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/calendar": {
+      "get": {
+        "tags": ["admin-room-controller"],
+        "operationId": "getCalendar",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "roomTypeId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/room/bypms/rooms": {
+      "get": {
+        "tags": ["admin-room-controller"],
+        "operationId": "fetchBypmsRooms",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/review/list": {
+      "get": {
+        "tags": ["admin-review-controller"],
+        "operationId": "listReviews",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/list": {
+      "get": {
+        "tags": ["admin-order-controller"],
+        "operationId": "listAllOrders",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/order/detail": {
+      "get": {
+        "tags": ["admin-order-controller"],
+        "operationId": "getOrderDetail",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/guide/list": {
+      "get": {
+        "tags": ["admin-guide-controller"],
+        "operationId": "listGuides",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupon/template/list": {
+      "get": {
+        "tags": ["admin-coupon-controller"],
+        "operationId": "listTemplates",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/config/list": {
+      "get": {
+        "tags": ["admin-config-controller"],
+        "operationId": "listConfigs",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/commission/withdraw/list": {
+      "get": {
+        "tags": ["admin-commission-controller"],
+        "operationId": "listWithdrawRecords",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/commission/records": {
+      "get": {
+        "tags": ["admin-commission-controller"],
+        "operationId": "getRecords",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultObject" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/list": {
+      "get": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "listAdmins",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultListAdminVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/detail": {
+      "get": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "getAdminDetail",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ResultAdminVO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/bound-tenants": {
+      "get": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "getBoundTenants",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultListTenantSimpleVO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/unbind-tenant": {
+      "delete": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "unbindTenant",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    },
+    "/admin/admin/delete": {
+      "delete": {
+        "tags": ["admin-admin-controller"],
+        "operationId": "deleteAdmin",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ResultVoid" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResultVoid": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": {}
+        }
+      },
+      "AdminUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "adminId": { "type": "integer", "format": "int64" },
+          "password": { "type": "string" },
+          "role": { "type": "string", "enum": ["SUPER_ADMIN", "ADMIN"] },
+          "status": { "type": "string", "enum": ["DISABLED", "ENABLED"] },
+          "permissions": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["adminId"]
+      },
+      "AdminVO": {
+        "type": "object",
+        "properties": {
+          "adminId": { "type": "integer", "format": "int64" },
+          "username": { "type": "string" },
+          "role": { "type": "string", "enum": ["SUPER_ADMIN", "ADMIN"] },
+          "status": { "type": "string", "enum": ["DISABLED", "ENABLED"] },
+          "permissions": { "type": "array", "items": { "type": "string" } },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "boundTenants": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TenantSimpleVO" }
+          },
+          "lastLogin": { "type": "string", "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ResultAdminVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/AdminVO" }
+        }
+      },
+      "TenantSimpleVO": {
+        "type": "object",
+        "properties": {
+          "tenantId": { "type": "integer", "format": "int64" },
+          "tenantName": { "type": "string" },
+          "tenantCode": { "type": "string" }
+        }
+      },
+      "Tenant": {
+        "type": "object",
+        "properties": {
+          "tenantId": { "type": "integer", "format": "int64" },
+          "tenantName": { "type": "string" },
+          "tenantCode": { "type": "string" },
+          "contactName": { "type": "string" },
+          "contactPhone": { "type": "string" },
+          "bypmsCompanyId": { "type": "integer", "format": "int64" },
+          "bypmsAppId": { "type": "string" },
+          "bypmsAppSecret": { "type": "string" },
+          "wxAppid": { "type": "string" },
+          "wxSecret": { "type": "string" },
+          "wxMchid": { "type": "string" },
+          "wxApikey": { "type": "string" },
+          "address": { "type": "string" },
+          "longitude": { "type": "number" },
+          "latitude": { "type": "number" },
+          "cityCode": { "type": "string" },
+          "cityName": { "type": "string" },
+          "isRecommend": { "type": "integer", "format": "int32" },
+          "sortOrder": { "type": "integer", "format": "int32" },
+          "status": { "type": "string", "enum": ["DISABLED", "ENABLED"] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ResultObject": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": {}
+        }
+      },
+      "AdminSelectTenantDTO": {
+        "type": "object",
+        "properties": { "tenantId": { "type": "integer", "format": "int64" } },
+        "required": ["tenantId"]
+      },
+      "ResultTokenVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/TokenVO" }
+        }
+      },
+      "TokenVO": {
+        "type": "object",
+        "properties": {
+          "accessToken": { "type": "string" },
+          "refreshToken": { "type": "string" },
+          "currentTenantId": { "type": "integer", "format": "int64" },
+          "role": { "type": "string" },
+          "boundTenants": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TenantSimpleVO" }
+          }
+        }
+      },
+      "RoomType": {
+        "type": "object",
+        "properties": {
+          "roomTypeId": { "type": "integer", "format": "int64" },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "bypmsTypeId": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "subtitle": { "type": "string" },
+          "coverImage": { "type": "string" },
+          "images": { "type": "array", "items": { "type": "string" } },
+          "description": { "type": "string" },
+          "facilities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          },
+          "maxPeople": { "type": "integer", "format": "int32" },
+          "extraBed": { "type": "integer", "format": "int32" },
+          "status": { "type": "string", "enum": ["DISABLED", "ENABLED"] },
+          "sortOrder": { "type": "integer", "format": "int32" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AdminLoginDTO": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string", "minLength": 1 },
+          "password": { "type": "string", "minLength": 1 },
+          "tenantId": { "type": "integer", "format": "int64" }
+        },
+        "required": ["password", "username"]
+      },
+      "TenantHomeConfig": {
+        "type": "object",
+        "properties": {
+          "configId": { "type": "integer", "format": "int64" },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "hotelName": { "type": "string" },
+          "hotelLogo": { "type": "string" },
+          "bannerImages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          },
+          "guideEnabled": { "type": "integer", "format": "int32" },
+          "guideIcon": { "type": "string" },
+          "guideTitle": { "type": "string" },
+          "servicePhone": { "type": "string" },
+          "serviceEnabled": { "type": "integer", "format": "int32" },
+          "wifiName": { "type": "string" },
+          "wifiPassword": { "type": "string" },
+          "wifiEnabled": { "type": "integer", "format": "int32" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TenantGuide": {
+        "type": "object",
+        "properties": {
+          "guideId": { "type": "integer", "format": "int64" },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "sortOrder": { "type": "integer", "format": "int32" },
+          "status": { "type": "integer", "format": "int32" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CouponTemplate": {
+        "type": "object",
+        "properties": {
+          "templateId": { "type": "integer", "format": "int64" },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "couponType": { "type": "string", "enum": ["DELAY", "DISCOUNT"] },
+          "ruleConfig": { "type": "object", "additionalProperties": {} },
+          "totalCount": { "type": "integer", "format": "int32" },
+          "userLimit": { "type": "integer", "format": "int32" },
+          "validDays": { "type": "integer", "format": "int32" },
+          "validStart": { "type": "string", "format": "date" },
+          "validEnd": { "type": "string", "format": "date" },
+          "status": { "type": "string", "enum": ["DISABLED", "ENABLED"] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SystemConfig": {
+        "type": "object",
+        "properties": {
+          "configId": { "type": "integer", "format": "int64" },
+          "tenantId": { "type": "integer", "format": "int64" },
+          "configCode": { "type": "string" },
+          "configName": { "type": "string" },
+          "configValue": { "type": "string" },
+          "configType": { "type": "string" },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CommissionConfig": {
+        "type": "object",
+        "properties": {
+          "tenantId": { "type": "integer", "format": "int64" },
+          "level": { "type": "integer", "format": "int32" },
+          "rate": { "type": "number" },
+          "minAmount": { "type": "number" },
+          "status": { "type": "integer", "format": "int32" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AdminCreateDTO": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string", "minLength": 1 },
+          "password": { "type": "string", "minLength": 1 },
+          "role": { "type": "string", "enum": ["SUPER_ADMIN", "ADMIN"] },
+          "tenantIds": {
+            "type": "array",
+            "items": { "type": "integer", "format": "int64" }
+          },
+          "permissions": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["password", "role", "username"]
+      },
+      "AdminBindTenantDTO": {
+        "type": "object",
+        "properties": {
+          "adminId": { "type": "integer", "format": "int64" },
+          "tenantIds": {
+            "type": "array",
+            "items": { "type": "integer", "format": "int64" },
+            "minItems": 1
+          }
+        },
+        "required": ["adminId", "tenantIds"]
+      },
+      "ResultMapStringObject": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": { "type": "object", "additionalProperties": {} }
+        }
+      },
+      "ResultTenantHomeConfig": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/TenantHomeConfig" }
+        }
+      },
+      "PermissionItemVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      },
+      "PermissionModuleVO": {
+        "type": "object",
+        "properties": {
+          "module": { "type": "string" },
+          "label": { "type": "string" },
+          "permissions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PermissionItemVO" }
+          }
+        }
+      },
+      "ResultListPermissionModuleVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PermissionModuleVO" }
+          }
+        }
+      },
+      "ResultListAdminVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminVO" }
+          }
+        }
+      },
+      "ResultListTenantSimpleVO": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "format": "int32" },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TenantSimpleVO" }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer JWT": {
+        "type": "http",
+        "name": "Authorization",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

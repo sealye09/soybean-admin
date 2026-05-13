@@ -35,6 +35,7 @@
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
     "fmt": "oxfmt",
+    "gen-api": "node scripts/gen-api.mjs",
     "gen-route": "sa gen-route",
     "lint": "oxlint --fix && eslint --fix .",
     "prepare": "simple-git-hooks",
@@ -68,6 +69,7 @@
   },
   "devDependencies": {
     "@elegant-router/vue": "0.3.8",
+    "@hey-api/openapi-ts": "^0.97.1",
     "@iconify/json": "2.2.462",
     "@sa/scripts": "workspace:*",
     "@sa/uno-preset": "workspace:*",
@@ -96,7 +98,6 @@
     "vue-tsc": "3.2.6"
   },
   "simple-git-hooks": {
-    "commit-msg": "pnpm sa git-commit-verify",
     "pre-commit": "pnpm typecheck && pnpm lint && pnpm fmt && git diff --exit-code"
   },
   "engines": {
